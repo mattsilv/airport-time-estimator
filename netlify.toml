@@ -2,6 +2,12 @@
   command = "npm run build"
   publish = "web-build"
 
+[build.environment]
+  NODE_ENV = "production"
+
+[context.production.environment]
+  NODE_ENV = "production"
+
 [[redirects]]
   from = "/*"
   to = "/index.html"

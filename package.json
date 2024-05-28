@@ -3,25 +3,29 @@
     "version": "1.0.0",
     "main": "index.js",
     "scripts": {
-        "start": "expo start",
-        "android": "expo run:android",
-        "ios": "expo run:ios",
-        "web": "expo start --web",
-        "build": "expo build:web"
+      "start": "expo start",
+      "android": "expo run:android",
+      "ios": "expo run:ios",
+      "web": "expo start --web",
+      "build": "expo build:web && npm run minify",
+      "minify": "imagemin web-build/* --out-dir=web-build"
     },
     "dependencies": {
-        "@react-navigation/native": "^6.0.6",
-        "@react-navigation/stack": "^6.0.11",
-        "react": "17.0.1",
-        "react-dom": "17.0.1",
-        "react-native": "0.64.3",
-        "react-native-gesture-handler": "^1.10.3",
-        "react-native-reanimated": "^2.2.4",
-        "react-native-safe-area-context": "^3.3.2",
-        "react-native-screens": "^3.5.0",
-        "tamagui": "^1.99.1"
+      "@react-navigation/native": "^6.0.6",
+      "@react-navigation/stack": "^6.0.11",
+      "react": "17.0.1",
+      "react-dom": "17.0.1",
+      "react-native": "0.64.3",
+      "react-native-gesture-handler": "^1.10.3",
+      "react-native-reanimated": "^2.2.4",
+      "react-native-safe-area-context": "^3.3.2",
+      "react-native-screens": "^3.5.0",
+      "tamagui": "^1.99.1"
     },
     "devDependencies": {
-        "expo": "^51.0.8"
+      "expo": "^48.0.0",
+      "imagemin": "^7.0.0",
+      "imagemin-cli": "^6.0.0"
     }
-}
+  }
+  
