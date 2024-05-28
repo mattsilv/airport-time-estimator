@@ -1,5 +1,5 @@
 // src/FlightFormLogic.js
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import FlightFormInputs from "./FlightFormInputs";
 
 const FlightFormLogic = ({ onCalculate }) => {
@@ -8,6 +8,14 @@ const FlightFormLogic = ({ onCalculate }) => {
   const [drivingTime, setDrivingTime] = useState("45");
   const [arriveEarly, setArriveEarly] = useState("30");
   const [snackTime, setSnackTime] = useState("5");
+
+  const calculateLeaveTime = useCallback(() => {
+    const totalMinutes =
+      parseInt(drivingTime, 10) +
+      parseInt(arriveEarly, 10) +
+      parseInt(snackTime, 10);
+    onCalculate(boardingTime, totalMinutes);
+  }, [boardingTime, drivingTime, arriveEarly, snackTime, onCalculate]);
 
   useEffect(() => {
     if (departureTime) {
@@ -21,15 +29,7 @@ const FlightFormLogic = ({ onCalculate }) => {
 
   useEffect(() => {
     calculateLeaveTime();
-  }, [departureTime, boardingTime, drivingTime, arriveEarly, snackTime]);
-
-  const calculateLeaveTime = () => {
-    const totalMinutes =
-      parseInt(drivingTime, 10) +
-      parseInt(arriveEarly, 10) +
-      parseInt(snackTime, 10);
-    onCalculate(boardingTime, totalMinutes);
-  };
+  }, [calculateLeaveTime]);
 
   const handleDepartureChange = (e) => {
     setDepartureTime(e.target.value);
