@@ -1,0 +1,349 @@
+
+// mergefiles.js
+const fs = require("fs");
+const path = require("path");
+const ignore = require("ignore");
+
+// Initialize ignore parser with .gitignore rules
+const ig = ignore();
+const gitignorePath = path.join(__dirname, ".gitignore");
+if (fs.existsSync(gitignorePath)) {
+  const gitignoreContent = fs.readFileSync(gitignorePath).toString();
+  ig.add(gitignoreContent);
+}
+
+// File extensions to include
+const extensions = [".js", ".toml", ".json", ".html"];
+const outputFilePath = path.join(__dirname, "merged.txt");
+let mergedContent = "";
+
+// Function to read files recursively
+const readFilesRecursively = (dir) => {
+  const files = fs.readdirSync(dir);
+
+  files.forEach((file) => {
+    const filePath = path.join(dir, file);
+    const relativePath = path.relative(__dirname, filePath);
+
+    // Check if the file should be ignored
+    if (ig.ignores(relativePath)) {
+      return;
+    }
+
+    const stat = fs.statSync(filePath);
+
+    if (stat.isDirectory()) {
+      readFilesRecursively(filePath);
+    } else if (extensions.includes(path.extname(file))) {
+      const content = fs.readFileSync(filePath, "utf-8");
+      const comment = `\n// ${relativePath}\n`;
+      mergedContent += comment + content + "\n";
+    }
+  });
+};
+
+// Start reading from the current directory
+readFilesRecursively(__dirname);
+
+// Write the merged content to a .txt file
+fs.writeFileSync(outputFilePath, mergedContent);
+
+console.log("All content merged into", outputFilePath);
+process.exit(0); // Ensure the script exits
+
+
+// package.json
+{
+  "name": "airport-time-estimator",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@types/node": "^20.12.12",
+    "@types/react": "^18.3.3",
+    "@types/react-dom": "^18.3.0",
+    "bootstrap": "^5.3.3",
+    "react": "^18.3.1",
+    "react-bootstrap": "^2.10.2",
+    "react-dom": "^18.3.1",
+    "react-scripts": "^5.0.1",
+    "typescript": "^5.4.5",
+    "puppeteer": "^20.7.3"
+  },
+  "devDependencies": {
+    "@babel/plugin-proposal-private-property-in-object": "^7.17.12"
+  },
+  "scripts": {
+    "merge": "node mergefiles.js",
+    "start": "npm run merge && PORT=3001 react-scripts start & sleep 5 && node src/testPageLoad.js",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}
+
+
+// public/index.html
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#000000" />
+    <meta
+      name="description"
+      content="Web site created using create-react-app"
+    />
+    <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
+    <!--
+      manifest.json provides metadata used when your web app is installed on a
+      user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
+    -->
+    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+    <!--
+      Notice the use of %PUBLIC_URL% in the tags above.
+      It will be replaced with the URL of the `public` folder during the build.
+      Only files inside the `public` folder can be referenced from the HTML.
+
+      Unlike "/favicon.ico" or "favicon.ico", "%PUBLIC_URL%/favicon.ico" will
+      work correctly both with client-side routing and a non-root public URL.
+      Learn how to configure a non-root public URL by running `npm run build`.
+    -->
+    <title>React App</title>
+  </head>
+  <body>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <div id="root"></div>
+    <!--
+      This HTML file is a template.
+      If you open it directly in the browser, you will see an empty page.
+
+      You can add webfonts, meta tags, or analytics to this file.
+      The build step will place the bundled scripts into the <body> tag.
+
+      To begin the development, run `npm start` or `yarn start`.
+      To create a production bundle, use `npm run build` or `yarn build`.
+    -->
+  </body>
+</html>
+
+
+// public/manifest.json
+{
+  "short_name": "React App",
+  "name": "Create React App Sample",
+  "icons": [
+    {
+      "src": "favicon.ico",
+      "sizes": "64x64 32x32 24x24 16x16",
+      "type": "image/x-icon"
+    },
+    {
+      "src": "logo192.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "logo512.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ],
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#000000",
+  "background_color": "#ffffff"
+}
+
+
+// src/App.js
+import React, { useState, useEffect } from "react";
+import "bootstrap/dist/css/bootstrap.min.css";
+import { Container, Row, Col, Form, Button, Alert } from "react-bootstrap";
+
+function App() {
+  const [departureTime, setDepartureTime] = useState("");
+  const [boardingTime, setBoardingTime] = useState("");
+  const [drivingTime, setDrivingTime] = useState("");
+  const [arriveEarly, setArriveEarly] = useState("");
+  const [snackTime, setSnackTime] = useState("");
+  const [leaveTime, setLeaveTime] = useState("");
+
+  useEffect(() => {
+    if (departureTime) {
+      const [hours, minutes] = departureTime.split(":").map(Number);
+      const boardingDate = new Date();
+      boardingDate.setHours(hours);
+      boardingDate.setMinutes(minutes - 30);
+      setBoardingTime(boardingDate.toTimeString().substring(0, 5));
+    }
+  }, [departureTime]);
+
+  const handleDepartureChange = (e) => {
+    setDepartureTime(e.target.value);
+  };
+
+  const calculateLeaveTime = (e) => {
+    e.preventDefault();
+    const totalMinutes =
+      parseInt(drivingTime, 10) +
+      parseInt(arriveEarly, 10) +
+      parseInt(snackTime, 10);
+    const [boardingHours, boardingMinutes] = boardingTime
+      .split(":")
+      .map(Number);
+    const boardingDate = new Date();
+    boardingDate.setHours(boardingHours);
+    boardingDate.setMinutes(boardingMinutes - totalMinutes);
+    const hours = boardingDate.getHours().toString().padStart(2, "0");
+    const minutes = boardingDate.getMinutes().toString().padStart(2, "0");
+    setLeaveTime(`You should leave at: ${hours}:${minutes}`);
+  };
+
+  return (
+    <Container className="mt-4">
+      <Row className="justify-content-center">
+        <Col xs={12} sm={10} md={8} lg={6} xl={5}>
+          <div className="border p-4 rounded shadow-sm bg-light">
+            <Form onSubmit={calculateLeaveTime}>
+              <Form.Group>
+                <Form.Label htmlFor="departure-time">
+                  Departure Time:
+                </Form.Label>
+                <Form.Control
+                  type="time"
+                  id="departure-time"
+                  value={departureTime}
+                  onChange={handleDepartureChange}
+                />
+              </Form.Group>
+              <Form.Group>
+                <Form.Label htmlFor="boarding-time">Boarding Time:</Form.Label>
+                <Form.Control
+                  type="time"
+                  id="boarding-time"
+                  value={boardingTime}
+                  readOnly
+                />
+              </Form.Group>
+              <Form.Group>
+                <Form.Label htmlFor="driving-time">
+                  Driving Time to Airport With Traffic (minutes):
+                </Form.Label>
+                <Form.Control
+                  type="number"
+                  id="driving-time"
+                  value={drivingTime}
+                  onChange={(e) => setDrivingTime(e.target.value)}
+                />
+              </Form.Group>
+              <Form.Group>
+                <Form.Label htmlFor="arrive-early">
+                  Arrive Early (minutes):
+                </Form.Label>
+                <Form.Control
+                  type="number"
+                  id="arrive-early"
+                  value={arriveEarly}
+                  onChange={(e) => setArriveEarly(e.target.value)}
+                />
+              </Form.Group>
+              <Form.Group>
+                <Form.Label htmlFor="snack-time">
+                  Snack Time (minutes):
+                </Form.Label>
+                <Form.Control
+                  type="number"
+                  id="snack-time"
+                  value={snackTime}
+                  onChange={(e) => setSnackTime(e.target.value)}
+                />
+              </Form.Group>
+              <Button variant="primary" type="submit" block>
+                Calculate
+              </Button>
+            </Form>
+            {leaveTime && (
+              <Alert
+                variant="info"
+                className="text-center mt-3 font-weight-bold"
+              >
+                {leaveTime}
+              </Alert>
+            )}
+          </div>
+        </Col>
+      </Row>
+    </Container>
+  );
+}
+
+export default App;
+
+
+// src/index.js
+import React from "react";
+import ReactDOM from "react-dom/client";
+import App from "./App";
+
+const root = ReactDOM.createRoot(document.getElementById("root"));
+root.render(<App />);
+
+
+// src/testPageLoad.js
+// src/testPageLoad.js
+const puppeteer = require("puppeteer");
+
+(async () => {
+  const browser = await puppeteer.launch({ headless: "new" });
+  const page = await browser.newPage();
+  page.on("console", (msg) => {
+    if (msg.type() === "error") {
+      console.error("Console error detected:", msg.text());
+      process.exit(1);
+    }
+  });
+
+  await page.goto("http://localhost:3000");
+  console.log("Page loaded successfully without console errors.");
+  await browser.close();
+  process.exit(0);
+})();
+
+
+// tsconfig.json
+{
+  "compilerOptions": {
+    "target": "es5",
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "allowJs": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "module": "esnext",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true,
+    "jsx": "react-jsx"
+  },
+  "include": ["src"]
+}
+

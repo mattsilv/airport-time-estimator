@@ -1,14 +1,19 @@
 [build]
   command = "npm run build"
-  publish = "web-build"
+  publish = "build"
+  functions = "netlify/functions"
 
 [build.environment]
   NODE_ENV = "production"
+  YARN_VERSION = "1.22.10"
 
 [context.production.environment]
   NODE_ENV = "production"
 
-[[redirects]]
-  from = "/*"
-  to = "/index.html"
-  status = 200
+[context.deploy-preview.environment]
+  NODE_ENV = "development"
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"

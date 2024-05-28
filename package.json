@@ -1,31 +1,41 @@
 {
-    "name": "my-calc-app",
-    "version": "1.0.0",
-    "main": "index.js",
-    "scripts": {
-      "start": "expo start",
-      "android": "expo run:android",
-      "ios": "expo run:ios",
-      "web": "expo start --web",
-      "build": "npx expo build:web && npm run minify",
-      "minify": "imagemin web-build/* --out-dir=web-build"
-    },
-    "dependencies": {
-      "@react-navigation/native": "^6.0.6",
-      "@react-navigation/stack": "^6.0.11",
-      "react": "17.0.1",
-      "react-dom": "17.0.1",
-      "react-native": "0.64.3",
-      "react-native-gesture-handler": "^1.10.3",
-      "react-native-reanimated": "^2.2.4",
-      "react-native-safe-area-context": "^3.3.2",
-      "react-native-screens": "^3.5.0",
-      "tamagui": "^1.99.1"
-    },
-    "devDependencies": {
-      "expo-cli": "^6.0.0",
-      "imagemin": "^7.0.0",
-      "imagemin-cli": "^6.0.0"
-    }
+  "name": "airport-time-estimator",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@types/node": "^20.12.12",
+    "@types/react": "^18.3.3",
+    "@types/react-dom": "^18.3.0",
+    "bootstrap": "^5.3.3",
+    "react": "^18.3.1",
+    "react-bootstrap": "^2.10.2",
+    "react-dom": "^18.3.1",
+    "react-scripts": "^5.0.1",
+    "typescript": "^5.4.5",
+    "puppeteer": "^20.7.3"
+  },
+  "devDependencies": {
+    "@babel/plugin-proposal-private-property-in-object": "^7.17.12"
+  },
+  "scripts": {
+    "start": "node start-dev.js",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
   }
-  
+}
