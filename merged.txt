@@ -52,6 +52,17 @@ console.log("All content merged into", outputFilePath);
 process.exit(0); // Ensure the script exits
 
 
+// netlify.toml
+[build]
+  command = "npm run build"
+  publish = "build"
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+
 // package.json
 {
   "name": "airport-time-estimator",
@@ -66,15 +77,10 @@ process.exit(0); // Ensure the script exits
     "react-bootstrap": "^2.10.2",
     "react-dom": "^18.3.1",
     "react-scripts": "^5.0.1",
-    "typescript": "^5.4.5",
-    "puppeteer": "^20.7.3"
-  },
-  "devDependencies": {
-    "@babel/plugin-proposal-private-property-in-object": "^7.17.12"
+    "typescript": "^5.4.5"
   },
   "scripts": {
-    "merge": "node mergefiles.js",
-    "start": "npm run merge && PORT=3001 react-scripts start & sleep 5 && node src/testPageLoad.js",
+    "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
@@ -172,112 +178,39 @@ process.exit(0); // Ensure the script exits
 
 
 // src/App.js
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { Container, Row, Col, Form, Button, Alert } from "react-bootstrap";
+import { Container, Row, Col, Alert } from "react-bootstrap";
+import FlightForm from "./FlightForm";
 
 function App() {
-  const [departureTime, setDepartureTime] = useState("");
-  const [boardingTime, setBoardingTime] = useState("");
-  const [drivingTime, setDrivingTime] = useState("");
-  const [arriveEarly, setArriveEarly] = useState("");
-  const [snackTime, setSnackTime] = useState("");
   const [leaveTime, setLeaveTime] = useState("");
 
-  useEffect(() => {
-    if (departureTime) {
-      const [hours, minutes] = departureTime.split(":").map(Number);
-      const boardingDate = new Date();
-      boardingDate.setHours(hours);
-      boardingDate.setMinutes(minutes - 30);
-      setBoardingTime(boardingDate.toTimeString().substring(0, 5));
-    }
-  }, [departureTime]);
-
-  const handleDepartureChange = (e) => {
-    setDepartureTime(e.target.value);
-  };
-
-  const calculateLeaveTime = (e) => {
-    e.preventDefault();
-    const totalMinutes =
-      parseInt(drivingTime, 10) +
-      parseInt(arriveEarly, 10) +
-      parseInt(snackTime, 10);
+  const handleCalculate = (boardingTime, totalMinutes) => {
     const [boardingHours, boardingMinutes] = boardingTime
       .split(":")
       .map(Number);
     const boardingDate = new Date();
     boardingDate.setHours(boardingHours);
     boardingDate.setMinutes(boardingMinutes - totalMinutes);
-    const hours = boardingDate.getHours().toString().padStart(2, "0");
+    const hours = boardingDate.getHours();
     const minutes = boardingDate.getMinutes().toString().padStart(2, "0");
-    setLeaveTime(`You should leave at: ${hours}:${minutes}`);
+    const ampm = hours >= 12 ? "PM" : "AM";
+    const formattedHours = (hours % 12 || 12).toString().padStart(2, "0");
+    setLeaveTime(`You should leave at: ${formattedHours}:${minutes} ${ampm}`);
   };
 
   return (
     <Container className="mt-4">
       <Row className="justify-content-center">
+        <Col xs={12} sm={10} md={8} lg={6} xl={5} className="text-center">
+          <h1>What time should I leave for the airport?</h1>
+        </Col>
+      </Row>
+      <Row className="justify-content-center">
         <Col xs={12} sm={10} md={8} lg={6} xl={5}>
           <div className="border p-4 rounded shadow-sm bg-light">
-            <Form onSubmit={calculateLeaveTime}>
-              <Form.Group>
-                <Form.Label htmlFor="departure-time">
-                  Departure Time:
-                </Form.Label>
-                <Form.Control
-                  type="time"
-                  id="departure-time"
-                  value={departureTime}
-                  onChange={handleDepartureChange}
-                />
-              </Form.Group>
-              <Form.Group>
-                <Form.Label htmlFor="boarding-time">Boarding Time:</Form.Label>
-                <Form.Control
-                  type="time"
-                  id="boarding-time"
-                  value={boardingTime}
-                  readOnly
-                />
-              </Form.Group>
-              <Form.Group>
-                <Form.Label htmlFor="driving-time">
-                  Driving Time to Airport With Traffic (minutes):
-                </Form.Label>
-                <Form.Control
-                  type="number"
-                  id="driving-time"
-                  value={drivingTime}
-                  onChange={(e) => setDrivingTime(e.target.value)}
-                />
-              </Form.Group>
-              <Form.Group>
-                <Form.Label htmlFor="arrive-early">
-                  Arrive Early (minutes):
-                </Form.Label>
-                <Form.Control
-                  type="number"
-                  id="arrive-early"
-                  value={arriveEarly}
-                  onChange={(e) => setArriveEarly(e.target.value)}
-                />
-              </Form.Group>
-              <Form.Group>
-                <Form.Label htmlFor="snack-time">
-                  Snack Time (minutes):
-                </Form.Label>
-                <Form.Control
-                  type="number"
-                  id="snack-time"
-                  value={snackTime}
-                  onChange={(e) => setSnackTime(e.target.value)}
-                />
-              </Form.Group>
-              <Button variant="primary" type="submit" block>
-                Calculate
-              </Button>
-            </Form>
+            <FlightForm onCalculate={handleCalculate} />
             {leaveTime && (
               <Alert
                 variant="info"
@@ -296,6 +229,162 @@ function App() {
 export default App;
 
 
+// src/FlightForm.js
+// src/FlightForm.js
+import React from "react";
+import FlightFormLogic from "./FlightFormLogic";
+
+const FlightForm = ({ onCalculate }) => {
+  return <FlightFormLogic onCalculate={onCalculate} />;
+};
+
+export default FlightForm;
+
+
+// src/FlightFormInputs.js
+// src/FlightFormInputs.js
+import React from "react";
+import { Form } from "react-bootstrap";
+
+const FlightFormInputs = ({
+  departureTime,
+  boardingTime,
+  drivingTime,
+  arriveEarly,
+  snackTime,
+  handleDepartureChange,
+  handleDrivingTimeChange,
+  handleArriveEarlyChange,
+  handleSnackTimeChange,
+}) => {
+  return (
+    <Form>
+      <Form.Group>
+        <Form.Label htmlFor="departure-time">Departure Time:</Form.Label>
+        <Form.Control
+          type="time"
+          id="departure-time"
+          value={departureTime}
+          onChange={handleDepartureChange}
+        />
+      </Form.Group>
+      <Form.Group>
+        <Form.Label htmlFor="boarding-time">Boarding Time:</Form.Label>
+        <Form.Control
+          type="time"
+          id="boarding-time"
+          value={boardingTime}
+          readOnly
+        />
+      </Form.Group>
+      <Form.Group>
+        <Form.Label htmlFor="driving-time">
+          Driving Time to Airport With Traffic (minutes):
+        </Form.Label>
+        <Form.Control
+          type="number"
+          id="driving-time"
+          value={drivingTime}
+          onChange={handleDrivingTimeChange}
+          style={{ width: "70px" }}
+        />
+      </Form.Group>
+      <Form.Group>
+        <Form.Label htmlFor="arrive-early">Arrive Early (minutes):</Form.Label>
+        <Form.Control
+          type="number"
+          id="arrive-early"
+          value={arriveEarly}
+          onChange={handleArriveEarlyChange}
+          style={{ width: "70px" }}
+        />
+      </Form.Group>
+      <Form.Group>
+        <Form.Label htmlFor="snack-time">Snack Time (minutes):</Form.Label>
+        <Form.Control
+          type="number"
+          id="snack-time"
+          value={snackTime}
+          onChange={handleSnackTimeChange}
+          style={{ width: "70px" }}
+        />
+      </Form.Group>
+    </Form>
+  );
+};
+
+export default FlightFormInputs;
+
+
+// src/FlightFormLogic.js
+// src/FlightFormLogic.js
+import React, { useState, useEffect } from "react";
+import FlightFormInputs from "./FlightFormInputs";
+
+const FlightFormLogic = ({ onCalculate }) => {
+  const [departureTime, setDepartureTime] = useState("11:00");
+  const [boardingTime, setBoardingTime] = useState("");
+  const [drivingTime, setDrivingTime] = useState("45");
+  const [arriveEarly, setArriveEarly] = useState("30");
+  const [snackTime, setSnackTime] = useState("5");
+
+  useEffect(() => {
+    if (departureTime) {
+      const [hours, minutes] = departureTime.split(":").map(Number);
+      const boardingDate = new Date();
+      boardingDate.setHours(hours);
+      boardingDate.setMinutes(minutes - 30);
+      setBoardingTime(boardingDate.toTimeString().substring(0, 5));
+    }
+  }, [departureTime]);
+
+  useEffect(() => {
+    calculateLeaveTime();
+  }, [departureTime, boardingTime, drivingTime, arriveEarly, snackTime]);
+
+  const calculateLeaveTime = () => {
+    const totalMinutes =
+      parseInt(drivingTime, 10) +
+      parseInt(arriveEarly, 10) +
+      parseInt(snackTime, 10);
+    onCalculate(boardingTime, totalMinutes);
+  };
+
+  const handleDepartureChange = (e) => {
+    setDepartureTime(e.target.value);
+  };
+
+  const handleDrivingTimeChange = (e) => {
+    setDrivingTime(e.target.value);
+  };
+
+  const handleArriveEarlyChange = (e) => {
+    setArriveEarly(e.target.value);
+  };
+
+  const handleSnackTimeChange = (e) => {
+    setSnackTime(e.target.value);
+  };
+
+  return (
+    <FlightFormInputs
+      departureTime={departureTime}
+      boardingTime={boardingTime}
+      drivingTime={drivingTime}
+      arriveEarly={arriveEarly}
+      snackTime={snackTime}
+      handleDepartureChange={handleDepartureChange}
+      handleDrivingTimeChange={handleDrivingTimeChange}
+      handleArriveEarlyChange={handleArriveEarlyChange}
+      handleSnackTimeChange={handleSnackTimeChange}
+    />
+  );
+};
+
+export default FlightFormLogic;
+
+
+// src/index.js
 // src/index.js
 import React from "react";
 import ReactDOM from "react-dom/client";
@@ -305,45 +394,27 @@ const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(<App />);
 
 
-// src/testPageLoad.js
-// src/testPageLoad.js
-const puppeteer = require("puppeteer");
+// webpack.config.js
+// webpack.config.js
+const { ESBuildPlugin } = require("esbuild-loader");
 
-(async () => {
-  const browser = await puppeteer.launch({ headless: "new" });
-  const page = await browser.newPage();
-  page.on("console", (msg) => {
-    if (msg.type() === "error") {
-      console.error("Console error detected:", msg.text());
-      process.exit(1);
-    }
-  });
-
-  await page.goto("http://localhost:3000");
-  console.log("Page loaded successfully without console errors.");
-  await browser.close();
-  process.exit(0);
-})();
-
-
-// tsconfig.json
-{
-  "compilerOptions": {
-    "target": "es5",
-    "lib": ["dom", "dom.iterable", "esnext"],
-    "allowJs": true,
-    "skipLibCheck": true,
-    "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true,
-    "strict": true,
-    "forceConsistentCasingInFileNames": true,
-    "module": "esnext",
-    "moduleResolution": "node",
-    "resolveJsonModule": true,
-    "isolatedModules": true,
-    "noEmit": true,
-    "jsx": "react-jsx"
+module.exports = {
+  // other webpack config
+  module: {
+    rules: [
+      {
+        test: /\.(js|mjs|jsx|ts|tsx)$/,
+        exclude: /node_modules/,
+        use: {
+          loader: "esbuild-loader",
+          options: {
+            loader: "jsx", // Remove this if you're not using JSX
+            target: "es2015",
+          },
+        },
+      },
+    ],
   },
-  "include": ["src"]
-}
+  plugins: [new ESBuildPlugin()],
+};
 

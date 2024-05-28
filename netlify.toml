@@ -1,17 +1,6 @@
 [build]
   command = "npm run build"
   publish = "build"
-  functions = "netlify/functions"
-
-[build.environment]
-  NODE_ENV = "production"
-  YARN_VERSION = "1.22.10"
-
-[context.production.environment]
-  NODE_ENV = "production"
-
-[context.deploy-preview.environment]
-  NODE_ENV = "development"
 
 [[headers]]
   for = "/*"

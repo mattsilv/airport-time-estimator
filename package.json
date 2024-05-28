@@ -11,14 +11,10 @@
     "react-bootstrap": "^2.10.2",
     "react-dom": "^18.3.1",
     "react-scripts": "^5.0.1",
-    "typescript": "^5.4.5",
-    "puppeteer": "^20.7.3"
-  },
-  "devDependencies": {
-    "@babel/plugin-proposal-private-property-in-object": "^7.17.12"
+    "typescript": "^5.4.5"
   },
   "scripts": {
-    "start": "node start-dev.js",
+    "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
