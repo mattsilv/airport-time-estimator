@@ -7,7 +7,7 @@
       "android": "expo run:android",
       "ios": "expo run:ios",
       "web": "expo start --web",
-      "build": "expo build:web && npm run minify",
+      "build": "npx expo build:web && npm run minify",
       "minify": "imagemin web-build/* --out-dir=web-build"
     },
     "dependencies": {
@@ -23,7 +23,7 @@
       "tamagui": "^1.99.1"
     },
     "devDependencies": {
-      "expo": "^48.0.0",
+      "expo-cli": "^6.0.0",
       "imagemin": "^7.0.0",
       "imagemin-cli": "^6.0.0"
     }
