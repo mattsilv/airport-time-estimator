@@ -1,57 +1,4 @@
 
-// mergefiles.js
-const fs = require("fs");
-const path = require("path");
-const ignore = require("ignore");
-
-// Initialize ignore parser with .gitignore rules
-const ig = ignore();
-const gitignorePath = path.join(__dirname, ".gitignore");
-if (fs.existsSync(gitignorePath)) {
-  const gitignoreContent = fs.readFileSync(gitignorePath).toString();
-  ig.add(gitignoreContent);
-}
-
-// File extensions to include
-const extensions = [".js", ".toml", ".json", ".html"];
-const outputFilePath = path.join(__dirname, "merged.txt");
-let mergedContent = "";
-
-// Function to read files recursively
-const readFilesRecursively = (dir) => {
-  const files = fs.readdirSync(dir);
-
-  files.forEach((file) => {
-    const filePath = path.join(dir, file);
-    const relativePath = path.relative(__dirname, filePath);
-
-    // Check if the file should be ignored
-    if (ig.ignores(relativePath)) {
-      return;
-    }
-
-    const stat = fs.statSync(filePath);
-
-    if (stat.isDirectory()) {
-      readFilesRecursively(filePath);
-    } else if (extensions.includes(path.extname(file))) {
-      const content = fs.readFileSync(filePath, "utf-8");
-      const comment = `\n// ${relativePath}\n`;
-      mergedContent += comment + content + "\n";
-    }
-  });
-};
-
-// Start reading from the current directory
-readFilesRecursively(__dirname);
-
-// Write the merged content to a .txt file
-fs.writeFileSync(outputFilePath, mergedContent);
-
-console.log("All content merged into", outputFilePath);
-process.exit(0); // Ensure the script exits
-
-
 // netlify.toml
 [build]
   command = "npm run build"
@@ -234,11 +181,11 @@ export default FlightForm;
 
 
 // src/FlightFormLogic.js
-import React, { useCallback, useEffect } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import FlightFormInputs from "./components/FlightFormInputs";
 import CalendarLink from "./components/CalendarLink";
 import { useNavigate, useLocation } from "react-router-dom";
-import { formatTime } from "./utils/timeUtils";
+import { formatTime, parseTimeString } from "./utils/timeUtils";
 import useFormState from "./hooks/useFormState";
 import useUrlParams from "./hooks/useUrlParams";
 import { getDefaultDate } from "./utils/dateUtils";
@@ -264,7 +211,10 @@ const FlightFormLogic = ({ onCalculate }) => {
     setSelectedDate,
     setBoardingTime,
     resetFields,
+    setIsInitialLoad, // Make sure to use setIsInitialLoad from the hook
   } = useFormState(formFieldsConfig, defaultDate);
+
+  const [leaveTime, setLeaveTime] = useState("");
 
   useUrlParams(
     formValues,
@@ -561,15 +511,11 @@ export default useFormField;
 // src/hooks/useFormState.js
 import { useState, useEffect } from "react";
 import { parseTimeString, formatInputTime } from "../utils/timeUtils";
-import { useNavigate, useLocation } from "react-router-dom";
 
 const useFormState = (formFieldsConfig, defaultDate) => {
-  const navigate = useNavigate();
-  const location = useLocation();
-
   const [formValues, setFormValues] = useState(() =>
     formFieldsConfig.reduce((acc, field) => {
-      const params = new URLSearchParams(location.search);
+      const params = new URLSearchParams(window.location.search);
       acc[field.name] = params.get(field.name) || field.defaultValue;
       return acc;
     }, {})
@@ -618,6 +564,7 @@ const useFormState = (formFieldsConfig, defaultDate) => {
     setSelectedDate,
     setBoardingTime,
     resetFields,
+    setIsInitialLoad, // Make sure to return setIsInitialLoad
   };
 };
 
@@ -640,27 +587,47 @@ const useUrlParams = (
 
   useEffect(() => {
     if (!isInitialLoad) {
-      const params = new URLSearchParams();
+      const params = new URLSearchParams(location.search);
+      let shouldNavigate = false;
+
       Object.entries(formValues).forEach(([key, value]) => {
-        if (
-          value !==
-          formFieldsConfig.find((field) => field.name === key).defaultValue
-        ) {
-          params.set(key, value);
+        const defaultValue = formFieldsConfig.find(
+          (field) => field.name === key
+        ).defaultValue;
+        if (value !== defaultValue) {
+          if (params.get(key) !== value) {
+            params.set(key, value);
+            shouldNavigate = true;
+          }
+        } else if (params.has(key)) {
+          params.delete(key);
+          shouldNavigate = true;
         }
       });
-      if (selectedDate !== defaultDate) {
-        params.set("date", selectedDate.toISOString().split("T")[0]);
+
+      const formattedDate = selectedDate.toISOString().split("T")[0];
+      if (formattedDate !== defaultDate.toISOString().split("T")[0]) {
+        if (params.get("date") !== formattedDate) {
+          params.set("date", formattedDate);
+          shouldNavigate = true;
+        }
+      } else if (params.has("date")) {
+        params.delete("date");
+        shouldNavigate = true;
       }
-      navigate({ search: params.toString() }, { replace: true });
+
+      if (shouldNavigate) {
+        navigate({ search: params.toString() }, { replace: true });
+      }
     }
   }, [
     formValues,
     selectedDate,
-    navigate,
     isInitialLoad,
     formFieldsConfig,
     defaultDate,
+    location.search,
+    navigate,
   ]);
 };
 

@@ -23,8 +23,8 @@ const readFilesRecursively = (dir) => {
     const filePath = path.join(dir, file);
     const relativePath = path.relative(__dirname, filePath);
 
-    // Check if the file should be ignored
-    if (ig.ignores(relativePath)) {
+    // Check if the file should be ignored or is mergefiles.js
+    if (ig.ignores(relativePath) || file === "mergefiles.js") {
       return;
     }
 
