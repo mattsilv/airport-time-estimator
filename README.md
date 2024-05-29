@@ -6,6 +6,8 @@
 
 The Airport Time Estimator is a simple web application that helps you calculate the optimal time to leave for the airport. By inputting your departure time, driving time to the airport, how early you want to arrive before boarding, and additional time for snacks, the app will compute when you should leave.
 
+[Live Demo](https://airportcalc.silv.app/)
+
 ## Features
 
 - **Responsive Design**: Mobile-first approach ensures the app looks great on all devices.
@@ -96,10 +98,6 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 - [React](https://reactjs.org/)
 - [Bootstrap](https://getbootstrap.com/)
 - [Date-fns](https://date-fns.org/)
-
-## Contact
-
-If you have any questions or feedback, please feel free to reach out.
 
 ---
 
