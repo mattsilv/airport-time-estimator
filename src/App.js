@@ -39,7 +39,7 @@ function App() {
       </Row>
       <footer className="footer mt-4">
         <p className="text-center small">
-          a silly @nbsp;
+          a silly &nbsp;
           <a
             href="https://github.com/mattsilv/airport-time-estimator"
             target="_blank"
