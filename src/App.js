@@ -37,6 +37,21 @@ function App() {
           </div>
         </Col>
       </Row>
+      <footer className="footer mt-4">
+        <p className="text-center small">
+          <a
+            href="https://github.com/mattsilv/airport-time-estimator"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            open-source
+          </a>{" "}
+          app by{" "}
+          <a href="https://silv.blog" target="_blank" rel="noopener noreferrer">
+            silv
+          </a>
+        </p>
+      </footer>
     </Container>
   );
 }
