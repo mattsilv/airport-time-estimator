@@ -1,4 +1,3 @@
-// src/FlightFormInputs.js
 import React from "react";
 import { Form } from "react-bootstrap";
 import DatePicker from "react-datepicker";

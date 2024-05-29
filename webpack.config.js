@@ -1,8 +1,6 @@
-// webpack.config.js
 const { ESBuildPlugin } = require("esbuild-loader");
 
 module.exports = {
-  // other webpack config
   module: {
     rules: [
       {

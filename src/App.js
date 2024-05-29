@@ -2,22 +2,14 @@ import React, { useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Container, Row, Col, Alert } from "react-bootstrap";
 import FlightForm from "./FlightForm";
+import { Routes, Route } from "react-router-dom";
 
 function App() {
   const [leaveTime, setLeaveTime] = useState("");
 
-  const handleCalculate = (boardingTime, totalMinutes) => {
-    const [boardingHours, boardingMinutes] = boardingTime
-      .split(":")
-      .map(Number);
-    const boardingDate = new Date();
-    boardingDate.setHours(boardingHours);
-    boardingDate.setMinutes(boardingMinutes - totalMinutes);
-    const hours = boardingDate.getHours();
-    const minutes = boardingDate.getMinutes().toString().padStart(2, "0");
-    const ampm = hours >= 12 ? "PM" : "AM";
-    const formattedHours = (hours % 12 || 12).toString().padStart(2, "0");
-    setLeaveTime(`You should leave at: ${formattedHours}:${minutes} ${ampm}`);
+  const handleCalculate = (leaveTimeString) => {
+    console.log("Setting leave time:", leaveTimeString); // Debug
+    setLeaveTime(`You should leave at: ${leaveTimeString}`);
   };
 
   return (
@@ -30,7 +22,12 @@ function App() {
       <Row className="justify-content-center">
         <Col xs={12} sm={10} md={8} lg={6} xl={5}>
           <div className="border p-4 rounded shadow-sm bg-light">
-            <FlightForm onCalculate={handleCalculate} />
+            <Routes>
+              <Route
+                path="/"
+                element={<FlightForm onCalculate={handleCalculate} />}
+              />
+            </Routes>
             {leaveTime && (
               <div>
                 <Alert

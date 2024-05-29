@@ -1,4 +1,3 @@
-// src/FlightForm.js
 import React from "react";
 import FlightFormLogic from "./FlightFormLogic";
 
