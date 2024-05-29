@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { parseTimeString, formatInputTime } from "../utils/timeUtils";
+import { formatInputTime } from "../utils/timeUtils";
 
 const useFormState = (formFieldsConfig, defaultDate) => {
   const [formValues, setFormValues] = useState(() =>
