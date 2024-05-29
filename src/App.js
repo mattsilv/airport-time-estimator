@@ -45,7 +45,7 @@ function App() {
             target="_blank"
             rel="noopener noreferrer"
           >
-            open-source
+          &nbsp; open-source
           </a>{" "}
           app by{" "}
           <a href="https://silv.blog" target="_blank" rel="noopener noreferrer">
