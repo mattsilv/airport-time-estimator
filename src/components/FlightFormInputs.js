@@ -4,71 +4,63 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
 const FlightFormInputs = ({
-  departureTime,
-  boardingTime,
-  drivingTime,
-  arriveEarly,
-  snackTime,
-  handleDepartureChange,
-  handleDrivingTimeChange,
-  handleArriveEarlyChange,
-  handleSnackTimeChange,
+  formValues,
+  handleFieldChange,
   selectedDate,
   handleDateChange,
+  boardingTime,
 }) => {
   return (
     <Form>
       <Form.Group>
-        <Form.Label htmlFor="departure-time">Departure Time:</Form.Label>
+        <Form.Label htmlFor="departureTime">Departure Time:</Form.Label>
         <Form.Control
           type="time"
-          id="departure-time"
-          value={departureTime}
-          onChange={handleDepartureChange}
+          id="departureTime"
+          value={formValues.departureTime}
+          onChange={handleFieldChange("departureTime")}
         />
       </Form.Group>
       <Form.Group>
-        <Form.Label htmlFor="boarding-time">Boarding Time:</Form.Label>
+        <Form.Label htmlFor="boardingTime">Boarding Time:</Form.Label>
         <Form.Control
           type="time"
-          id="boarding-time"
-          value={boardingTime}
+          id="boardingTime"
+          value={boardingTime} // Boarding time is derived from departure time
           readOnly
         />
       </Form.Group>
       <Form.Group>
-        <Form.Label htmlFor="driving-time">
+        <Form.Label htmlFor="drivingTime">
           Driving Time to Airport (minutes):
         </Form.Label>
         <Form.Control
           type="number"
-          id="driving-time"
-          value={drivingTime}
-          onChange={handleDrivingTimeChange}
+          id="drivingTime"
+          value={formValues.drivingTime}
+          onChange={handleFieldChange("drivingTime")}
           style={{ width: "70px" }}
         />
       </Form.Group>
       <Form.Group>
-        <Form.Label htmlFor="arrive-early">
+        <Form.Label htmlFor="arriveEarly">
           Arrive how soon before boarding? (minutes):
         </Form.Label>
         <Form.Control
           type="number"
-          id="arrive-early"
-          value={arriveEarly}
-          onChange={handleArriveEarlyChange}
+          id="arriveEarly"
+          value={formValues.arriveEarly}
+          onChange={handleFieldChange("arriveEarly")}
           style={{ width: "70px" }}
         />
       </Form.Group>
       <Form.Group>
-        <Form.Label htmlFor="snack-time">
-          Time For Snacks? (minutes):
-        </Form.Label>
+        <Form.Label htmlFor="snackTime">Time For Snacks? (minutes):</Form.Label>
         <Form.Control
           type="number"
-          id="snack-time"
-          value={snackTime}
-          onChange={handleSnackTimeChange}
+          id="snackTime"
+          value={formValues.snackTime}
+          onChange={handleFieldChange("snackTime")}
           style={{ width: "70px" }}
         />
       </Form.Group>

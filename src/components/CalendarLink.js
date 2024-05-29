@@ -34,6 +34,7 @@ const CalendarLink = ({ leaveTime, selectedDate }) => {
         "Time to leave for the airport. Created by https://airportcalc.silv.app/",
     });
     setCalendarLink(`${baseURL}?${params.toString()}`);
+    console.log("Calendar link created:", `${baseURL}?${params.toString()}`);
   }, [leaveTime, selectedDate]);
 
   useEffect(() => {

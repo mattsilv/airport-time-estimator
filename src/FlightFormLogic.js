@@ -1,51 +1,45 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import FlightFormInputs from "./components/FlightFormInputs";
-import { addDays } from "date-fns";
 import CalendarLink from "./components/CalendarLink";
-import useFormField from "./hooks/useFormField";
-import {
-  formatTime,
-  parseTimeString,
-  formatInputTime,
-} from "./utils/timeUtils";
+import { useNavigate, useLocation } from "react-router-dom";
+import { formatTime, parseTimeString } from "./utils/timeUtils";
+import useFormState from "./hooks/useFormState";
+import useUrlParams from "./hooks/useUrlParams";
+import { getDefaultDate } from "./utils/dateUtils";
+
+const formFieldsConfig = [
+  { name: "departureTime", defaultValue: "11:00" },
+  { name: "drivingTime", defaultValue: "45" },
+  { name: "arriveEarly", defaultValue: "30" },
+  { name: "snackTime", defaultValue: "5" },
+];
 
 const FlightFormLogic = ({ onCalculate }) => {
-  const defaultDate = addDays(new Date(), 1);
-
-  const getDefaultDate = () => {
-    const params = new URLSearchParams(window.location.search);
-    const dateParam = params.get("date");
-    if (dateParam) {
-      const date = new Date(dateParam);
-      return date < new Date() ? defaultDate : date;
-    }
-    return defaultDate;
-  };
+  const navigate = useNavigate();
+  const location = useLocation();
+  const defaultDate = getDefaultDate(location);
 
   const {
-    value: departureTime,
-    handleChange: handleDepartureChange,
-    handleReset: resetDepartureTime,
-  } = useFormField("departureTime", "11:00");
-  const {
-    value: drivingTime,
-    handleChange: handleDrivingTimeChange,
-    handleReset: resetDrivingTime,
-  } = useFormField("drivingTime", "45");
-  const {
-    value: arriveEarly,
-    handleChange: handleArriveEarlyChange,
-    handleReset: resetArriveEarly,
-  } = useFormField("arriveEarly", "30");
-  const {
-    value: snackTime,
-    handleChange: handleSnackTimeChange,
-    handleReset: resetSnackTime,
-  } = useFormField("snackTime", "5");
+    formValues,
+    selectedDate,
+    boardingTime,
+    isInitialLoad,
+    handleFieldChange,
+    setSelectedDate,
+    setBoardingTime,
+    resetFields,
+    setIsInitialLoad, // Make sure to use setIsInitialLoad from the hook
+  } = useFormState(formFieldsConfig, defaultDate);
 
-  const [boardingTime, setBoardingTime] = useState("");
-  const [selectedDate, setSelectedDate] = useState(getDefaultDate());
   const [leaveTime, setLeaveTime] = useState("");
+
+  useUrlParams(
+    formValues,
+    selectedDate,
+    isInitialLoad,
+    formFieldsConfig,
+    defaultDate
+  );
 
   const calculateLeaveTime = useCallback(() => {
     if (!boardingTime) {
@@ -57,9 +51,9 @@ const FlightFormLogic = ({ onCalculate }) => {
       parseTimeString(boardingTime);
 
     const totalMinutes =
-      parseInt(drivingTime, 10) +
-      parseInt(arriveEarly, 10) +
-      parseInt(snackTime, 10);
+      parseInt(formValues.drivingTime, 10) +
+      parseInt(formValues.arriveEarly, 10) +
+      parseInt(formValues.snackTime, 10);
 
     const leaveDate = new Date(selectedDate);
     leaveDate.setHours(boardingHours);
@@ -76,87 +70,53 @@ const FlightFormLogic = ({ onCalculate }) => {
     if (formattedLeaveTime) {
       onCalculate(formattedLeaveTime);
       setLeaveTime(formattedLeaveTime);
+      console.log(`Leave time set to: ${formattedLeaveTime}`);
     }
-  }, [
-    boardingTime,
-    drivingTime,
-    arriveEarly,
-    snackTime,
-    selectedDate,
-    onCalculate,
-  ]);
-
-  useEffect(() => {
-    if (departureTime) {
-      const [hours, minutes] = departureTime.split(":").map(Number);
-      const boardingDate = new Date(selectedDate);
-      boardingDate.setHours(hours);
-      boardingDate.setMinutes(minutes - 30);
-      const newBoardingTime = formatInputTime(boardingDate);
-      setBoardingTime(newBoardingTime);
-      console.log("Calculated Boarding Time:", newBoardingTime);
-    }
-  }, [departureTime, selectedDate]);
+  }, [boardingTime, formValues, selectedDate, onCalculate]);
 
   useEffect(() => {
     if (
-      departureTime &&
+      formValues.departureTime &&
       boardingTime &&
-      drivingTime &&
-      arriveEarly &&
-      snackTime &&
+      formValues.drivingTime &&
+      formValues.arriveEarly &&
+      formValues.snackTime &&
       selectedDate
     ) {
       calculateLeaveTime();
     }
   }, [
-    departureTime,
+    formValues.departureTime,
     boardingTime,
-    drivingTime,
-    arriveEarly,
-    snackTime,
+    formValues.drivingTime,
+    formValues.arriveEarly,
+    formValues.snackTime,
     selectedDate,
     calculateLeaveTime,
   ]);
 
-  useEffect(() => {
-    const [hours, minutes] = departureTime.split(":").map(Number);
-    const boardingDate = new Date(selectedDate);
-    boardingDate.setHours(hours);
-    boardingDate.setMinutes(minutes - 30);
-    const newBoardingTime = formatInputTime(boardingDate);
-    setBoardingTime(newBoardingTime);
-    console.log("Initial boarding time set:", newBoardingTime);
-  }, [departureTime, selectedDate]);
-
   const handleDateChange = (date) => {
     setSelectedDate(date);
+    setIsInitialLoad(false);
+    console.log(`Date changed to: ${date}`);
   };
 
   const handleReset = () => {
-    resetDepartureTime();
+    resetFields();
     setBoardingTime("");
-    resetDrivingTime();
-    resetArriveEarly();
-    resetSnackTime();
-    setSelectedDate(defaultDate);
     setLeaveTime("");
+    navigate("/", { replace: true });
+    console.log("Reset button clicked, URL and state reset");
   };
 
   return (
     <div>
       <FlightFormInputs
-        departureTime={departureTime}
-        boardingTime={boardingTime}
-        drivingTime={drivingTime}
-        arriveEarly={arriveEarly}
-        snackTime={snackTime}
-        handleDepartureChange={handleDepartureChange}
-        handleDrivingTimeChange={handleDrivingTimeChange}
-        handleArriveEarlyChange={handleArriveEarlyChange}
-        handleSnackTimeChange={handleSnackTimeChange}
+        formValues={formValues}
+        handleFieldChange={handleFieldChange}
         selectedDate={selectedDate}
         handleDateChange={handleDateChange}
+        boardingTime={boardingTime}
       />
       <CalendarLink leaveTime={leaveTime} selectedDate={selectedDate} />
       <div className="text-center mt-3">
