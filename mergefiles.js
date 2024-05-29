@@ -11,7 +11,7 @@ if (fs.existsSync(gitignorePath)) {
 }
 
 // File extensions to include
-const extensions = [".js", ".toml", ".json", ".html"];
+const extensions = [".js", ".toml", ".json", ".html", ".css", ".md"];
 const outputFilePath = path.join(__dirname, "merged.txt");
 let mergedContent = "";
 

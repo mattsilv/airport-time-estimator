@@ -1,68 +1,106 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# Airport Time Estimator
 
-## Available Scripts
+[![Netlify Status](https://api.netlify.com/api/v1/badges/f145b5d3-22b3-40da-b586-80ba24c5afe9/deploy-status)](https://app.netlify.com/sites/airport-time-calc/deploys)
 
-In the project directory, you can run:
+## Overview
 
-### `yarn start`
+The Airport Time Estimator is a simple web application that helps you calculate the optimal time to leave for the airport. By inputting your departure time, driving time to the airport, how early you want to arrive before boarding, and additional time for snacks, the app will compute when you should leave.
 
-Runs the app in the development mode.<br />
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+## Features
 
-The page will reload if you make edits.<br />
-You will also see any lint errors in the console.
+- **Responsive Design**: Mobile-first approach ensures the app looks great on all devices.
+- **User-Friendly Interface**: Simple and intuitive form inputs.
+- **Real-Time Calculation**: Automatically calculates the best time to leave as you input your details.
+- **Add to Calendar**: Provides an option to add the calculated time to your Google Calendar.
 
-### `yarn test`
+## Getting Started
 
-Launches the test runner in the interactive watch mode.<br />
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### Prerequisites
 
-### `yarn build`
+- Node.js (v14 or later)
+- npm (v6 or later)
 
-Builds the app for production to the `build` folder.<br />
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### Installation
 
-The build is minified and the filenames include the hashes.<br />
-Your app is ready to be deployed!
+1. Clone the repository:
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+   ```sh
+   git clone https://github.com/yourusername/airport-time-estimator.git
+   cd airport-time-estimator
+   ```
 
-### `yarn eject`
+2. Install dependencies:
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+   ```sh
+   npm install
+   ```
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+3. Start the development server:
 
-Instead, it will copy all the configuration files and the transitive dependencies (Webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+   ```sh
+   npm start
+   ```
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+   The app should now be running on `http://localhost:3000`.
 
-## Learn More
+### Building for Production
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+To create a production build of the app, run:
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+```sh
+npm run build
+```
 
-### Code Splitting
+The production-ready files will be in the `build` directory.
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
+## Deployment
 
-### Analyzing the Bundle Size
+This project is configured to deploy on Netlify. The build command and publish directory are specified in the `netlify.toml` file:
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
+```toml
+[build]
+  command = "npm run build"
+  publish = "build"
 
-### Making a Progressive Web App
+[[headers]]
+  for = "/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+```
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
+## Project Structure
 
-### Advanced Configuration
+- `public/`: Static assets and the HTML template.
+- `src/`: Source code, including components, hooks, and utilities.
+- `src/App.js`: Main app component.
+- `src/components/`: Contains individual React components.
+- `src/hooks/`: Custom hooks for managing form state and URL parameters.
+- `src/utils/`: Utility functions for date and time formatting.
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
+## Contributing
 
-### Deployment
+Contributions are welcome! Please follow these steps:
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
+1. Fork the repository.
+2. Create a new branch (`git checkout -b feature/your-feature`).
+3. Make your changes and commit them (`git commit -m 'Add some feature'`).
+4. Push to the branch (`git push origin feature/your-feature`).
+5. Open a pull request.
 
-### `yarn build` fails to minify
+## License
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+
+## Acknowledgements
+
+- [React](https://reactjs.org/)
+- [Bootstrap](https://getbootstrap.com/)
+- [Date-fns](https://date-fns.org/)
+
+## Contact
+
+If you have any questions or feedback, please feel free to reach out.
+
+---
+
+Thank you for using the Airport Time Estimator!
