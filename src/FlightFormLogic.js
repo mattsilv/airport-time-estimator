@@ -1,6 +1,7 @@
 // src/FlightFormLogic.js
 import React, { useState, useEffect, useCallback } from "react";
 import FlightFormInputs from "./FlightFormInputs";
+import { format, addDays } from "date-fns";
 
 const FlightFormLogic = ({ onCalculate }) => {
   const [departureTime, setDepartureTime] = useState("11:00");
@@ -8,6 +9,8 @@ const FlightFormLogic = ({ onCalculate }) => {
   const [drivingTime, setDrivingTime] = useState("45");
   const [arriveEarly, setArriveEarly] = useState("30");
   const [snackTime, setSnackTime] = useState("5");
+  const [selectedDate, setSelectedDate] = useState(addDays(new Date(), 1));
+  const [calendarLink, setCalendarLink] = useState("");
 
   const calculateLeaveTime = useCallback(() => {
     const totalMinutes =
@@ -47,18 +50,57 @@ const FlightFormLogic = ({ onCalculate }) => {
     setSnackTime(e.target.value);
   };
 
+  const handleDateChange = (date) => {
+    setSelectedDate(date);
+  };
+
+  const formatDateTime = (date, time) => {
+    const [hours, minutes] = time.split(":").map(Number);
+    const formattedDate = new Date(date);
+    formattedDate.setHours(hours);
+    formattedDate.setMinutes(minutes);
+    return format(formattedDate, "yyyyMMdd'T'HHmmss");
+  };
+
+  const createGoogleCalendarLink = () => {
+    const formattedStart = formatDateTime(selectedDate, departureTime);
+    const formattedEnd = formatDateTime(selectedDate, departureTime);
+    const baseURL = "https://www.google.com/calendar/render";
+    const params = new URLSearchParams({
+      action: "TEMPLATE",
+      text: "Depart for Airport",
+      dates: `${formattedStart}/${formattedEnd}`,
+      details:
+        "Time to leave for the airport. Created by https://airportcalc.silv.app/",
+    });
+    setCalendarLink(`${baseURL}?${params.toString()}`);
+  };
+
+  useEffect(() => {
+    createGoogleCalendarLink();
+  }, [departureTime, selectedDate]);
+
   return (
-    <FlightFormInputs
-      departureTime={departureTime}
-      boardingTime={boardingTime}
-      drivingTime={drivingTime}
-      arriveEarly={arriveEarly}
-      snackTime={snackTime}
-      handleDepartureChange={handleDepartureChange}
-      handleDrivingTimeChange={handleDrivingTimeChange}
-      handleArriveEarlyChange={handleArriveEarlyChange}
-      handleSnackTimeChange={handleSnackTimeChange}
-    />
+    <div>
+      <FlightFormInputs
+        departureTime={departureTime}
+        boardingTime={boardingTime}
+        drivingTime={drivingTime}
+        arriveEarly={arriveEarly}
+        snackTime={snackTime}
+        handleDepartureChange={handleDepartureChange}
+        handleDrivingTimeChange={handleDrivingTimeChange}
+        handleArriveEarlyChange={handleArriveEarlyChange}
+        handleSnackTimeChange={handleSnackTimeChange}
+        selectedDate={selectedDate}
+        handleDateChange={handleDateChange}
+      />
+      <div className="text-center mt-3">
+        <a href={calendarLink} target="_blank" rel="noopener noreferrer">
+          Add to Calendar
+        </a>
+      </div>
+    </div>
   );
 };
 

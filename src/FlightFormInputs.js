@@ -1,6 +1,8 @@
 // src/FlightFormInputs.js
 import React from "react";
 import { Form } from "react-bootstrap";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 const FlightFormInputs = ({
   departureTime,
@@ -12,6 +14,8 @@ const FlightFormInputs = ({
   handleDrivingTimeChange,
   handleArriveEarlyChange,
   handleSnackTimeChange,
+  selectedDate,
+  handleDateChange,
 }) => {
   return (
     <Form>
@@ -35,7 +39,7 @@ const FlightFormInputs = ({
       </Form.Group>
       <Form.Group>
         <Form.Label htmlFor="driving-time">
-          Driving Time to Airport With Traffic (minutes):
+          Driving Time to Airport (minutes):
         </Form.Label>
         <Form.Control
           type="number"
@@ -46,7 +50,9 @@ const FlightFormInputs = ({
         />
       </Form.Group>
       <Form.Group>
-        <Form.Label htmlFor="arrive-early">Arrive Early (minutes):</Form.Label>
+        <Form.Label htmlFor="arrive-early">
+          Arrive how soon before boarding? (minutes):
+        </Form.Label>
         <Form.Control
           type="number"
           id="arrive-early"
@@ -56,13 +62,24 @@ const FlightFormInputs = ({
         />
       </Form.Group>
       <Form.Group>
-        <Form.Label htmlFor="snack-time">Snack Time (minutes):</Form.Label>
+        <Form.Label htmlFor="snack-time">
+          Time For Snacks? (minutes):
+        </Form.Label>
         <Form.Control
           type="number"
           id="snack-time"
           value={snackTime}
           onChange={handleSnackTimeChange}
           style={{ width: "70px" }}
+        />
+      </Form.Group>
+      <Form.Group>
+        <Form.Label>Departure Date:</Form.Label>
+        <DatePicker
+          selected={selectedDate}
+          onChange={handleDateChange}
+          dateFormat="yyyy-MM-dd"
+          className="form-control"
         />
       </Form.Group>
     </Form>

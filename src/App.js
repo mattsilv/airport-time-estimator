@@ -32,12 +32,14 @@ function App() {
           <div className="border p-4 rounded shadow-sm bg-light">
             <FlightForm onCalculate={handleCalculate} />
             {leaveTime && (
-              <Alert
-                variant="info"
-                className="text-center mt-3 font-weight-bold"
-              >
-                {leaveTime}
-              </Alert>
+              <div>
+                <Alert
+                  variant="info"
+                  className="text-center mt-3 font-weight-bold"
+                >
+                  {leaveTime}
+                </Alert>
+              </div>
             )}
           </div>
         </Col>
