@@ -280,7 +280,6 @@ const FlightFormLogic = ({ onCalculate }) => {
   );
   const [selectedDate, setSelectedDate] = useState(getDefaultDate());
   const [isDefault, setIsDefault] = useState(true);
-  const [totalMinutes, setTotalMinutes] = useState(0);
   const [leaveTime, setLeaveTime] = useState("");
 
   const updateURLParams = () => {
@@ -323,10 +322,7 @@ const FlightFormLogic = ({ onCalculate }) => {
     if (formattedLeaveTime) {
       onCalculate(formattedLeaveTime);
       setLeaveTime(formattedLeaveTime);
-      setTotalMinutes(totalMinutes);
     }
-
-    return leaveDate;
   }, [
     boardingTime,
     drivingTime,
@@ -339,14 +335,14 @@ const FlightFormLogic = ({ onCalculate }) => {
   useEffect(() => {
     if (departureTime) {
       const [hours, minutes] = departureTime.split(":").map(Number);
-      const boardingDate = new Date();
+      const boardingDate = new Date(selectedDate);
       boardingDate.setHours(hours);
       boardingDate.setMinutes(minutes - 30);
       const newBoardingTime = formatInputTime(boardingDate);
       setBoardingTime(newBoardingTime);
       console.log("Calculated Boarding Time:", newBoardingTime);
     }
-  }, [departureTime]);
+  }, [departureTime, selectedDate]);
 
   useEffect(() => {
     if (boardingTime) {
@@ -418,18 +414,11 @@ const FlightFormLogic = ({ onCalculate }) => {
         selectedDate={selectedDate}
         handleDateChange={handleDateChange}
       />
-      <CalendarLink
-        leaveTime={leaveTime}
-        selectedDate={selectedDate}
-        totalMinutes={totalMinutes}
-      />
+      <CalendarLink leaveTime={leaveTime} selectedDate={selectedDate} />
       <div className="text-center mt-3">
         <button className="btn btn-secondary" onClick={handleReset}>
           Reset
         </button>
-      </div>
-      <div className="text-center mt-3 font-weight-bold">
-        You should leave at: {leaveTime}
       </div>
     </div>
   );

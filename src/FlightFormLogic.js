@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useCallback } from "react";
 import FlightFormInputs from "./components/FlightFormInputs";
 import { addDays } from "date-fns";
-import { useNavigate, useLocation } from "react-router-dom";
 import CalendarLink from "./components/CalendarLink";
+import useFormField from "./hooks/useFormField";
 import {
   formatTime,
   parseTimeString,
@@ -10,17 +10,10 @@ import {
 } from "./utils/timeUtils";
 
 const FlightFormLogic = ({ onCalculate }) => {
-  const navigate = useNavigate();
-  const location = useLocation();
-  const params = new URLSearchParams(location.search);
-
-  const defaultDepartureTime = "11:00";
-  const defaultDrivingTime = "45";
-  const defaultArriveEarly = "30";
-  const defaultSnackTime = "5";
   const defaultDate = addDays(new Date(), 1);
 
   const getDefaultDate = () => {
+    const params = new URLSearchParams(window.location.search);
     const dateParam = params.get("date");
     if (dateParam) {
       const date = new Date(dateParam);
@@ -29,33 +22,30 @@ const FlightFormLogic = ({ onCalculate }) => {
     return defaultDate;
   };
 
-  const [departureTime, setDepartureTime] = useState(
-    params.get("departureTime") || defaultDepartureTime
-  );
-  const [boardingTime, setBoardingTime] = useState("");
-  const [drivingTime, setDrivingTime] = useState(
-    params.get("drivingTime") || defaultDrivingTime
-  );
-  const [arriveEarly, setArriveEarly] = useState(
-    params.get("arriveEarly") || defaultArriveEarly
-  );
-  const [snackTime, setSnackTime] = useState(
-    params.get("snackTime") || defaultSnackTime
-  );
-  const [selectedDate, setSelectedDate] = useState(getDefaultDate());
-  const [isDefault, setIsDefault] = useState(true);
-  const [leaveTime, setLeaveTime] = useState("");
+  const {
+    value: departureTime,
+    handleChange: handleDepartureChange,
+    handleReset: resetDepartureTime,
+  } = useFormField("departureTime", "11:00");
+  const {
+    value: drivingTime,
+    handleChange: handleDrivingTimeChange,
+    handleReset: resetDrivingTime,
+  } = useFormField("drivingTime", "45");
+  const {
+    value: arriveEarly,
+    handleChange: handleArriveEarlyChange,
+    handleReset: resetArriveEarly,
+  } = useFormField("arriveEarly", "30");
+  const {
+    value: snackTime,
+    handleChange: handleSnackTimeChange,
+    handleReset: resetSnackTime,
+  } = useFormField("snackTime", "5");
 
-  const updateURLParams = () => {
-    if (isDefault) return;
-    const searchParams = new URLSearchParams();
-    searchParams.set("departureTime", departureTime);
-    searchParams.set("drivingTime", drivingTime);
-    searchParams.set("arriveEarly", arriveEarly);
-    searchParams.set("snackTime", snackTime);
-    searchParams.set("date", selectedDate.toISOString().split("T")[0]);
-    navigate({ search: searchParams.toString() });
-  };
+  const [boardingTime, setBoardingTime] = useState("");
+  const [selectedDate, setSelectedDate] = useState(getDefaultDate());
+  const [leaveTime, setLeaveTime] = useState("");
 
   const calculateLeaveTime = useCallback(() => {
     if (!boardingTime) {
@@ -109,16 +99,19 @@ const FlightFormLogic = ({ onCalculate }) => {
   }, [departureTime, selectedDate]);
 
   useEffect(() => {
-    if (boardingTime) {
+    if (
+      departureTime &&
+      boardingTime &&
+      drivingTime &&
+      arriveEarly &&
+      snackTime &&
+      selectedDate
+    ) {
       calculateLeaveTime();
     }
-  }, [boardingTime, calculateLeaveTime]);
-
-  useEffect(() => {
-    updateURLParams();
-    calculateLeaveTime();
   }, [
     departureTime,
+    boardingTime,
     drivingTime,
     arriveEarly,
     snackTime,
@@ -126,41 +119,28 @@ const FlightFormLogic = ({ onCalculate }) => {
     calculateLeaveTime,
   ]);
 
-  const handleDepartureChange = (e) => {
-    setDepartureTime(e.target.value);
-    setIsDefault(false);
-  };
-
-  const handleDrivingTimeChange = (e) => {
-    setDrivingTime(e.target.value);
-    setIsDefault(false);
-  };
-
-  const handleArriveEarlyChange = (e) => {
-    setArriveEarly(e.target.value);
-    setIsDefault(false);
-  };
-
-  const handleSnackTimeChange = (e) => {
-    setSnackTime(e.target.value);
-    setIsDefault(false);
-  };
+  useEffect(() => {
+    const [hours, minutes] = departureTime.split(":").map(Number);
+    const boardingDate = new Date(selectedDate);
+    boardingDate.setHours(hours);
+    boardingDate.setMinutes(minutes - 30);
+    const newBoardingTime = formatInputTime(boardingDate);
+    setBoardingTime(newBoardingTime);
+    console.log("Initial boarding time set:", newBoardingTime);
+  }, [departureTime, selectedDate]);
 
   const handleDateChange = (date) => {
     setSelectedDate(date);
-    setIsDefault(false);
   };
 
   const handleReset = () => {
-    setDepartureTime(defaultDepartureTime);
+    resetDepartureTime();
     setBoardingTime("");
-    setDrivingTime(defaultDrivingTime);
-    setArriveEarly(defaultArriveEarly);
-    setSnackTime(defaultSnackTime);
+    resetDrivingTime();
+    resetArriveEarly();
+    resetSnackTime();
     setSelectedDate(defaultDate);
-    setIsDefault(true);
     setLeaveTime("");
-    navigate({ search: "" });
   };
 
   return (
