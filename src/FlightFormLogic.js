@@ -6,14 +6,8 @@ import { formatTime, parseTimeString } from "./utils/timeUtils";
 import useFormState from "./hooks/useFormState";
 import useUrlParams from "./hooks/useUrlParams";
 import { getDefaultDate } from "./utils/dateUtils";
-import { parseISO, isValid, isAfter } from "date-fns"; // Import isAfter
-
-const formFieldsConfig = [
-  { name: "departureTime", defaultValue: "11:00" },
-  { name: "drivingTime", defaultValue: "45" },
-  { name: "arriveEarly", defaultValue: "30" },
-  { name: "snackTime", defaultValue: "5" },
-];
+import { parseISO, isValid, isAfter } from "date-fns";
+import formFieldsConfig from "./config/formFieldsConfig";
 
 const FlightFormLogic = ({ onCalculate }) => {
   const navigate = useNavigate();
