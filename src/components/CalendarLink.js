@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { formatDateTime, parseTimeString } from "../utils/timeUtils";
-import { parseISO, isValid } from "date-fns"; // Import parseISO and isValid
+import { parseISO, isValid } from "date-fns";
 
 const CalendarLink = ({ leaveTime, selectedDate }) => {
   const [calendarLink, setCalendarLink] = useState("");
@@ -45,8 +45,10 @@ const CalendarLink = ({ leaveTime, selectedDate }) => {
       details:
         "Time to leave for the airport. Created by https://airportcalc.silv.app/",
     });
-    setCalendarLink(`${baseURL}?${params.toString()}`);
-    console.log("Calendar link created:", `${baseURL}?${params.toString()}`);
+
+    const calendarURL = `${baseURL}?${params.toString()}`;
+    setCalendarLink(calendarURL);
+    console.log("Calendar link created:", calendarURL);
   }, [leaveTime, selectedDate]);
 
   useEffect(() => {

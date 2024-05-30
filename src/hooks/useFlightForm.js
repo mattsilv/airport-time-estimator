@@ -1,38 +1,28 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { parseISO, isValid, isAfter } from "date-fns";
 import useFormState from "./useFormState";
-import useUrlParams from "./useUrlParams";
 import { getDefaultDate } from "../utils/dateUtils";
 import { formatTime, parseTimeString } from "../utils/timeUtils";
 import formFieldsConfig from "../config/formFieldsConfig";
+import { useGlobalDispatch } from "../context/GlobalStateContext";
 
 const useFlightForm = (onCalculate) => {
   const navigate = useNavigate();
   const location = useLocation();
   const defaultDate = getDefaultDate(location);
+  const dispatch = useGlobalDispatch();
 
   const {
     formValues,
     selectedDate,
     boardingTime,
-    isInitialLoad,
     handleFieldChange,
     setSelectedDate,
     setBoardingTime,
     resetFields,
     setIsInitialLoad,
   } = useFormState(formFieldsConfig, defaultDate);
-
-  const [leaveTime, setLeaveTime] = useState("");
-
-  useUrlParams(
-    formValues,
-    selectedDate,
-    isInitialLoad,
-    formFieldsConfig,
-    defaultDate
-  );
 
   const calculateLeaveTime = useCallback(() => {
     if (!boardingTime) {
@@ -66,10 +56,10 @@ const useFlightForm = (onCalculate) => {
 
     if (formattedLeaveTime) {
       onCalculate(formattedLeaveTime);
-      setLeaveTime(formattedLeaveTime);
+      dispatch({ type: "SET_LEAVE_TIME", payload: formattedLeaveTime });
       console.log(`Leave time set to: ${formattedLeaveTime}`);
     }
-  }, [boardingTime, formValues, selectedDate, onCalculate]);
+  }, [boardingTime, formValues, selectedDate, onCalculate, dispatch]);
 
   useEffect(() => {
     if (
@@ -108,7 +98,7 @@ const useFlightForm = (onCalculate) => {
   const handleReset = () => {
     resetFields();
     setBoardingTime("");
-    setLeaveTime("");
+    dispatch({ type: "RESET_LEAVE_TIME" });
     navigate("/", { replace: true });
     console.log("Reset button clicked, URL and state reset");
   };
@@ -117,7 +107,6 @@ const useFlightForm = (onCalculate) => {
     formValues,
     selectedDate,
     boardingTime,
-    leaveTime,
     handleFieldChange,
     handleDateChange,
     handleReset,

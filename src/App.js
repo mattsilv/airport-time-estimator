@@ -1,17 +1,13 @@
-// src/App.js
-import React, { useState } from "react";
+import React from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Container, Row, Col, Alert } from "react-bootstrap";
 import FlightForm from "./FlightForm";
 import { Routes, Route } from "react-router-dom";
-import "./App.css"; // Import the new CSS file
+import "./App.css";
+import { useGlobalState } from "./context/GlobalStateContext";
 
 function App() {
-  const [leaveTime, setLeaveTime] = useState("");
-
-  const handleCalculate = (leaveTimeString) => {
-    setLeaveTime(`You should leave at: ${leaveTimeString}`);
-  };
+  const { leaveTime } = useGlobalState();
 
   return (
     <Container className="mt-4">
@@ -24,10 +20,7 @@ function App() {
         <Col xs={12}>
           <div className="border p-4 rounded shadow-sm bg-light">
             <Routes>
-              <Route
-                path="/"
-                element={<FlightForm onCalculate={handleCalculate} />}
-              />
+              <Route path="/" element={<FlightForm />} />
             </Routes>
             {leaveTime && (
               <Alert variant="info" className="text-center mt-3">

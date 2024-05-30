@@ -170,20 +170,16 @@ button {
 
 
 // src/App.js
-// src/App.js
-import React, { useState } from "react";
+import React from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Container, Row, Col, Alert } from "react-bootstrap";
 import FlightForm from "./FlightForm";
 import { Routes, Route } from "react-router-dom";
-import "./App.css"; // Import the new CSS file
+import "./App.css";
+import { useGlobalState } from "./context/GlobalStateContext";
 
 function App() {
-  const [leaveTime, setLeaveTime] = useState("");
-
-  const handleCalculate = (leaveTimeString) => {
-    setLeaveTime(`You should leave at: ${leaveTimeString}`);
-  };
+  const { leaveTime } = useGlobalState();
 
   return (
     <Container className="mt-4">
@@ -196,10 +192,7 @@ function App() {
         <Col xs={12}>
           <div className="border p-4 rounded shadow-sm bg-light">
             <Routes>
-              <Route
-                path="/"
-                element={<FlightForm onCalculate={handleCalculate} />}
-              />
+              <Route path="/" element={<FlightForm />} />
             </Routes>
             {leaveTime && (
               <Alert variant="info" className="text-center mt-3">
@@ -236,131 +229,42 @@ export default App;
 import React from "react";
 import FlightFormLogic from "./FlightFormLogic";
 
-const FlightForm = ({ onCalculate }) => {
-  return <FlightFormLogic onCalculate={onCalculate} />;
+const FlightForm = () => {
+  return <FlightFormLogic />;
 };
 
 export default FlightForm;
 
 
 // src/FlightFormLogic.js
-import React, { useCallback, useEffect, useState } from "react";
+import React from "react";
 import FlightFormInputs from "./components/FlightFormInputs";
 import CalendarLink from "./components/CalendarLink";
-import { useNavigate, useLocation } from "react-router-dom";
-import { formatTime, parseTimeString } from "./utils/timeUtils";
-import useFormState from "./hooks/useFormState";
-import useUrlParams from "./hooks/useUrlParams";
-import { getDefaultDate } from "./utils/dateUtils";
-import { parseISO, isValid, isAfter } from "date-fns";
-import formFieldsConfig from "./config/formFieldsConfig";
+import useFlightForm from "../hooks/useFlightForm";
+import {
+  useGlobalState,
+  useGlobalDispatch,
+} from "../context/GlobalStateContext";
 
-const FlightFormLogic = ({ onCalculate }) => {
-  const navigate = useNavigate();
-  const location = useLocation();
-  const defaultDate = getDefaultDate(location);
+const FlightFormLogic = () => {
+  const { leaveTime } = useGlobalState();
+  const dispatch = useGlobalDispatch();
+
+  const handleCalculate = (leaveTimeString) => {
+    dispatch({
+      type: "SET_LEAVE_TIME",
+      payload: `You should leave at: ${leaveTimeString}`,
+    });
+  };
 
   const {
     formValues,
     selectedDate,
     boardingTime,
-    isInitialLoad,
     handleFieldChange,
-    setSelectedDate,
-    setBoardingTime,
-    resetFields,
-    setIsInitialLoad,
-  } = useFormState(formFieldsConfig, defaultDate);
-
-  const [leaveTime, setLeaveTime] = useState("");
-
-  useUrlParams(
-    formValues,
-    selectedDate,
-    isInitialLoad,
-    formFieldsConfig,
-    defaultDate
-  );
-
-  const calculateLeaveTime = useCallback(() => {
-    if (!boardingTime) {
-      console.log("Boarding time is not set yet.");
-      return;
-    }
-
-    const { hours: boardingHours, minutes: boardingMinutes } =
-      parseTimeString(boardingTime);
-
-    const totalMinutes =
-      parseInt(formValues.drivingTime, 10) +
-      parseInt(formValues.arriveEarly, 10) +
-      parseInt(formValues.snackTime, 10);
-
-    let leaveDate;
-    if (typeof selectedDate === "string") {
-      leaveDate = parseISO(selectedDate);
-      if (!isValid(leaveDate)) {
-        console.error("Invalid leave date:", leaveDate);
-        return;
-      }
-    } else {
-      leaveDate = new Date(selectedDate);
-    }
-
-    leaveDate.setHours(boardingHours);
-    leaveDate.setMinutes(boardingMinutes - totalMinutes);
-
-    const formattedLeaveTime = formatTime(leaveDate);
-    console.log(`Calculated leave time: ${formattedLeaveTime}`);
-
-    if (formattedLeaveTime) {
-      onCalculate(formattedLeaveTime);
-      setLeaveTime(formattedLeaveTime);
-      console.log(`Leave time set to: ${formattedLeaveTime}`);
-    }
-  }, [boardingTime, formValues, selectedDate, onCalculate]);
-
-  useEffect(() => {
-    if (
-      formValues.departureTime &&
-      boardingTime &&
-      formValues.drivingTime &&
-      formValues.arriveEarly &&
-      formValues.snackTime &&
-      selectedDate
-    ) {
-      calculateLeaveTime();
-    }
-  }, [
-    formValues.departureTime,
-    boardingTime,
-    formValues.drivingTime,
-    formValues.arriveEarly,
-    formValues.snackTime,
-    selectedDate,
-    calculateLeaveTime,
-  ]);
-
-  const handleDateChange = (date) => {
-    const now = new Date();
-    if (isAfter(date, now)) {
-      setSelectedDate(date);
-      setIsInitialLoad(false);
-      console.log(`Future date selected: ${date}`);
-    } else {
-      setSelectedDate(date);
-      setIsInitialLoad(false);
-      console.log(`Past date or today selected: ${date}`);
-    }
-  };
-
-  const handleReset = () => {
-    resetFields();
-    setBoardingTime("");
-    setLeaveTime("");
-    navigate("/", { replace: true });
-    console.log("Reset button clicked, URL and state reset");
-  };
+    handleDateChange,
+    handleReset,
+  } = useFlightForm(handleCalculate);
 
   return (
     <div>
@@ -387,7 +291,7 @@ export default FlightFormLogic;
 // src/components/CalendarLink.js
 import React, { useEffect, useState, useCallback } from "react";
 import { formatDateTime, parseTimeString } from "../utils/timeUtils";
-import { parseISO, isValid } from "date-fns"; // Import parseISO and isValid
+import { parseISO, isValid } from "date-fns";
 
 const CalendarLink = ({ leaveTime, selectedDate }) => {
   const [calendarLink, setCalendarLink] = useState("");
@@ -432,8 +336,10 @@ const CalendarLink = ({ leaveTime, selectedDate }) => {
       details:
         "Time to leave for the airport. Created by https://airportcalc.silv.app/",
     });
-    setCalendarLink(`${baseURL}?${params.toString()}`);
-    console.log("Calendar link created:", `${baseURL}?${params.toString()}`);
+
+    const calendarURL = `${baseURL}?${params.toString()}`;
+    setCalendarLink(calendarURL);
+    console.log("Calendar link created:", calendarURL);
   }, [leaveTime, selectedDate]);
 
   useEffect(() => {
@@ -566,6 +472,170 @@ const formFieldsConfig = [
 export default formFieldsConfig;
 
 
+// src/context/GlobalStateContext.js
+import React, { createContext, useContext, useReducer } from "react";
+
+const GlobalStateContext = createContext();
+const GlobalDispatchContext = createContext();
+
+const initialState = {
+  leaveTime: "",
+};
+
+const reducer = (state, action) => {
+  switch (action.type) {
+    case "SET_LEAVE_TIME":
+      return {
+        ...state,
+        leaveTime: action.payload,
+      };
+    case "RESET_LEAVE_TIME":
+      return {
+        ...state,
+        leaveTime: "",
+      };
+    default:
+      throw new Error(`Unknown action: ${action.type}`);
+  }
+};
+
+export const GlobalStateProvider = ({ children }) => {
+  const [state, dispatch] = useReducer(reducer, initialState);
+
+  return (
+    <GlobalStateContext.Provider value={state}>
+      <GlobalDispatchContext.Provider value={dispatch}>
+        {children}
+      </GlobalDispatchContext.Provider>
+    </GlobalStateContext.Provider>
+  );
+};
+
+export const useGlobalState = () => useContext(GlobalStateContext);
+export const useGlobalDispatch = () => useContext(GlobalDispatchContext);
+
+
+// src/hooks/useFlightForm.js
+import { useCallback, useEffect } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
+import { parseISO, isValid, isAfter } from "date-fns";
+import useFormState from "./useFormState";
+import useUrlParams from "./useUrlParams";
+import { getDefaultDate } from "../utils/dateUtils";
+import { formatTime, parseTimeString } from "../utils/timeUtils";
+import formFieldsConfig from "../config/formFieldsConfig";
+import { useGlobalDispatch } from "../context/GlobalStateContext";
+
+const useFlightForm = (onCalculate) => {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const defaultDate = getDefaultDate(location);
+  const dispatch = useGlobalDispatch();
+
+  const {
+    formValues,
+    selectedDate,
+    boardingTime,
+    isInitialLoad,
+    handleFieldChange,
+    setSelectedDate,
+    setBoardingTime,
+    resetFields,
+    setIsInitialLoad,
+  } = useFormState(formFieldsConfig, defaultDate);
+
+  const calculateLeaveTime = useCallback(() => {
+    if (!boardingTime) {
+      console.log("Boarding time is not set yet.");
+      return;
+    }
+
+    const { hours: boardingHours, minutes: boardingMinutes } =
+      parseTimeString(boardingTime);
+    const totalMinutes =
+      parseInt(formValues.drivingTime, 10) +
+      parseInt(formValues.arriveEarly, 10) +
+      parseInt(formValues.snackTime, 10);
+
+    let leaveDate;
+    if (typeof selectedDate === "string") {
+      leaveDate = parseISO(selectedDate);
+      if (!isValid(leaveDate)) {
+        console.error("Invalid leave date:", leaveDate);
+        return;
+      }
+    } else {
+      leaveDate = new Date(selectedDate);
+    }
+
+    leaveDate.setHours(boardingHours);
+    leaveDate.setMinutes(boardingMinutes - totalMinutes);
+
+    const formattedLeaveTime = formatTime(leaveDate);
+    console.log(`Calculated leave time: ${formattedLeaveTime}`);
+
+    if (formattedLeaveTime) {
+      onCalculate(formattedLeaveTime);
+      dispatch({ type: "SET_LEAVE_TIME", payload: formattedLeaveTime });
+      console.log(`Leave time set to: ${formattedLeaveTime}`);
+    }
+  }, [boardingTime, formValues, selectedDate, onCalculate, dispatch]);
+
+  useEffect(() => {
+    if (
+      formValues.departureTime &&
+      boardingTime &&
+      formValues.drivingTime &&
+      formValues.arriveEarly &&
+      formValues.snackTime &&
+      selectedDate
+    ) {
+      calculateLeaveTime();
+    }
+  }, [
+    formValues.departureTime,
+    boardingTime,
+    formValues.drivingTime,
+    formValues.arriveEarly,
+    formValues.snackTime,
+    selectedDate,
+    calculateLeaveTime,
+  ]);
+
+  const handleDateChange = (date) => {
+    const now = new Date();
+    if (isAfter(date, now)) {
+      setSelectedDate(date);
+      setIsInitialLoad(false);
+      console.log(`Future date selected: ${date}`);
+    } else {
+      setSelectedDate(date);
+      setIsInitialLoad(false);
+      console.log(`Past date or today selected: ${date}`);
+    }
+  };
+
+  const handleReset = () => {
+    resetFields();
+    setBoardingTime("");
+    dispatch({ type: "RESET_LEAVE_TIME" });
+    navigate("/", { replace: true });
+    console.log("Reset button clicked, URL and state reset");
+  };
+
+  return {
+    formValues,
+    selectedDate,
+    boardingTime,
+    handleFieldChange,
+    handleDateChange,
+    handleReset,
+  };
+};
+
+export default useFlightForm;
+
+
 // src/hooks/useFormField.js
 import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
@@ -678,9 +748,9 @@ export default useFormState;
 
 
 // src/hooks/useUrlParams.js
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { parseISO, isValid } from "date-fns"; // Import parseISO and isValid
+import { parseISO, isValid } from "date-fns";
 
 const useUrlParams = (
   formValues,
@@ -691,10 +761,9 @@ const useUrlParams = (
 ) => {
   const navigate = useNavigate();
   const location = useLocation();
-  const [paramsUpdated, setParamsUpdated] = useState(false);
 
   useEffect(() => {
-    if (!isInitialLoad && !paramsUpdated) {
+    if (!isInitialLoad) {
       const params = new URLSearchParams(location.search);
       let shouldNavigate = false;
 
@@ -734,7 +803,6 @@ const useUrlParams = (
       }
 
       if (shouldNavigate) {
-        setParamsUpdated(true); // Prevent immediate re-update
         navigate({ search: params.toString() }, { replace: true });
       }
     }
@@ -746,16 +814,7 @@ const useUrlParams = (
     defaultDate,
     location.search,
     navigate,
-    paramsUpdated,
   ]);
-
-  // Reset paramsUpdated after some time to allow further updates
-  useEffect(() => {
-    if (paramsUpdated) {
-      const timer = setTimeout(() => setParamsUpdated(false), 300); // Adjust the delay as necessary
-      return () => clearTimeout(timer);
-    }
-  }, [paramsUpdated]);
 };
 
 export default useUrlParams;
@@ -767,12 +826,15 @@ import ReactDOM from "react-dom/client";
 import App from "./App";
 import { BrowserRouter as Router } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
+import { GlobalStateProvider } from "./context/GlobalStateContext";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
-  <Router>
-    <App />
-  </Router>
+  <GlobalStateProvider>
+    <Router>
+      <App />
+    </Router>
+  </GlobalStateProvider>
 );
 
 

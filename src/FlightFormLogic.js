@@ -2,17 +2,30 @@ import React from "react";
 import FlightFormInputs from "./components/FlightFormInputs";
 import CalendarLink from "./components/CalendarLink";
 import useFlightForm from "./hooks/useFlightForm";
+import {
+  useGlobalState,
+  useGlobalDispatch,
+} from "./context/GlobalStateContext";
 
-const FlightFormLogic = ({ onCalculate }) => {
+const FlightFormLogic = () => {
+  const { leaveTime } = useGlobalState();
+  const dispatch = useGlobalDispatch();
+
+  const handleCalculate = (leaveTimeString) => {
+    dispatch({
+      type: "SET_LEAVE_TIME",
+      payload: `You should leave at: ${leaveTimeString}`,
+    });
+  };
+
   const {
     formValues,
     selectedDate,
     boardingTime,
-    leaveTime,
     handleFieldChange,
     handleDateChange,
     handleReset,
-  } = useFlightForm(onCalculate);
+  } = useFlightForm(handleCalculate);
 
   return (
     <div>
