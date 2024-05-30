@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { parseISO, isValid } from "date-fns"; // Import parseISO and isValid
+import { parseISO, isValid } from "date-fns";
 
 const useUrlParams = (
   formValues,
@@ -11,10 +11,9 @@ const useUrlParams = (
 ) => {
   const navigate = useNavigate();
   const location = useLocation();
-  const [paramsUpdated, setParamsUpdated] = useState(false);
 
   useEffect(() => {
-    if (!isInitialLoad && !paramsUpdated) {
+    if (!isInitialLoad) {
       const params = new URLSearchParams(location.search);
       let shouldNavigate = false;
 
@@ -54,7 +53,6 @@ const useUrlParams = (
       }
 
       if (shouldNavigate) {
-        setParamsUpdated(true); // Prevent immediate re-update
         navigate({ search: params.toString() }, { replace: true });
       }
     }
@@ -66,16 +64,7 @@ const useUrlParams = (
     defaultDate,
     location.search,
     navigate,
-    paramsUpdated,
   ]);
-
-  // Reset paramsUpdated after some time to allow further updates
-  useEffect(() => {
-    if (paramsUpdated) {
-      const timer = setTimeout(() => setParamsUpdated(false), 300); // Adjust the delay as necessary
-      return () => clearTimeout(timer);
-    }
-  }, [paramsUpdated]);
 };
 
 export default useUrlParams;
