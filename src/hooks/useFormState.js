@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { formatInputTime } from "../utils/timeUtils";
+import { parseISO, isValid } from "date-fns"; // Import parseISO and isValid
 
 const useFormState = (formFieldsConfig, defaultDate) => {
   const [formValues, setFormValues] = useState(() =>
@@ -9,7 +10,14 @@ const useFormState = (formFieldsConfig, defaultDate) => {
       return acc;
     }, {})
   );
-  const [selectedDate, setSelectedDate] = useState(defaultDate);
+
+  const initialDate =
+    typeof defaultDate === "string"
+      ? parseISO(defaultDate)
+      : new Date(defaultDate);
+  const [selectedDate, setSelectedDate] = useState(
+    isValid(initialDate) ? initialDate : new Date()
+  );
   const [boardingTime, setBoardingTime] = useState("");
   const [isInitialLoad, setIsInitialLoad] = useState(true);
 
@@ -29,7 +37,7 @@ const useFormState = (formFieldsConfig, defaultDate) => {
         return acc;
       }, {})
     );
-    setSelectedDate(defaultDate);
+    setSelectedDate(isValid(initialDate) ? initialDate : new Date());
     setIsInitialLoad(true);
   };
 

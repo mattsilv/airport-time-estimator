@@ -1,9 +1,4 @@
-// src/utils/dateUtils.js
-import { format, addDays, parseISO } from "date-fns";
-
-export const formatDateTime = (date) => {
-  return format(date, "yyyyMMdd'T'HHmmss");
-};
+import { addDays, parseISO } from "date-fns"; // Import necessary functions
 
 export const getDefaultDate = (location) => {
   const params = new URLSearchParams(location.search);

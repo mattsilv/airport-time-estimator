@@ -1,5 +1,6 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
+import { parseISO, isValid } from "date-fns"; // Import parseISO and isValid
 
 const useUrlParams = (
   formValues,
@@ -10,9 +11,10 @@ const useUrlParams = (
 ) => {
   const navigate = useNavigate();
   const location = useLocation();
+  const [paramsUpdated, setParamsUpdated] = useState(false);
 
   useEffect(() => {
-    if (!isInitialLoad) {
+    if (!isInitialLoad && !paramsUpdated) {
       const params = new URLSearchParams(location.search);
       let shouldNavigate = false;
 
@@ -31,18 +33,28 @@ const useUrlParams = (
         }
       });
 
-      const formattedDate = selectedDate.toISOString().split("T")[0];
-      if (formattedDate !== defaultDate.toISOString().split("T")[0]) {
-        if (params.get("date") !== formattedDate) {
-          params.set("date", formattedDate);
+      let parsedDate;
+      if (typeof selectedDate === "string") {
+        parsedDate = parseISO(selectedDate);
+      } else {
+        parsedDate = new Date(selectedDate);
+      }
+
+      if (isValid(parsedDate)) {
+        const formattedDate = parsedDate.toISOString().split("T")[0];
+        if (formattedDate !== defaultDate.toISOString().split("T")[0]) {
+          if (params.get("date") !== formattedDate) {
+            params.set("date", formattedDate);
+            shouldNavigate = true;
+          }
+        } else if (params.has("date")) {
+          params.delete("date");
           shouldNavigate = true;
         }
-      } else if (params.has("date")) {
-        params.delete("date");
-        shouldNavigate = true;
       }
 
       if (shouldNavigate) {
+        setParamsUpdated(true); // Prevent immediate re-update
         navigate({ search: params.toString() }, { replace: true });
       }
     }
@@ -54,7 +66,16 @@ const useUrlParams = (
     defaultDate,
     location.search,
     navigate,
+    paramsUpdated,
   ]);
+
+  // Reset paramsUpdated after some time to allow further updates
+  useEffect(() => {
+    if (paramsUpdated) {
+      const timer = setTimeout(() => setParamsUpdated(false), 300); // Adjust the delay as necessary
+      return () => clearTimeout(timer);
+    }
+  }, [paramsUpdated]);
 };
 
 export default useUrlParams;

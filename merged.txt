@@ -1,111 +1,4 @@
 
-// README.md
-# Airport Time Estimator
-
-[![Netlify Status](https://api.netlify.com/api/v1/badges/f145b5d3-22b3-40da-b586-80ba24c5afe9/deploy-status)](https://app.netlify.com/sites/airport-time-calc/deploys)
-
-## Overview
-
-The Airport Time Estimator is a simple web application that helps you calculate the optimal time to leave for the airport. By inputting your departure time, driving time to the airport, how early you want to arrive before boarding, and additional time for snacks, the app will compute when you should leave.
-
-[Live Demo](https://airportcalc.silv.app/)
-
-## Features
-
-- **Responsive Design**: Mobile-first approach ensures the app looks great on all devices.
-- **User-Friendly Interface**: Simple and intuitive form inputs.
-- **Real-Time Calculation**: Automatically calculates the best time to leave as you input your details.
-- **Add to Calendar**: Provides an option to add the calculated time to your Google Calendar.
-
-## Getting Started
-
-### Prerequisites
-
-- Node.js (v14 or later)
-- npm (v6 or later)
-
-### Installation
-
-1. Clone the repository:
-
-   ```sh
-   git clone https://github.com/yourusername/airport-time-estimator.git
-   cd airport-time-estimator
-   ```
-
-2. Install dependencies:
-
-   ```sh
-   npm install
-   ```
-
-3. Start the development server:
-
-   ```sh
-   npm start
-   ```
-
-   The app should now be running on `http://localhost:3000`.
-
-### Building for Production
-
-To create a production build of the app, run:
-
-```sh
-npm run build
-```
-
-The production-ready files will be in the `build` directory.
-
-## Deployment
-
-This project is configured to deploy on Netlify. The build command and publish directory are specified in the `netlify.toml` file:
-
-```toml
-[build]
-  command = "npm run build"
-  publish = "build"
-
-[[headers]]
-  for = "/*"
-  [headers.values]
-    Cache-Control = "public, max-age=31536000, immutable"
-```
-
-## Project Structure
-
-- `public/`: Static assets and the HTML template.
-- `src/`: Source code, including components, hooks, and utilities.
-- `src/App.js`: Main app component.
-- `src/components/`: Contains individual React components.
-- `src/hooks/`: Custom hooks for managing form state and URL parameters.
-- `src/utils/`: Utility functions for date and time formatting.
-
-## Contributing
-
-Contributions are welcome! Please follow these steps:
-
-1. Fork the repository.
-2. Create a new branch (`git checkout -b feature/your-feature`).
-3. Make your changes and commit them (`git commit -m 'Add some feature'`).
-4. Push to the branch (`git push origin feature/your-feature`).
-5. Open a pull request.
-
-## License
-
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
-
-## Acknowledgements
-
-- [React](https://reactjs.org/)
-- [Bootstrap](https://getbootstrap.com/)
-- [Date-fns](https://date-fns.org/)
-
----
-
-Thank you for using the Airport Time Estimator!
-
-
 // netlify.toml
 [build]
   command = "npm run build"
@@ -128,6 +21,7 @@ Thank you for using the Airport Time Estimator!
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
     "bootstrap": "^5.3.3",
+    "lodash": "^4.17.21",
     "react": "^18.3.1",
     "react-bootstrap": "^2.10.2",
     "react-datepicker": "^6.9.0",
@@ -357,6 +251,7 @@ import { formatTime, parseTimeString } from "./utils/timeUtils";
 import useFormState from "./hooks/useFormState";
 import useUrlParams from "./hooks/useUrlParams";
 import { getDefaultDate } from "./utils/dateUtils";
+import { parseISO, isValid } from "date-fns";
 
 const formFieldsConfig = [
   { name: "departureTime", defaultValue: "11:00" },
@@ -379,7 +274,7 @@ const FlightFormLogic = ({ onCalculate }) => {
     setSelectedDate,
     setBoardingTime,
     resetFields,
-    setIsInitialLoad, // Make sure to use setIsInitialLoad from the hook
+    setIsInitialLoad,
   } = useFormState(formFieldsConfig, defaultDate);
 
   const [leaveTime, setLeaveTime] = useState("");
@@ -406,14 +301,19 @@ const FlightFormLogic = ({ onCalculate }) => {
       parseInt(formValues.arriveEarly, 10) +
       parseInt(formValues.snackTime, 10);
 
-    const leaveDate = new Date(selectedDate);
+    let leaveDate;
+    if (typeof selectedDate === "string") {
+      leaveDate = parseISO(selectedDate);
+      if (!isValid(leaveDate)) {
+        console.error("Invalid leave date:", leaveDate);
+        return;
+      }
+    } else {
+      leaveDate = new Date(selectedDate);
+    }
+
     leaveDate.setHours(boardingHours);
     leaveDate.setMinutes(boardingMinutes - totalMinutes);
-
-    if (isNaN(leaveDate.getTime())) {
-      console.error("Invalid leave date:", leaveDate);
-      return;
-    }
 
     const formattedLeaveTime = formatTime(leaveDate);
     console.log(`Calculated leave time: ${formattedLeaveTime}`);
@@ -485,6 +385,7 @@ export default FlightFormLogic;
 // src/components/CalendarLink.js
 import React, { useEffect, useState, useCallback } from "react";
 import { formatDateTime, parseTimeString } from "../utils/timeUtils";
+import { parseISO, isValid } from "date-fns"; // Import parseISO and isValid
 
 const CalendarLink = ({ leaveTime, selectedDate }) => {
   const [calendarLink, setCalendarLink] = useState("");
@@ -502,7 +403,17 @@ const CalendarLink = ({ leaveTime, selectedDate }) => {
       return;
     }
 
-    const leaveDate = new Date(selectedDate);
+    let leaveDate;
+    if (typeof selectedDate === "string") {
+      leaveDate = parseISO(selectedDate);
+      if (!isValid(leaveDate)) {
+        console.error("Invalid leave date:", leaveDate);
+        return;
+      }
+    } else {
+      leaveDate = new Date(selectedDate);
+    }
+
     leaveDate.setHours(hours);
     leaveDate.setMinutes(minutes);
 
@@ -510,6 +421,7 @@ const CalendarLink = ({ leaveTime, selectedDate }) => {
     const formattedEnd = formatDateTime(
       new Date(leaveDate.getTime() + 3600000)
     ); // Add one hour for the end time
+
     const baseURL = "https://www.google.com/calendar/render";
     const params = new URLSearchParams({
       action: "TEMPLATE",
@@ -644,6 +556,7 @@ export default TimeInput;
 // src/hooks/useFormField.js
 import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
+import { parseISO, isValid } from "date-fns"; // Import parseISO and isValid
 
 function useFormField(name, defaultValue) {
   const navigate = useNavigate();
@@ -656,8 +569,11 @@ function useFormField(name, defaultValue) {
   useEffect(() => {
     if (!isDefault) {
       const searchParams = new URLSearchParams(location.search);
-      searchParams.set(name, value);
-      navigate({ search: searchParams.toString() });
+      const parsedValue = parseISO(value);
+      if (isValid(parsedValue)) {
+        searchParams.set(name, parsedValue.toISOString());
+        navigate({ search: searchParams.toString() });
+      }
     }
   }, [name, value, isDefault, navigate, location.search]);
 
@@ -680,6 +596,7 @@ export default useFormField;
 // src/hooks/useFormState.js
 import { useState, useEffect } from "react";
 import { formatInputTime } from "../utils/timeUtils";
+import { parseISO, isValid } from "date-fns"; // Import parseISO and isValid
 
 const useFormState = (formFieldsConfig, defaultDate) => {
   const [formValues, setFormValues] = useState(() =>
@@ -689,7 +606,14 @@ const useFormState = (formFieldsConfig, defaultDate) => {
       return acc;
     }, {})
   );
-  const [selectedDate, setSelectedDate] = useState(defaultDate);
+
+  const initialDate =
+    typeof defaultDate === "string"
+      ? parseISO(defaultDate)
+      : new Date(defaultDate);
+  const [selectedDate, setSelectedDate] = useState(
+    isValid(initialDate) ? initialDate : new Date()
+  );
   const [boardingTime, setBoardingTime] = useState("");
   const [isInitialLoad, setIsInitialLoad] = useState(true);
 
@@ -709,7 +633,7 @@ const useFormState = (formFieldsConfig, defaultDate) => {
         return acc;
       }, {})
     );
-    setSelectedDate(defaultDate);
+    setSelectedDate(isValid(initialDate) ? initialDate : new Date());
     setIsInitialLoad(true);
   };
 
@@ -743,6 +667,8 @@ export default useFormState;
 // src/hooks/useUrlParams.js
 import { useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
+import { parseISO, isValid } from "date-fns";
+import { debounce } from "lodash";
 
 const useUrlParams = (
   formValues,
@@ -753,6 +679,10 @@ const useUrlParams = (
 ) => {
   const navigate = useNavigate();
   const location = useLocation();
+
+  const debouncedNavigate = debounce((params) => {
+    navigate({ search: params.toString() }, { replace: true });
+  }, 300); // Adjust debounce delay as necessary
 
   useEffect(() => {
     if (!isInitialLoad) {
@@ -774,19 +704,28 @@ const useUrlParams = (
         }
       });
 
-      const formattedDate = selectedDate.toISOString().split("T")[0];
-      if (formattedDate !== defaultDate.toISOString().split("T")[0]) {
-        if (params.get("date") !== formattedDate) {
-          params.set("date", formattedDate);
+      let parsedDate;
+      if (typeof selectedDate === "string") {
+        parsedDate = parseISO(selectedDate);
+      } else {
+        parsedDate = new Date(selectedDate);
+      }
+
+      if (isValid(parsedDate)) {
+        const formattedDate = parsedDate.toISOString().split("T")[0];
+        if (formattedDate !== defaultDate.toISOString().split("T")[0]) {
+          if (params.get("date") !== formattedDate) {
+            params.set("date", formattedDate);
+            shouldNavigate = true;
+          }
+        } else if (params.has("date")) {
+          params.delete("date");
           shouldNavigate = true;
         }
-      } else if (params.has("date")) {
-        params.delete("date");
-        shouldNavigate = true;
       }
 
       if (shouldNavigate) {
-        navigate({ search: params.toString() }, { replace: true });
+        debouncedNavigate(params);
       }
     }
   }, [
@@ -796,8 +735,15 @@ const useUrlParams = (
     formFieldsConfig,
     defaultDate,
     location.search,
-    navigate,
+    debouncedNavigate,
   ]);
+
+  // Cleanup debounce on unmount
+  useEffect(() => {
+    return () => {
+      debouncedNavigate.cancel();
+    };
+  }, [debouncedNavigate]);
 };
 
 export default useUrlParams;
@@ -819,11 +765,7 @@ root.render(
 
 
 // src/utils/dateUtils.js
-import { format, addDays } from "date-fns";
-
-export const formatDateTime = (date) => {
-  return format(date, "yyyyMMdd'T'HHmmss");
-};
+import { addDays, parseISO } from "date-fns"; // Import necessary functions
 
 export const getDefaultDate = (location) => {
   const params = new URLSearchParams(location.search);
@@ -831,7 +773,7 @@ export const getDefaultDate = (location) => {
   const defaultDate = addDays(new Date(), 1);
 
   if (dateParam) {
-    const date = new Date(dateParam);
+    const date = parseISO(dateParam); // Use parseISO for consistent parsing
     return date < new Date() ? defaultDate : date;
   }
   return defaultDate;
@@ -839,9 +781,16 @@ export const getDefaultDate = (location) => {
 
 
 // src/utils/timeUtils.js
-import { format } from "date-fns";
+import { format, parseISO, isValid } from "date-fns"; // Import parseISO and isValid
 
 export const formatDateTime = (date) => {
+  if (typeof date === "string") {
+    const parsedDate = parseISO(date);
+    if (isValid(parsedDate)) {
+      return format(parsedDate, "yyyyMMdd'T'HHmmss");
+    }
+    return null;
+  }
   return format(date, "yyyyMMdd'T'HHmmss");
 };
 

@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { formatDateTime, parseTimeString } from "../utils/timeUtils";
+import { parseISO, isValid } from "date-fns"; // Import parseISO and isValid
 
 const CalendarLink = ({ leaveTime, selectedDate }) => {
   const [calendarLink, setCalendarLink] = useState("");
@@ -17,7 +18,17 @@ const CalendarLink = ({ leaveTime, selectedDate }) => {
       return;
     }
 
-    const leaveDate = new Date(selectedDate);
+    let leaveDate;
+    if (typeof selectedDate === "string") {
+      leaveDate = parseISO(selectedDate);
+      if (!isValid(leaveDate)) {
+        console.error("Invalid leave date:", leaveDate);
+        return;
+      }
+    } else {
+      leaveDate = new Date(selectedDate);
+    }
+
     leaveDate.setHours(hours);
     leaveDate.setMinutes(minutes);
 
@@ -25,6 +36,7 @@ const CalendarLink = ({ leaveTime, selectedDate }) => {
     const formattedEnd = formatDateTime(
       new Date(leaveDate.getTime() + 3600000)
     ); // Add one hour for the end time
+
     const baseURL = "https://www.google.com/calendar/render";
     const params = new URLSearchParams({
       action: "TEMPLATE",

@@ -1,6 +1,13 @@
-import { format } from "date-fns";
+import { format, parseISO, isValid } from "date-fns"; // Import parseISO and isValid
 
 export const formatDateTime = (date) => {
+  if (typeof date === "string") {
+    const parsedDate = parseISO(date);
+    if (isValid(parsedDate)) {
+      return format(parsedDate, "yyyyMMdd'T'HHmmss");
+    }
+    return null;
+  }
   return format(date, "yyyyMMdd'T'HHmmss");
 };
 

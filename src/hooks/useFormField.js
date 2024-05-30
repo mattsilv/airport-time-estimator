@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
+import { parseISO, isValid } from "date-fns"; // Import parseISO and isValid
 
 function useFormField(name, defaultValue) {
   const navigate = useNavigate();
@@ -12,8 +13,11 @@ function useFormField(name, defaultValue) {
   useEffect(() => {
     if (!isDefault) {
       const searchParams = new URLSearchParams(location.search);
-      searchParams.set(name, value);
-      navigate({ search: searchParams.toString() });
+      const parsedValue = parseISO(value);
+      if (isValid(parsedValue)) {
+        searchParams.set(name, parsedValue.toISOString());
+        navigate({ search: searchParams.toString() });
+      }
     }
   }, [name, value, isDefault, navigate, location.search]);
 

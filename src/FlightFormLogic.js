@@ -6,6 +6,7 @@ import { formatTime, parseTimeString } from "./utils/timeUtils";
 import useFormState from "./hooks/useFormState";
 import useUrlParams from "./hooks/useUrlParams";
 import { getDefaultDate } from "./utils/dateUtils";
+import { parseISO, isValid, isAfter } from "date-fns"; // Import isAfter
 
 const formFieldsConfig = [
   { name: "departureTime", defaultValue: "11:00" },
@@ -28,7 +29,7 @@ const FlightFormLogic = ({ onCalculate }) => {
     setSelectedDate,
     setBoardingTime,
     resetFields,
-    setIsInitialLoad, // Make sure to use setIsInitialLoad from the hook
+    setIsInitialLoad,
   } = useFormState(formFieldsConfig, defaultDate);
 
   const [leaveTime, setLeaveTime] = useState("");
@@ -55,14 +56,19 @@ const FlightFormLogic = ({ onCalculate }) => {
       parseInt(formValues.arriveEarly, 10) +
       parseInt(formValues.snackTime, 10);
 
-    const leaveDate = new Date(selectedDate);
+    let leaveDate;
+    if (typeof selectedDate === "string") {
+      leaveDate = parseISO(selectedDate);
+      if (!isValid(leaveDate)) {
+        console.error("Invalid leave date:", leaveDate);
+        return;
+      }
+    } else {
+      leaveDate = new Date(selectedDate);
+    }
+
     leaveDate.setHours(boardingHours);
     leaveDate.setMinutes(boardingMinutes - totalMinutes);
-
-    if (isNaN(leaveDate.getTime())) {
-      console.error("Invalid leave date:", leaveDate);
-      return;
-    }
 
     const formattedLeaveTime = formatTime(leaveDate);
     console.log(`Calculated leave time: ${formattedLeaveTime}`);
@@ -96,9 +102,16 @@ const FlightFormLogic = ({ onCalculate }) => {
   ]);
 
   const handleDateChange = (date) => {
-    setSelectedDate(date);
-    setIsInitialLoad(false);
-    console.log(`Date changed to: ${date}`);
+    const now = new Date();
+    if (isAfter(date, now)) {
+      setSelectedDate(date);
+      setIsInitialLoad(false);
+      console.log(`Future date selected: ${date}`);
+    } else {
+      setSelectedDate(date);
+      setIsInitialLoad(false);
+      console.log(`Past date or today selected: ${date}`);
+    }
   };
 
   const handleReset = () => {
