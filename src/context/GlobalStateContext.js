@@ -4,10 +4,10 @@ const GlobalStateContext = createContext();
 const GlobalDispatchContext = createContext();
 
 const initialState = {
-  leaveTime: "",
+  leaveTime: "00:00",
 };
 
-const reducer = (state, action) => {
+export const reducer = (state, action) => {
   switch (action.type) {
     case "SET_LEAVE_TIME":
       return {
