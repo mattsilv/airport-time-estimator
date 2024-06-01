@@ -1,11 +1,11 @@
-import { useCallback, useEffect } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
-import { parseISO, isValid, isAfter } from "date-fns";
-import useFormState from "./useFormState";
-import { getDefaultDate } from "../utils/dateUtils";
-import { formatTime, parseTimeString } from "../utils/timeUtils";
-import formFieldsConfig from "../config/formFieldsConfig";
-import { useGlobalDispatch } from "../context/GlobalStateContext";
+import {useCallback, useEffect} from 'react';
+import {useNavigate, useLocation} from 'react-router-dom';
+import {parseISO, isValid, isAfter} from 'date-fns';
+import useFormState from './useFormState';
+import {getDefaultDate} from '../utils/dateUtils';
+import {formatTime, parseTimeString} from '../utils/timeUtils';
+import formFieldsConfig from '../config/formFieldsConfig';
+import {useGlobalDispatch} from '../context/GlobalStateContext';
 
 const useFlightForm = (onCalculate) => {
   const navigate = useNavigate();
@@ -26,11 +26,11 @@ const useFlightForm = (onCalculate) => {
 
   const calculateLeaveTime = useCallback(() => {
     if (!boardingTime) {
-      console.log("Boarding time is not set yet.");
+      console.log('Boarding time is not set yet.');
       return;
     }
 
-    const { hours: boardingHours, minutes: boardingMinutes } =
+    const {hours: boardingHours, minutes: boardingMinutes} =
       parseTimeString(boardingTime);
     const totalMinutes =
       parseInt(formValues.drivingTime, 10) +
@@ -38,10 +38,10 @@ const useFlightForm = (onCalculate) => {
       parseInt(formValues.snackTime, 10);
 
     let leaveDate;
-    if (typeof selectedDate === "string") {
+    if (typeof selectedDate === 'string') {
       leaveDate = parseISO(selectedDate);
       if (!isValid(leaveDate)) {
-        console.error("Invalid leave date:", leaveDate);
+        console.error('Invalid leave date:', leaveDate);
         return;
       }
     } else {
@@ -56,7 +56,7 @@ const useFlightForm = (onCalculate) => {
 
     if (formattedLeaveTime) {
       onCalculate(formattedLeaveTime);
-      dispatch({ type: "SET_LEAVE_TIME", payload: formattedLeaveTime });
+      dispatch({type: 'SET_LEAVE_TIME', payload: formattedLeaveTime});
       console.log(`Leave time set to: ${formattedLeaveTime}`);
     }
   }, [boardingTime, formValues, selectedDate, onCalculate, dispatch]);
@@ -79,7 +79,6 @@ const useFlightForm = (onCalculate) => {
     formValues.arriveEarly,
     formValues.snackTime,
     selectedDate,
-    calculateLeaveTime,
   ]);
 
   const handleDateChange = (date) => {
@@ -97,10 +96,10 @@ const useFlightForm = (onCalculate) => {
 
   const handleReset = () => {
     resetFields();
-    setBoardingTime("");
-    dispatch({ type: "RESET_LEAVE_TIME" });
-    navigate("/", { replace: true });
-    console.log("Reset button clicked, URL and state reset");
+    setBoardingTime('');
+    dispatch({type: 'RESET_LEAVE_TIME'});
+    navigate('/', {replace: true});
+    console.log('Reset button clicked, URL and state reset');
   };
 
   return {
