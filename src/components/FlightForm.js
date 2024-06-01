@@ -3,7 +3,7 @@ import {Form, Button} from 'react-bootstrap';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 
-const FlightFormInputs = ({
+const FlightForm = ({
   formValues,
   selectedDate,
   boardingTime,
@@ -79,4 +79,4 @@ const FlightFormInputs = ({
   );
 };
 
-export default FlightFormInputs;
+export default FlightForm;
