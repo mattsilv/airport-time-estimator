@@ -1,7 +1,6 @@
 import React from 'react';
 import {Alert, Stack} from 'react-bootstrap';
 import FlightForm from '../components/FlightForm';
-import CalendarLink from '../components/CalendarLink';
 import useFlightForm from '../hooks/useFlightForm';
 import {useGlobalState} from '../context/GlobalStateContext';
 import useCalenderLink from '../hooks/useCalenderLink';
@@ -19,7 +18,7 @@ function Home() {
     handleCalculateLeaveTime,
   } = useFlightForm();
 
-  const calendarLink = useCalenderLink(leaveTime, selectedDate);
+  const {createGoogleCalendarLink} = useCalenderLink();
 
   return (
     <Stack className="mt-4" gap={3}>
@@ -40,21 +39,29 @@ function Home() {
         />
 
         {!!leaveTime && leaveTime !== '00:00' && (
-          <div className="text-center mt-3">
-            <div className="text-center mt-3">
+          <Stack gap={2} className="mt-3 mx-auto">
+            <div>
+              <Alert variant="info" className="text-center">
+                {leaveTime}
+              </Alert>
+            </div>
+
+            <div className="text-center">
+              <a
+                href={createGoogleCalendarLink(leaveTime, selectedDate)}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Add to Calendar
+              </a>
+            </div>
+
+            <div className="text-center">
               <button className="btn btn-secondary" onClick={handleReset}>
                 Reset
               </button>
             </div>
-
-            <div className="text-center mt-3">
-              <Alert variant="info" className="text-center mt-3">
-                {leaveTime}
-              </Alert>
-
-              <CalendarLink link={calendarLink} />
-            </div>
-          </div>
+          </Stack>
         )}
       </div>
     </Stack>
