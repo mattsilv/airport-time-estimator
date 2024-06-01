@@ -6,7 +6,7 @@ import {GlobalStateProvider} from './context/GlobalStateContext';
 
 function App() {
   return (
-    <Container className="mt-4">
+    <Container className="fluid">
       <GlobalStateProvider>
         <AppRouter />
       </GlobalStateProvider>
