@@ -1,6 +1,6 @@
-import { useState, useEffect } from "react";
-import { formatInputTime } from "../utils/timeUtils";
-import { parseISO, isValid } from "date-fns"; // Import parseISO and isValid
+import {useState, useEffect} from 'react';
+import {formatInputTime} from '../utils/timeUtils';
+import {parseISO, isValid} from 'date-fns';
 
 const useFormState = (formFieldsConfig, defaultDate) => {
   const [formValues, setFormValues] = useState(() =>
@@ -12,13 +12,13 @@ const useFormState = (formFieldsConfig, defaultDate) => {
   );
 
   const initialDate =
-    typeof defaultDate === "string"
+    typeof defaultDate === 'string'
       ? parseISO(defaultDate)
       : new Date(defaultDate);
   const [selectedDate, setSelectedDate] = useState(
     isValid(initialDate) ? initialDate : new Date()
   );
-  const [boardingTime, setBoardingTime] = useState("");
+  const [boardingTime, setBoardingTime] = useState('');
   const [isInitialLoad, setIsInitialLoad] = useState(true);
 
   const handleFieldChange = (name) => (e) => {
@@ -43,7 +43,7 @@ const useFormState = (formFieldsConfig, defaultDate) => {
 
   useEffect(() => {
     if (isInitialLoad) {
-      const [hours, minutes] = formValues.departureTime.split(":").map(Number);
+      const [hours, minutes] = formValues.departureTime.split(':').map(Number);
       const boardingDate = new Date(selectedDate);
       boardingDate.setHours(hours);
       boardingDate.setMinutes(minutes - 30);
