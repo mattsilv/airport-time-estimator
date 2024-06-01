@@ -1,15 +1,15 @@
-// src/components/FlightFormInputs.js
-import React from "react";
-import { Form, Button } from "react-bootstrap";
-import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
+import React from 'react';
+import {Form, Button} from 'react-bootstrap';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
 
 const FlightFormInputs = ({
   formValues,
-  handleFieldChange,
   selectedDate,
-  handleDateChange,
   boardingTime,
+  onFieldChange,
+  onDateChange,
+  onCalculate,
 }) => {
   return (
     <Form>
@@ -19,7 +19,7 @@ const FlightFormInputs = ({
           type="time"
           id="departureTime"
           value={formValues.departureTime}
-          onChange={handleFieldChange("departureTime")}
+          onChange={onFieldChange('departureTime')}
         />
       </Form.Group>
       <Form.Group className="mb-3">
@@ -39,7 +39,7 @@ const FlightFormInputs = ({
           type="number"
           id="drivingTime"
           value={formValues.drivingTime}
-          onChange={handleFieldChange("drivingTime")}
+          onChange={onFieldChange('drivingTime')}
         />
       </Form.Group>
       <Form.Group className="mb-3">
@@ -50,7 +50,7 @@ const FlightFormInputs = ({
           type="number"
           id="arriveEarly"
           value={formValues.arriveEarly}
-          onChange={handleFieldChange("arriveEarly")}
+          onChange={onFieldChange('arriveEarly')}
         />
       </Form.Group>
       <Form.Group className="mb-3">
@@ -59,19 +59,20 @@ const FlightFormInputs = ({
           type="number"
           id="snackTime"
           value={formValues.snackTime}
-          onChange={handleFieldChange("snackTime")}
+          onChange={onFieldChange('snackTime')}
         />
       </Form.Group>
       <Form.Group className="mb-3">
         <Form.Label>Departure Date:</Form.Label>
         <DatePicker
           selected={selectedDate}
-          onChange={handleDateChange}
+          onChange={onDateChange}
           dateFormat="yyyy-MM-dd"
           className="form-control"
         />
       </Form.Group>
-      <Button variant="primary" type="submit" className="w-100">
+
+      <Button variant="primary" className="w-100" onClick={onCalculate}>
         Calculate
       </Button>
     </Form>
