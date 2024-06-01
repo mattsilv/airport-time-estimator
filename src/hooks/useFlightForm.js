@@ -12,7 +12,6 @@ const useFlightForm = (onCalculate) => {
   const location = useLocation();
   const defaultDate = getDefaultDate(location);
   const dispatch = useGlobalDispatch();
-
   const {
     formValues,
     selectedDate,
@@ -23,6 +22,27 @@ const useFlightForm = (onCalculate) => {
     resetFields,
     setIsInitialLoad,
   } = useFormState(formFieldsConfig, defaultDate);
+
+  const handleDateChange = (date) => {
+    const now = new Date();
+    if (isAfter(date, now)) {
+      setSelectedDate(date);
+      setIsInitialLoad(false);
+      console.log(`Future date selected: ${date}`);
+    } else {
+      setSelectedDate(date);
+      setIsInitialLoad(false);
+      console.log(`Past date or today selected: ${date}`);
+    }
+  };
+
+  const handleReset = () => {
+    resetFields();
+    setBoardingTime('');
+    dispatch({type: 'RESET_LEAVE_TIME'});
+    navigate('/', {replace: true});
+    console.log('Reset button clicked, URL and state reset');
+  };
 
   const calculateLeaveTime = useCallback(() => {
     if (!boardingTime) {
@@ -80,27 +100,6 @@ const useFlightForm = (onCalculate) => {
     formValues.snackTime,
     selectedDate,
   ]);
-
-  const handleDateChange = (date) => {
-    const now = new Date();
-    if (isAfter(date, now)) {
-      setSelectedDate(date);
-      setIsInitialLoad(false);
-      console.log(`Future date selected: ${date}`);
-    } else {
-      setSelectedDate(date);
-      setIsInitialLoad(false);
-      console.log(`Past date or today selected: ${date}`);
-    }
-  };
-
-  const handleReset = () => {
-    resetFields();
-    setBoardingTime('');
-    dispatch({type: 'RESET_LEAVE_TIME'});
-    navigate('/', {replace: true});
-    console.log('Reset button clicked, URL and state reset');
-  };
 
   return {
     formValues,
