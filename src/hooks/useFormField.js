@@ -1,6 +1,6 @@
-import { useState, useEffect } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
-import { parseISO, isValid } from "date-fns"; // Import parseISO and isValid
+import {useState, useEffect} from 'react';
+import {useNavigate, useLocation} from 'react-router-dom';
+import {parseISO, isValid} from 'date-fns';
 
 function useFormField(name, defaultValue) {
   const navigate = useNavigate();
@@ -16,7 +16,7 @@ function useFormField(name, defaultValue) {
       const parsedValue = parseISO(value);
       if (isValid(parsedValue)) {
         searchParams.set(name, parsedValue.toISOString());
-        navigate({ search: searchParams.toString() });
+        navigate({search: searchParams.toString()});
       }
     }
   }, [name, value, isDefault, navigate, location.search]);
@@ -31,7 +31,7 @@ function useFormField(name, defaultValue) {
     setIsDefault(true);
   };
 
-  return { value, isDefault, handleChange, handleReset };
+  return {value, isDefault, handleChange, handleReset};
 }
 
 export default useFormField;
