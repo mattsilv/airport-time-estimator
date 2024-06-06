@@ -1,9 +1,16 @@
-import {useCallback} from 'react';
+import {useEffect, useState} from 'react';
+import {isValid} from 'date-fns';
 import {formatDateTime, parseTimeString} from '../utils/timeUtils';
-import {parseISO, isValid} from 'date-fns';
+import {parseSelectedDate} from '../utils/dateUtils';
 
-export function useCalenderLink() {
-  const createGoogleCalendarLink = useCallback((leaveTime, selectedDate) => {
+export function useCalenderLink(leaveTime, selectedDate) {
+  const [calendarURL, setCalendarURL] = useState(null);
+
+  useEffect(() => {
+    if (!leaveTime) {
+      return;
+    }
+
     const {hours, minutes} = parseTimeString(leaveTime);
     if (isNaN(hours) || isNaN(minutes)) {
       console.error(`Invalid leave time: ${leaveTime}`);
@@ -19,16 +26,12 @@ export function useCalenderLink() {
     leaveDate.setHours(hours);
     leaveDate.setMinutes(minutes);
 
-    const calendarURL = makeGoogleCalenderLink(leaveDate);
-    console.log('Calendar link created:', calendarURL);
-    return calendarURL;
-  }, []);
+    const url = makeGoogleCalenderLink(leaveDate);
+    console.log('Calendar link created:', url);
+    setCalendarURL(url);
+  }, [leaveTime, selectedDate]);
 
-  return {createGoogleCalendarLink};
-}
-
-function parseSelectedDate(date) {
-  return typeof selectedDate === 'string' ? parseISO(date) : new Date(date);
+  return {calendarURL};
 }
 
 function makeGoogleCalenderLink(date) {
