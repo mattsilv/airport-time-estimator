@@ -1,12 +1,12 @@
-import { addDays, parseISO } from "date-fns"; // Import necessary functions
+import {addDays, parseISO} from 'date-fns';
 
 export const getDefaultDate = (location) => {
   const params = new URLSearchParams(location.search);
-  const dateParam = params.get("date");
+  const dateParam = params.get('date');
   const defaultDate = addDays(new Date(), 1);
 
   if (dateParam) {
-    const date = parseISO(dateParam); // Use parseISO for consistent parsing
+    const date = parseISO(dateParam);
     return date < new Date() ? defaultDate : date;
   }
   return defaultDate;

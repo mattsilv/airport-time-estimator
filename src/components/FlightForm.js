@@ -1,15 +1,15 @@
 import React from 'react';
-import {Form, Button} from 'react-bootstrap';
+import {Form} from 'react-bootstrap';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 
-const FlightForm = ({
+export const FlightForm = ({
   formValues,
   selectedDate,
   boardingTime,
   onFieldChange,
+  onBoardingTimeChange,
   onDateChange,
-  onCalculate,
 }) => {
   return (
     <Form>
@@ -18,6 +18,7 @@ const FlightForm = ({
         <Form.Control
           type="time"
           id="departureTime"
+          defaultValue="11:00"
           value={formValues.departureTime}
           onChange={onFieldChange('departureTime')}
         />
@@ -28,7 +29,8 @@ const FlightForm = ({
           type="time"
           id="boardingTime"
           value={boardingTime}
-          readOnly
+          onChange={(e) => onBoardingTimeChange(e.target.value)}
+          disabled
         />
       </Form.Group>
       <Form.Group className="mb-3">
@@ -63,20 +65,14 @@ const FlightForm = ({
         />
       </Form.Group>
       <Form.Group className="mb-3">
-        <Form.Label>Departure Date:</Form.Label>
+        <Form.Label htmlFor="selectedDate">Departure Date:</Form.Label>
         <DatePicker
           selected={selectedDate}
           onChange={onDateChange}
           dateFormat="yyyy-MM-dd"
-          className="form-control"
+          className="form-control mx-2"
         />
       </Form.Group>
-
-      <Button variant="primary" className="w-100" onClick={onCalculate}>
-        Calculate
-      </Button>
     </Form>
   );
 };
-
-export default FlightForm;

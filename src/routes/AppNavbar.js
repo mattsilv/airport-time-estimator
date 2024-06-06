@@ -1,6 +1,6 @@
 import {Container, Navbar} from 'react-bootstrap';
 
-function AppNavbar() {
+export function AppNavbar() {
   return (
     <Navbar expand="lg" className="bg-body-tertiary">
       <Container>
@@ -25,5 +25,3 @@ function AppNavbar() {
     </Navbar>
   );
 }
-
-export default AppNavbar;

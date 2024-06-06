@@ -2,7 +2,7 @@ import {useCallback} from 'react';
 import {formatDateTime, parseTimeString} from '../utils/timeUtils';
 import {parseISO, isValid} from 'date-fns';
 
-function useCalenderLink() {
+export function useCalenderLink() {
   const createGoogleCalendarLink = useCallback((leaveTime, selectedDate) => {
     const {hours, minutes} = parseTimeString(leaveTime);
     if (isNaN(hours) || isNaN(minutes)) {
@@ -45,5 +45,3 @@ function makeGoogleCalenderLink(date) {
   });
   return `${baseURL}?${params.toString()}`;
 }
-
-export default useCalenderLink;

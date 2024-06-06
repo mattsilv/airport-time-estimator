@@ -1,12 +1,18 @@
 import {useState, useEffect} from 'react';
 import {formatInputTime} from '../utils/timeUtils';
 import {parseISO, isValid} from 'date-fns';
+import {formFieldsConfig} from '../config/formFieldsConfig';
+import {getDefaultDate} from '../utils/dateUtils';
+import {useLocation} from 'react-router-dom';
 
-const useFormState = (formFieldsConfig, defaultDate) => {
+export function useFormState() {
+  const location = useLocation();
+  const defaultDate = getDefaultDate(location);
+
   const [formValues, setFormValues] = useState(() =>
     formFieldsConfig.reduce((acc, field) => {
-      const params = new URLSearchParams(window.location.search);
-      acc[field.name] = params.get(field.name) || field.defaultValue;
+      const params = new URLSearchParams(location.search);
+      acc[field.name] = params.get(field.name) ?? field.defaultValue;
       return acc;
     }, {})
   );
@@ -22,10 +28,10 @@ const useFormState = (formFieldsConfig, defaultDate) => {
   const [isInitialLoad, setIsInitialLoad] = useState(true);
 
   const handleFieldChange = (name) => (e) => {
-    const newValue = e.target.value;
+    const {value} = e.target;
     setFormValues((prevValues) => ({
       ...prevValues,
-      [name]: newValue,
+      [name]: value,
     }));
     setIsInitialLoad(false);
   };
@@ -61,8 +67,6 @@ const useFormState = (formFieldsConfig, defaultDate) => {
     setSelectedDate,
     setBoardingTime,
     resetFields,
-    setIsInitialLoad, // Make sure to return setIsInitialLoad
+    setIsInitialLoad,
   };
-};
-
-export default useFormState;
+}
