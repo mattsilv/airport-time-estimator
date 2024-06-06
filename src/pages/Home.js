@@ -1,71 +1,67 @@
 import React from 'react';
 import {Alert, Stack} from 'react-bootstrap';
-import FlightForm from '../components/FlightForm';
-import useFlightForm from '../hooks/useFlightForm';
-import {useGlobalState} from '../context/GlobalStateContext';
-import useCalenderLink from '../hooks/useCalenderLink';
+import {FlightForm} from '../components/FlightForm';
+import {useFlightForm} from '../hooks/useFlightForm';
+import {useCalenderLink} from '../hooks/useCalenderLink';
 
-function Home() {
-  const {leaveTime} = useGlobalState();
-
+export function Home() {
   const {
+    leaveTime,
     formValues,
     selectedDate,
     boardingTime,
     handleFieldChange,
     handleDateChange,
+    handleBoardingTimeChange,
     handleReset,
-    handleCalculateLeaveTime,
   } = useFlightForm();
 
   const {createGoogleCalendarLink} = useCalenderLink();
 
   return (
-    <Stack className="mt-4" gap={3}>
+    <Stack className="mt-3" gap={2}>
       <div>
-        <h1 className="text-center">
+        <h3 className="text-center">
           What time should I leave for the airport?
-        </h1>
+        </h3>
       </div>
 
-      <div className="mt-4 p-4 border rounded shadow-sm bg-light">
+      <div className="px-4 pt-4 border rounded shadow-sm bg-light">
         <FlightForm
           formValues={formValues}
           selectedDate={selectedDate}
           boardingTime={boardingTime}
+          onBoardingTimeChange={handleBoardingTimeChange}
           onFieldChange={handleFieldChange}
           onDateChange={handleDateChange}
-          onCalculate={handleCalculateLeaveTime}
         />
 
         {!!leaveTime && leaveTime !== '00:00' && (
           <Stack gap={2} className="mt-3 mx-auto">
-            <div>
-              <Alert variant="info" className="text-center">
-                {leaveTime}
-              </Alert>
-            </div>
+            <Alert variant="info" className="text-center">
+              <Alert.Heading className="mb-0">✈️ {leaveTime}</Alert.Heading>
+            </Alert>
 
-            <div className="text-center">
+            <Stack className="mb-4">
               <a
+                className="mb-4 mx-auto"
                 href={createGoogleCalendarLink(leaveTime, selectedDate)}
-                target="_blank"
                 rel="noopener noreferrer"
+                target="_blank"
               >
                 Add to Calendar
               </a>
-            </div>
 
-            <div className="text-center">
-              <button className="btn btn-secondary" onClick={handleReset}>
+              <button
+                className="btn btn-secondary mx-auto"
+                onClick={handleReset}
+              >
                 Reset
               </button>
-            </div>
+            </Stack>
           </Stack>
         )}
       </div>
     </Stack>
   );
 }
-
-export default Home;
