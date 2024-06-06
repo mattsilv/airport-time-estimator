@@ -33,10 +33,6 @@ export function useFlightForm() {
     }
   };
 
-  const handleBoardingTimeChange = (time) => {
-    setBoardingTime(time);
-  };
-
   const handleReset = () => {
     resetFields();
     setLeaveTime(null);
@@ -88,7 +84,6 @@ export function useFlightForm() {
     leaveTime,
     handleFieldChange,
     handleDateChange,
-    handleBoardingTimeChange,
     handleReset,
   };
 }

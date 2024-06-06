@@ -1,8 +1,8 @@
 import {useState, useEffect} from 'react';
 import {formatInputTime} from '../utils/timeUtils';
-import {parseISO, isValid} from 'date-fns';
+import {isValid} from 'date-fns';
 import {formFieldsConfig} from '../config/formFieldsConfig';
-import {getDefaultDate} from '../utils/dateUtils';
+import {getDefaultDate, parseDate} from '../utils/dateUtils';
 import {useLocation} from 'react-router-dom';
 
 export function useFormState() {
@@ -17,10 +17,7 @@ export function useFormState() {
     }, {})
   );
 
-  const initialDate =
-    typeof defaultDate === 'string'
-      ? parseISO(defaultDate)
-      : new Date(defaultDate);
+  const initialDate = parseDate(defaultDate);
   const [selectedDate, setSelectedDate] = useState(
     isValid(initialDate) ? initialDate : new Date()
   );

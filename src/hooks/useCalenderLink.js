@@ -1,7 +1,7 @@
 import {useEffect, useState} from 'react';
 import {isValid} from 'date-fns';
 import {formatDateTime, parseTimeString} from '../utils/timeUtils';
-import {parseSelectedDate} from '../utils/dateUtils';
+import {parseDate} from '../utils/dateUtils';
 
 export function useCalenderLink(leaveTime, selectedDate) {
   const [calendarURL, setCalendarURL] = useState(null);
@@ -17,7 +17,7 @@ export function useCalenderLink(leaveTime, selectedDate) {
       return;
     }
 
-    const leaveDate = parseSelectedDate(selectedDate);
+    const leaveDate = parseDate(selectedDate);
     if (!isValid(leaveDate)) {
       console.error('Invalid leave date:', leaveDate);
       return;

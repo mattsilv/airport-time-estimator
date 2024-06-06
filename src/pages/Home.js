@@ -12,7 +12,6 @@ export function Home() {
     boardingTime,
     handleFieldChange,
     handleDateChange,
-    handleBoardingTimeChange,
     handleReset,
   } = useFlightForm();
 
@@ -31,7 +30,6 @@ export function Home() {
           formValues={formValues}
           selectedDate={selectedDate}
           boardingTime={boardingTime}
-          onBoardingTimeChange={handleBoardingTimeChange}
           onFieldChange={handleFieldChange}
           onDateChange={handleDateChange}
         />
