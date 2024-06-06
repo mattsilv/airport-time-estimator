@@ -1,9 +1,9 @@
-import {useState, useEffect} from 'react';
-import {formatInputTime} from '../utils/timeUtils';
-import {parseISO, isValid} from 'date-fns';
-import {formFieldsConfig} from '../config/formFieldsConfig';
-import {getDefaultDate} from '../utils/dateUtils';
-import {useLocation} from 'react-router-dom';
+import { useState, useEffect } from "react";
+import { formatInputTime } from "../utils/timeUtils";
+import { parseISO, isValid } from "date-fns";
+import { formFieldsConfig } from "../config/formFieldsConfig";
+import { getDefaultDate } from "../utils/dateUtils";
+import { useLocation } from "react-router-dom";
 
 export function useFormState() {
   const location = useLocation();
@@ -18,17 +18,17 @@ export function useFormState() {
   );
 
   const initialDate =
-    typeof defaultDate === 'string'
+    typeof defaultDate === "string"
       ? parseISO(defaultDate)
       : new Date(defaultDate);
   const [selectedDate, setSelectedDate] = useState(
     isValid(initialDate) ? initialDate : new Date()
   );
-  const [boardingTime, setBoardingTime] = useState('');
+  const [boardingTime, setBoardingTime] = useState("");
   const [isInitialLoad, setIsInitialLoad] = useState(true);
 
   const handleFieldChange = (name) => (e) => {
-    const {value} = e.target;
+    const { value } = e.target;
     setFormValues((prevValues) => ({
       ...prevValues,
       [name]: value,
@@ -48,15 +48,13 @@ export function useFormState() {
   };
 
   useEffect(() => {
-    if (isInitialLoad) {
-      const [hours, minutes] = formValues.departureTime.split(':').map(Number);
-      const boardingDate = new Date(selectedDate);
-      boardingDate.setHours(hours);
-      boardingDate.setMinutes(minutes - 30);
-      const newBoardingTime = formatInputTime(boardingDate);
-      setBoardingTime(newBoardingTime);
-    }
-  }, [formValues.departureTime, selectedDate, isInitialLoad]);
+    const [hours, minutes] = formValues.departureTime.split(":").map(Number);
+    const boardingDate = new Date(selectedDate);
+    boardingDate.setHours(hours);
+    boardingDate.setMinutes(minutes - 30);
+    const newBoardingTime = formatInputTime(boardingDate);
+    setBoardingTime(newBoardingTime);
+  }, [formValues.departureTime, selectedDate]);
 
   return {
     formValues,
