@@ -17,7 +17,6 @@ export const FlightForm = ({
         <Form.Control
           type="time"
           id="departureTime"
-          defaultValue="11:00"
           value={formValues.departureTime}
           onChange={onFieldChange('departureTime')}
         />

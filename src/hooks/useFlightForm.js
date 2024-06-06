@@ -51,9 +51,9 @@ export function useFlightForm() {
       parseTimeString(boardingTime);
     const {drivingTime, arriveEarly, snackTime} = formValues;
     const totalMinutes =
-      parseInt(drivingTime, 10) +
-      parseInt(arriveEarly, 10) +
-      parseInt(snackTime, 10);
+      parseInt(drivingTime || 0, 10) +
+      parseInt(arriveEarly || 0, 10) +
+      parseInt(snackTime || 0, 10);
 
     let leaveDate;
     if (typeof selectedDate === 'string') {
