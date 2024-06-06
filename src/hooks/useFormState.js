@@ -45,15 +45,13 @@ export function useFormState() {
   };
 
   useEffect(() => {
-    if (isInitialLoad) {
-      const [hours, minutes] = formValues.departureTime.split(':').map(Number);
-      const boardingDate = new Date(selectedDate);
-      boardingDate.setHours(hours);
-      boardingDate.setMinutes(minutes - 30);
-      const newBoardingTime = formatInputTime(boardingDate);
-      setBoardingTime(newBoardingTime);
-    }
-  }, [formValues.departureTime, selectedDate, isInitialLoad]);
+    const [hours, minutes] = formValues.departureTime.split(':').map(Number);
+    const boardingDate = new Date(selectedDate);
+    boardingDate.setHours(hours);
+    boardingDate.setMinutes(minutes - 30);
+    const newBoardingTime = formatInputTime(boardingDate);
+    setBoardingTime(newBoardingTime);
+  }, [formValues.departureTime, selectedDate]);
 
   return {
     formValues,
