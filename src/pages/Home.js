@@ -12,11 +12,10 @@ export function Home() {
     boardingTime,
     handleFieldChange,
     handleDateChange,
-    handleBoardingTimeChange,
     handleReset,
   } = useFlightForm();
 
-  const {createGoogleCalendarLink} = useCalenderLink();
+  const {calendarURL} = useCalenderLink(leaveTime, selectedDate);
 
   return (
     <Stack className="mt-3" gap={2}>
@@ -31,7 +30,6 @@ export function Home() {
           formValues={formValues}
           selectedDate={selectedDate}
           boardingTime={boardingTime}
-          onBoardingTimeChange={handleBoardingTimeChange}
           onFieldChange={handleFieldChange}
           onDateChange={handleDateChange}
         />
@@ -43,14 +41,16 @@ export function Home() {
             </Alert>
 
             <Stack className="mb-4">
-              <a
-                className="mb-4 mx-auto"
-                href={createGoogleCalendarLink(leaveTime, selectedDate)}
-                rel="noopener noreferrer"
-                target="_blank"
-              >
-                Add to Calendar
-              </a>
+              {calendarURL && (
+                <a
+                  href={calendarURL}
+                  className="mb-4 mx-auto"
+                  rel="noopener noreferrer"
+                  target="_blank"
+                >
+                  Add to Calendar
+                </a>
+              )}
 
               <button
                 className="btn btn-secondary mx-auto"

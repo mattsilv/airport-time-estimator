@@ -8,7 +8,6 @@ export const FlightForm = ({
   selectedDate,
   boardingTime,
   onFieldChange,
-  onBoardingTimeChange,
   onDateChange,
 }) => {
   return (
@@ -18,7 +17,6 @@ export const FlightForm = ({
         <Form.Control
           type="time"
           id="departureTime"
-          defaultValue="11:00"
           value={formValues.departureTime}
           onChange={onFieldChange('departureTime')}
         />
@@ -29,7 +27,6 @@ export const FlightForm = ({
           type="time"
           id="boardingTime"
           value={boardingTime}
-          onChange={(e) => onBoardingTimeChange(e.target.value)}
           disabled
         />
       </Form.Group>

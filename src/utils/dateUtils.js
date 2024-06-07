@@ -11,3 +11,7 @@ export const getDefaultDate = (location) => {
   }
   return defaultDate;
 };
+
+export function parseDate(date) {
+  return typeof date === 'string' ? parseISO(date) : new Date(date);
+}
