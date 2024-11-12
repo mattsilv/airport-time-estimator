@@ -1,6 +1,16 @@
 [build]
   command = "npm run build"
-  publish = "build"
+  publish = ".next"
+
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
+
+[[redirects]]
+  from = "/_next/image/*"
+  to = "/.netlify/images"
+  status = 200
+  force = true
+  query = { url = ":url", w = ":width", q = ":quality" }
 
 [[headers]]
   for = "/*"
