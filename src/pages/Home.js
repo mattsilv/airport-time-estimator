@@ -19,15 +19,6 @@ export function Home() {
 
   const { calendarURL } = useCalenderLink(leaveTime, selectedDate);
 
-  const calendarLinkStyle = {
-    color: "#007AFF",
-    textDecoration: "none",
-    fontWeight: "400",
-    fontSize: "0.95rem",
-    letterSpacing: "-0.01em",
-    marginBottom: "0.75rem",
-  };
-
   return (
     <Stack className="mt-0" gap={1}>
       <div className="px-4 pt-2 pb-2 bg-light">

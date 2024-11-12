@@ -44,6 +44,7 @@ export function useFlightForm() {
     const internationalBuffer = formValues.isInternational ? 40 : 0;
     const tsaBuffer = formValues.noTSAPre ? 15 : 0;
     const snackBuffer = formValues.needSnacks ? 10 : 0;
+    const parkingBuffer = formValues.needParking ? 15 : 0;
     const additionalMinutes = level * 5;
 
     const totalBuffer =
@@ -51,6 +52,7 @@ export function useFlightForm() {
       internationalBuffer +
       tsaBuffer +
       snackBuffer +
+      parkingBuffer +
       additionalMinutes;
 
     setFormValues((prev) => ({

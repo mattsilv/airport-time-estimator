@@ -194,6 +194,14 @@ export const FlightForm = ({
           checked={formValues.needSnacks || false}
           onChange={(e) => onCheckboxChange("needSnacks", e.target.checked)}
         />
+        <Form.Check
+          className={styles.checkboxLabel}
+          type="checkbox"
+          id="needParking"
+          label="Parking car (+15 min)"
+          checked={formValues.needParking === "true"}
+          onChange={(e) => onCheckboxChange("needParking", e.target.checked)}
+        />
       </div>
     </Form>
   );

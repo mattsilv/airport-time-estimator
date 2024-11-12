@@ -4,4 +4,5 @@ export const formFieldsConfig = [
   { name: "drivingTime", defaultValue: "45" },
   { name: "arriveEarly", defaultValue: "30" },
   { name: "snackTime", defaultValue: "5" },
+  { name: "needParking", defaultValue: "false" },
 ];
