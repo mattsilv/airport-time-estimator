@@ -1,25 +1,18 @@
 import { Container, Navbar } from "react-bootstrap";
+import styles from "../styles/Navbar.module.css";
 
 export function AppNavbar() {
   return (
-    <Navbar
-      expand="lg"
-      className="bg-light"
-      style={{
-        paddingTop: "env(safe-area-inset-top)",
-        marginBottom: "-1rem",
-        boxShadow: "0 1px 3px rgba(0,0,0,0.05)",
-      }}
-    >
+    <Navbar expand="lg" className={`bg-light ${styles.navbar}`}>
       <Container>
-        <Navbar.Brand href="/" className="py-2">
+        <Navbar.Brand href="/" className={styles.brand}>
           <img
             alt=""
             src="./favicon-32x32.png"
             width="30"
             height="30"
-            className="d-inline-block align-top"
-          />{" "}
+            className={`d-inline-block align-top ${styles.logo}`}
+          />
           Airport ETA Calculator
         </Navbar.Brand>
       </Container>

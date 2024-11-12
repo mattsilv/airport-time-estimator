@@ -1,0 +1,13 @@
+.container {
+  max-width: 430px;
+  margin: 0 auto;
+  background-color: #f8f9fa;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.footer {
+  background-color: transparent;
+  margin-top: 0;
+}

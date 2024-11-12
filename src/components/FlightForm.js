@@ -22,25 +22,24 @@ export const FlightForm = ({
   const extraMinutes = anxietyLevel * 5;
 
   return (
-    <Form>
-      <Form.Group className="mb-3">
-        <Form.Label htmlFor="anxietyLevel" className={styles.formLabel}>
-          Travel Anxiety Slider:
-        </Form.Label>
+    <Form className={styles.sliderForm}>
+      <div className={styles.formGroup}>
+        <Form.Label className={styles.formLabel}>Travel Anxiety</Form.Label>
         <div className={styles.sliderContainer}>
-          <Form.Range
+          <div className={styles.sliderTrack} />
+          <input
+            type="range"
             id="anxietyLevel"
             min="0"
             max="10"
             value={anxietyLevel}
             onChange={(e) => onAnxietyChange(parseInt(e.target.value))}
-            className={styles.sliderThumb}
+            className={styles.hiddenInput}
           />
           <div
             className={styles.sliderEmoji}
             style={{
               "--slider-percent": anxietyLevel / 10,
-              marginLeft: "16px",
             }}
           >
             {getEmoji(anxietyLevel)}
@@ -49,22 +48,21 @@ export const FlightForm = ({
         <div className={styles.anxietyText}>
           {getAnxietyText(anxietyLevel, extraMinutes)}
         </div>
-      </Form.Group>
+      </div>
 
-      <Form.Group className="mb-3">
-        <Form.Label htmlFor="boardingTime" className={styles.formLabel}>
-          Boarding Time:
-        </Form.Label>
+      <div className={styles.formGroup}>
+        <Form.Label className={styles.formLabel}>Boarding Time</Form.Label>
         <Form.Control
           type="time"
           id="boardingTime"
           value={formValues.boardingTime}
           onChange={onFieldChange("boardingTime")}
         />
-      </Form.Group>
-      <Form.Group className="mb-3">
-        <Form.Label htmlFor="drivingTime" className={styles.formLabel}>
-          Travel Time to Airport (min.):
+      </div>
+
+      <div className={styles.formGroup}>
+        <Form.Label className={styles.formLabel}>
+          Travel Time to Airport
         </Form.Label>
         <div className="d-flex align-items-center">
           <Form.Control
@@ -107,10 +105,11 @@ export const FlightForm = ({
             </button>
           </div>
         </div>
-      </Form.Group>
-      <Form.Group className="mb-3">
-        <Form.Label htmlFor="arriveEarly" className={styles.formLabel}>
-          Arrive how soon before boarding? (min.):
+      </div>
+
+      <div className={styles.formGroup}>
+        <Form.Label className={styles.formLabel}>
+          Buffer Time Before Boarding
         </Form.Label>
         <div className="d-flex align-items-center">
           <Form.Control
@@ -153,21 +152,21 @@ export const FlightForm = ({
             </button>
           </div>
         </div>
-      </Form.Group>
-      <Form.Group className="mb-3">
-        <Form.Label htmlFor="selectedDate" className={styles.formLabel}>
-          Departure Date:
-        </Form.Label>
+      </div>
+
+      <div className={styles.formGroup}>
+        <Form.Label className={styles.formLabel}>Departure Date</Form.Label>
         <DatePicker
           selected={selectedDate}
           onChange={onDateChange}
           dateFormat="yyyy-MM-dd"
           className="form-control mx-2"
         />
-      </Form.Group>
+      </div>
 
-      <Form.Group className="mb-3">
+      <div className={styles.formGroup}>
         <Form.Check
+          className={styles.checkboxLabel}
           type="checkbox"
           id="internationalFlight"
           label="International Flight (+40 min)"
@@ -177,6 +176,7 @@ export const FlightForm = ({
           }
         />
         <Form.Check
+          className={styles.checkboxLabel}
           type="checkbox"
           id="noTSAPre"
           label="No TSA Pre ✓ (+15 min)"
@@ -184,13 +184,14 @@ export const FlightForm = ({
           onChange={(e) => onCheckboxChange("noTSAPre", e.target.checked)}
         />
         <Form.Check
+          className={styles.checkboxLabel}
           type="checkbox"
           id="needSnacks"
           label="Time for Snacks (+10 min)"
           checked={formValues.needSnacks || false}
           onChange={(e) => onCheckboxChange("needSnacks", e.target.checked)}
         />
-      </Form.Group>
+      </div>
     </Form>
   );
 };

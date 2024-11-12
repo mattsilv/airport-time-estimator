@@ -1,0 +1,19 @@
+.navbar {
+  padding-top: env(safe-area-inset-top);
+  margin-bottom: 0;
+  box-shadow: none;
+  border-bottom: none;
+}
+
+.brand {
+  font-size: 1.25rem;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  color: #1c1c1e;
+  padding-top: 0.25rem;
+  padding-bottom: 0.25rem;
+}
+
+.logo {
+  margin-right: 0.5rem;
+}

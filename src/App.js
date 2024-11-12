@@ -1,15 +1,12 @@
-import React from 'react';
-import {Container} from 'react-bootstrap';
-import Footer from './components/Footer';
-import AppRouter from './routes/AppRouter';
+import React from "react";
+import AppRouter from "./routes/AppRouter";
+import styles from "./styles/App.module.css";
 
 function App() {
   return (
-    <Container fluid="lg md">
+    <div className={styles.container}>
       <AppRouter />
-
-      <Footer />
-    </Container>
+    </div>
   );
 }
 
