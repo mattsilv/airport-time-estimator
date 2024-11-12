@@ -39,6 +39,7 @@ export function Home() {
         {!!leaveTime && leaveTime !== "00:00" && (
           <Stack gap={2} className="mt-3 mx-auto">
             <Alert variant="info" className="text-center">
+              <div className="mb-2">Leave for the airport by:</div>
               <Alert.Heading className="mb-0">✈️ {leaveTime}</Alert.Heading>
             </Alert>
 

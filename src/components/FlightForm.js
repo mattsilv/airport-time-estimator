@@ -38,34 +38,13 @@ export const FlightForm = ({
 
   const sliderColor = getSliderColor(formValues.anxietyLevel || 0);
 
+  const handleNumberChange = (fieldName) => (e) => {
+    const value = Math.max(0, Math.min(999, parseInt(e.target.value) || 0));
+    onFieldChange(fieldName)({ target: { value: value.toString() } });
+  };
+
   return (
     <Form>
-      <Form.Group className="mb-3">
-        <Form.Check
-          type="checkbox"
-          id="internationalFlight"
-          label="International Flight (+40 min)"
-          checked={formValues.isInternational || false}
-          onChange={(e) =>
-            onCheckboxChange("isInternational", e.target.checked)
-          }
-        />
-        <Form.Check
-          type="checkbox"
-          id="noTSAPre"
-          label="No TSA Pre ✓ (+15 min)"
-          checked={formValues.noTSAPre || false}
-          onChange={(e) => onCheckboxChange("noTSAPre", e.target.checked)}
-        />
-        <Form.Check
-          type="checkbox"
-          id="needSnacks"
-          label="Time for Snacks (+10 min)"
-          checked={formValues.needSnacks || false}
-          onChange={(e) => onCheckboxChange("needSnacks", e.target.checked)}
-        />
-      </Form.Group>
-
       <Form.Group className="mb-3">
         <Form.Label htmlFor="anxietyLevel">Travel Anxiety:</Form.Label>
         <Form.Range
@@ -111,23 +90,135 @@ export const FlightForm = ({
         <Form.Label htmlFor="drivingTime">
           Driving Time to Airport (minutes):
         </Form.Label>
-        <Form.Control
-          type="number"
-          id="drivingTime"
-          value={formValues.drivingTime}
-          onChange={onFieldChange("drivingTime")}
-        />
+        <div className="d-flex align-items-center">
+          <Form.Control
+            type="number"
+            inputMode="numeric"
+            pattern="[0-9]*"
+            id="drivingTime"
+            value={formValues.drivingTime}
+            onChange={handleNumberChange("drivingTime")}
+            min="0"
+            max="999"
+            style={{ width: "100px" }}
+            className="form-control-sm"
+          />
+          <div className="d-flex gap-2 ms-2">
+            <button
+              type="button"
+              className="btn rounded-circle d-flex align-items-center justify-content-center"
+              style={{
+                backgroundColor: "#ff6b6b",
+                color: "white",
+                width: "32px",
+                height: "32px",
+                padding: "0",
+                fontSize: "20px",
+                border: "none",
+                touchAction: "manipulation",
+              }}
+              onClick={() =>
+                handleNumberChange("drivingTime")({
+                  target: {
+                    value: (parseInt(formValues.drivingTime) - 5).toString(),
+                  },
+                })
+              }
+            >
+              −
+            </button>
+            <button
+              type="button"
+              className="btn rounded-circle d-flex align-items-center justify-content-center"
+              style={{
+                backgroundColor: "#69db7c",
+                color: "white",
+                width: "32px",
+                height: "32px",
+                padding: "0",
+                fontSize: "20px",
+                border: "none",
+                touchAction: "manipulation",
+              }}
+              onClick={() =>
+                handleNumberChange("drivingTime")({
+                  target: {
+                    value: (parseInt(formValues.drivingTime) + 5).toString(),
+                  },
+                })
+              }
+            >
+              +
+            </button>
+          </div>
+        </div>
       </Form.Group>
       <Form.Group className="mb-3">
         <Form.Label htmlFor="arriveEarly">
           Arrive how soon before boarding? (minutes):
         </Form.Label>
-        <Form.Control
-          type="number"
-          id="arriveEarly"
-          value={formValues.arriveEarly}
-          onChange={onFieldChange("arriveEarly")}
-        />
+        <div className="d-flex align-items-center">
+          <Form.Control
+            type="number"
+            inputMode="numeric"
+            pattern="[0-9]*"
+            id="arriveEarly"
+            value={formValues.arriveEarly}
+            onChange={handleNumberChange("arriveEarly")}
+            min="0"
+            max="999"
+            style={{ width: "100px" }}
+            className="form-control-sm"
+          />
+          <div className="d-flex gap-2 ms-2">
+            <button
+              type="button"
+              className="btn rounded-circle d-flex align-items-center justify-content-center"
+              style={{
+                backgroundColor: "#ff6b6b",
+                color: "white",
+                width: "32px",
+                height: "32px",
+                padding: "0",
+                fontSize: "20px",
+                border: "none",
+                touchAction: "manipulation",
+              }}
+              onClick={() =>
+                handleNumberChange("arriveEarly")({
+                  target: {
+                    value: (parseInt(formValues.arriveEarly) - 5).toString(),
+                  },
+                })
+              }
+            >
+              −
+            </button>
+            <button
+              type="button"
+              className="btn rounded-circle d-flex align-items-center justify-content-center"
+              style={{
+                backgroundColor: "#69db7c",
+                color: "white",
+                width: "32px",
+                height: "32px",
+                padding: "0",
+                fontSize: "20px",
+                border: "none",
+                touchAction: "manipulation",
+              }}
+              onClick={() =>
+                handleNumberChange("arriveEarly")({
+                  target: {
+                    value: (parseInt(formValues.arriveEarly) + 5).toString(),
+                  },
+                })
+              }
+            >
+              +
+            </button>
+          </div>
+        </div>
       </Form.Group>
       <Form.Group className="mb-3">
         <Form.Label htmlFor="selectedDate">Departure Date:</Form.Label>
@@ -136,6 +227,32 @@ export const FlightForm = ({
           onChange={onDateChange}
           dateFormat="yyyy-MM-dd"
           className="form-control mx-2"
+        />
+      </Form.Group>
+
+      <Form.Group className="mb-3">
+        <Form.Check
+          type="checkbox"
+          id="internationalFlight"
+          label="International Flight (+40 min)"
+          checked={formValues.isInternational || false}
+          onChange={(e) =>
+            onCheckboxChange("isInternational", e.target.checked)
+          }
+        />
+        <Form.Check
+          type="checkbox"
+          id="noTSAPre"
+          label="No TSA Pre ✓ (+15 min)"
+          checked={formValues.noTSAPre || false}
+          onChange={(e) => onCheckboxChange("noTSAPre", e.target.checked)}
+        />
+        <Form.Check
+          type="checkbox"
+          id="needSnacks"
+          label="Time for Snacks (+10 min)"
+          checked={formValues.needSnacks || false}
+          onChange={(e) => onCheckboxChange("needSnacks", e.target.checked)}
         />
       </Form.Group>
     </Form>
