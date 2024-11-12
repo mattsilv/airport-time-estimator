@@ -48,51 +48,62 @@ export function Home() {
             </Alert>
 
             <Stack className="mb-2">
-              {calendarURL && (
-                <a
-                  href={calendarURL}
-                  style={calendarLinkStyle}
-                  className="mx-auto"
-                  rel="noopener noreferrer"
-                  target="_blank"
+              <div className="d-flex gap-3 justify-content-center">
+                <button
+                  className="btn btn-success d-flex align-items-center gap-2"
+                  onClick={() => window.open(calendarURL, "_blank")}
+                  style={{
+                    fontSize: "0.95rem",
+                    fontWeight: "400",
+                    letterSpacing: "-0.01em",
+                  }}
                 >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="16"
+                    height="16"
+                    fill="currentColor"
+                    viewBox="0 0 16 16"
+                  >
+                    <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4H1z" />
+                  </svg>
                   Add to Calendar
-                </a>
-              )}
+                </button>
 
-              <button
-                className="btn btn-secondary mx-auto mb-2"
-                onClick={handleReset}
-                style={{
-                  fontSize: "0.95rem",
-                  fontWeight: "400",
-                  letterSpacing: "-0.01em",
-                }}
-              >
-                Reset
-              </button>
-
-              <p className={styles.footerText}>
-                a silly{" "}
-                <a
-                  href="https://github.com/mattsilv/airport-time-estimator"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className={styles.footerLink}
+                <button
+                  className="btn btn-outline-secondary"
+                  onClick={handleReset}
+                  style={{
+                    fontSize: "0.95rem",
+                    fontWeight: "400",
+                    letterSpacing: "-0.01em",
+                  }}
                 >
-                  open-source
-                </a>{" "}
-                app by{" "}
-                <a
-                  href="https://silv.blog"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className={styles.footerLink}
-                >
-                  silv.eth
-                </a>
-              </p>
+                  Reset
+                </button>
+              </div>
             </Stack>
+
+            <p className={styles.footerText}>
+              a silly{" "}
+              <a
+                href="https://github.com/mattsilv/airport-time-estimator"
+                target="_blank"
+                rel="noopener noreferrer"
+                className={styles.footerLink}
+              >
+                open-source
+              </a>{" "}
+              app by{" "}
+              <a
+                href="https://silv.blog"
+                target="_blank"
+                rel="noopener noreferrer"
+                className={styles.footerLink}
+              >
+                silv.eth
+              </a>
+            </p>
           </Stack>
         )}
       </div>
