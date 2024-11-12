@@ -1,21 +1,22 @@
-import React from 'react';
-import {Alert, Stack} from 'react-bootstrap';
-import {FlightForm} from '../components/FlightForm';
-import {useFlightForm} from '../hooks/useFlightForm';
-import {useCalenderLink} from '../hooks/useCalenderLink';
+import React from "react";
+import { Alert, Stack } from "react-bootstrap";
+import { FlightForm } from "../components/FlightForm";
+import { useFlightForm } from "../hooks/useFlightForm";
+import { useCalenderLink } from "../hooks/useCalenderLink";
 
 export function Home() {
   const {
     leaveTime,
     formValues,
     selectedDate,
-    boardingTime,
     handleFieldChange,
     handleDateChange,
     handleReset,
+    handleAnxietyChange,
+    handleCheckboxChange,
   } = useFlightForm();
 
-  const {calendarURL} = useCalenderLink(leaveTime, selectedDate);
+  const { calendarURL } = useCalenderLink(leaveTime, selectedDate);
 
   return (
     <Stack className="mt-3" gap={2}>
@@ -29,12 +30,13 @@ export function Home() {
         <FlightForm
           formValues={formValues}
           selectedDate={selectedDate}
-          boardingTime={boardingTime}
           onFieldChange={handleFieldChange}
           onDateChange={handleDateChange}
+          onAnxietyChange={handleAnxietyChange}
+          onCheckboxChange={handleCheckboxChange}
         />
 
-        {!!leaveTime && leaveTime !== '00:00' && (
+        {!!leaveTime && leaveTime !== "00:00" && (
           <Stack gap={2} className="mt-3 mx-auto">
             <Alert variant="info" className="text-center">
               <Alert.Heading className="mb-0">✈️ {leaveTime}</Alert.Heading>

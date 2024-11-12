@@ -16,6 +16,7 @@ export function useFlightForm() {
     setSelectedDate,
     resetFields,
     setIsInitialLoad,
+    setFormValues,
   } = useFormState();
 
   const handleDateChange = (date) => {
@@ -36,6 +37,54 @@ export function useFlightForm() {
     setLeaveTime(null);
     navigate("/", { replace: true });
     console.log("Reset button clicked, URL and state reset");
+  };
+
+  const handleAnxietyChange = (level) => {
+    const baseArriveEarly = 30;
+    const internationalBuffer = formValues.isInternational ? 40 : 0;
+    const tsaBuffer = formValues.noTSAPre ? 15 : 0;
+    const snackBuffer = formValues.needSnacks ? 10 : 0;
+    const additionalMinutes = level * 5;
+
+    const totalBuffer =
+      baseArriveEarly +
+      internationalBuffer +
+      tsaBuffer +
+      snackBuffer +
+      additionalMinutes;
+
+    setFormValues((prev) => ({
+      ...prev,
+      anxietyLevel: level,
+      arriveEarly: totalBuffer.toString(),
+    }));
+  };
+
+  const handleCheckboxChange = (name, checked) => {
+    setFormValues((prev) => {
+      const newValues = {
+        ...prev,
+        [name]: checked,
+      };
+
+      const baseArriveEarly = 30;
+      const internationalBuffer = newValues.isInternational ? 40 : 0;
+      const tsaBuffer = newValues.noTSAPre ? 15 : 0;
+      const snackBuffer = newValues.needSnacks ? 10 : 0;
+      const anxietyMinutes = (parseInt(newValues.anxietyLevel) || 0) * 5;
+
+      const totalBuffer =
+        baseArriveEarly +
+        internationalBuffer +
+        tsaBuffer +
+        snackBuffer +
+        anxietyMinutes;
+
+      return {
+        ...newValues,
+        arriveEarly: totalBuffer.toString(),
+      };
+    });
   };
 
   useEffect(() => {
@@ -82,5 +131,7 @@ export function useFlightForm() {
     handleFieldChange,
     handleDateChange,
     handleReset,
+    handleAnxietyChange,
+    handleCheckboxChange,
   };
 }

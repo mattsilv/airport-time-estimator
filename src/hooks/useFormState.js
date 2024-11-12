@@ -59,5 +59,6 @@ export function useFormState() {
     setSelectedDate,
     resetFields,
     setIsInitialLoad,
+    setFormValues,
   };
 }
