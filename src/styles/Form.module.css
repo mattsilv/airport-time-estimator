@@ -82,11 +82,8 @@
   height: 44px;
   display: flex;
   align-items: center;
-  touch-action: none;
-  cursor: pointer;
-  padding: var(--spacing-sm) 22px;
-  background: transparent;
-  margin-bottom: var(--spacing-xs);
+  padding: 0 22px;
+  margin: 10px 0;
 }
 
 .sliderTrack {
@@ -96,22 +93,48 @@
   background: #e9ecef;
   border-radius: 2px;
   left: 22px;
-  pointer-events: none;
+}
+
+.sliderInput {
+  position: absolute;
+  width: calc(100% - 44px);
+  left: 22px;
+  margin: 0;
+  height: 44px;
+  opacity: 0.0001; /* Nearly invisible but still interactive */
+  cursor: pointer;
+  -webkit-appearance: none;
+  appearance: none;
+  z-index: 2; /* Ensure input is above emoji */
+}
+
+.sliderInput::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 44px;
+  height: 44px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+.sliderInput::-moz-range-thumb {
+  width: 44px;
+  height: 44px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
 }
 
 .sliderEmoji {
   position: absolute;
-  transform: translateX(-50%);
   font-size: 32px;
   pointer-events: none;
-  transition: left 0.1s ease-out;
-  line-height: 1;
-  display: flex;
-  align-items: center;
-  z-index: 2;
-  -webkit-user-select: none;
-  user-select: none;
+  transform: translateX(-50%);
   left: calc(22px + var(--slider-percent, 0) * (100% - 44px));
+  z-index: 1;
+  user-select: none;
+  -webkit-user-select: none;
 }
 
 .hiddenInput {
@@ -120,8 +143,12 @@
   height: 100%;
   opacity: 0;
   cursor: pointer;
-  touch-action: none;
+  touch-action: pan-x;
   -webkit-tap-highlight-color: transparent;
+  -webkit-user-select: none;
+  user-select: none;
+  margin: 0;
+  padding: 0;
 }
 
 .anxietyText {
@@ -138,8 +165,8 @@
   text-transform: uppercase;
   letter-spacing: 0.5px;
   font-weight: 500;
-  margin-bottom: var(--form-label-margin);
-  padding-left: 0; /* Remove left padding */
+  margin-bottom: var(--spacing-xs);
+  padding-left: 0;
   line-height: var(--label-line-height);
   display: block;
 }
@@ -208,7 +235,8 @@ input[type="range"]:focus {
   border-radius: 8px;
   border: 1px solid #d1d5db;
   padding: 0.5rem 0.75rem;
-  width: 140px;
+  padding-right: 2.5rem;
+  width: 100%;
   background-color: white;
   -webkit-appearance: none;
 }
@@ -228,7 +256,8 @@ input[type="range"]:focus {
   border-radius: 8px;
   border: 1px solid #d1d5db;
   padding: 0.5rem 0.75rem;
-  width: 140px;
+  padding-right: 2.5rem;
+  width: 100%;
   background-color: white;
   -webkit-appearance: none;
 }
@@ -292,4 +321,238 @@ input[type="range"]:focus {
   padding-top: calc(
     (var(--input-height) - (var(--font-sm) * var(--label-line-height))) / 2
   ); /* Center vertically */
+}
+
+.sliderContainer:active {
+  cursor: grabbing;
+}
+
+.sliderContainer:active .sliderTrack {
+  background: #d1d5db;
+}
+
+.timeAndDateContainer {
+  display: flex;
+  gap: 1.5rem;
+  margin-bottom: var(--form-group-spacing);
+}
+
+.timeGroup,
+.dateGroup {
+  flex: 1;
+  position: relative;
+}
+
+.timeGroup .formLabel,
+.dateGroup .formLabel {
+  font-family: var(--system-font);
+  font-size: var(--font-sm);
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-weight: 500;
+  margin-bottom: var(--spacing-xs);
+  display: block;
+}
+
+/* Time input specific styles */
+.timeInput {
+  font-family: var(--system-font);
+  font-size: 1rem;
+  color: #1c1c1e;
+  height: var(--input-height);
+  border-radius: 8px;
+  border: 1px solid #d1d5db;
+  padding: 0.5rem 0.75rem;
+  width: 100%;
+  background-color: white;
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Date input specific styles */
+.dateInput,
+:global(.react-datepicker__input-container input) {
+  font-family: var(--system-font);
+  font-size: 1rem;
+  color: #1c1c1e;
+  height: var(--input-height);
+  border-radius: 8px;
+  border: 1px solid #d1d5db;
+  padding: 0.5rem 0.75rem;
+  padding-right: 2.5rem;
+  width: 100%;
+  background-color: white;
+  -webkit-appearance: none;
+}
+
+/* Override global datepicker styles */
+:global(.react-datepicker-wrapper),
+:global(.react-datepicker__input-container) {
+  display: block;
+  width: 100%;
+}
+
+/* New clean styles */
+.timeAndDateContainer {
+  display: flex;
+  gap: 1.5rem;
+  margin-bottom: var(--form-group-spacing);
+}
+
+.timeGroup,
+.dateGroup {
+  flex: 1;
+}
+
+/* Base input styles */
+.inputBase {
+  font-family: var(--system-font);
+  font-size: 1rem;
+  color: #1c1c1e;
+  height: var(--input-height);
+  border-radius: 8px;
+  border: 1px solid #d1d5db;
+  padding: 0.5rem 0.75rem;
+  width: 100%;
+  background-color: white;
+  -webkit-appearance: none;
+}
+
+.inputBase:focus {
+  outline: none;
+  border-color: #007aff;
+  box-shadow: 0 0 0 1px #007aff;
+}
+
+/* Time input */
+.timeInput {
+  composes: inputBase;
+}
+
+/* Date input */
+.dateInput {
+  composes: inputBase;
+}
+
+/* Override datepicker styles */
+:global(.react-datepicker-wrapper) {
+  width: 100%;
+}
+
+:global(.react-datepicker__input-container) {
+  width: 100%;
+}
+
+:global(.react-datepicker__input-container input) {
+  font-family: var(--system-font);
+  font-size: 1rem;
+  color: #1c1c1e;
+  height: var(--input-height);
+  border-radius: 8px;
+  border: 1px solid #d1d5db;
+  padding: 0.5rem 0.75rem;
+  padding-right: 2.5rem;
+  width: 100%;
+  background-color: white;
+  -webkit-appearance: none;
+}
+
+:global(.react-datepicker__input-container input:focus) {
+  outline: none;
+  border-color: #007aff;
+  box-shadow: 0 0 0 1px #007aff;
+}
+
+/* Remove any conflicting styles */
+.dateGroup .dateLabel,
+.formGroup:nth-last-child(2),
+.formGroup:nth-last-child(2) .formLabel {
+  margin: 0;
+  padding: 0;
+}
+
+/* Unified label style */
+.formLabel {
+  display: block;
+  font-family: var(--system-font);
+  font-size: var(--font-sm);
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-weight: 500;
+  margin-bottom: 4px !important;
+  padding: 0;
+  line-height: 1;
+}
+
+/* Force DatePicker wrappers to behave */
+:global(.react-datepicker-wrapper),
+:global(.react-datepicker__input-container) {
+  margin: 0 !important;
+  padding: 0 !important;
+  display: block !important;
+  width: 100% !important;
+  line-height: 1 !important;
+  position: static !important;
+}
+
+/* Unified input styles */
+.timeInput,
+.dateInput,
+:global(.react-datepicker__input-container input) {
+  display: block;
+  width: 100%;
+  height: var(--input-height);
+  padding: 0.5rem 0.75rem;
+  margin: 0;
+  font-family: var(--system-font);
+  font-size: 1rem;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  background-color: white;
+  color: #1c1c1e;
+  -webkit-appearance: none;
+  line-height: normal;
+}
+
+.dateInputWrapper {
+  position: relative;
+  width: 100%;
+}
+
+.dateInputWrapper::after {
+  content: "📅";
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+  opacity: 0.5;
+  font-size: 1.1rem;
+  line-height: 1;
+}
+
+/* Add touch-specific improvements */
+.sliderContainer:active {
+  cursor: grabbing;
+}
+
+.sliderContainer:active .sliderTrack {
+  background: #d1d5db; /* Visual feedback when active */
+}
+
+/* Prevent unwanted touch behaviors */
+.hiddenInput {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: pointer;
+  touch-action: pan-x; /* Only allow horizontal sliding */
+  -webkit-tap-highlight-color: transparent;
+  -webkit-user-select: none;
+  user-select: none;
+  margin: 0;
+  padding: 0;
 }

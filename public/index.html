@@ -16,6 +16,24 @@
     <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
     <meta name="apple-mobile-web-app-status-bar-style" content="default" />
     <title>Airport ETA - Silv.app</title>
+    <script>
+      // Add version number to force cache refresh
+      window.appVersion = "1.0.0";
+
+      // Register service worker
+      if ("serviceWorker" in navigator) {
+        window.addEventListener("load", () => {
+          navigator.serviceWorker
+            .register("/service-worker.js")
+            .then((registration) => {
+              // Check for updates every hour
+              setInterval(() => {
+                registration.update();
+              }, 3600000);
+            });
+        });
+      }
+    </script>
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>

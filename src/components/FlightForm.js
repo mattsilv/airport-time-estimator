@@ -2,7 +2,8 @@ import React from "react";
 import { Form } from "react-bootstrap";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import styles from "./FlightForm.module.css";
+import styles from "../styles/Form.module.css";
+import sliderStyles from "../styles/Slider.module.css";
 import { getAnxietyText, getEmoji } from "../config/anxietyConfig";
 
 export const FlightForm = ({
@@ -25,19 +26,18 @@ export const FlightForm = ({
     <Form className={styles.sliderForm}>
       <div className={styles.formGroup}>
         <Form.Label className={styles.formLabel}>Travel Anxiety</Form.Label>
-        <div className={styles.sliderContainer}>
-          <div className={styles.sliderTrack} />
+        <div className={sliderStyles.sliderContainer}>
+          <div className={sliderStyles.sliderTrack} />
           <input
             type="range"
-            id="anxietyLevel"
             min="0"
             max="10"
             value={anxietyLevel}
             onChange={(e) => onAnxietyChange(parseInt(e.target.value))}
-            className={styles.hiddenInput}
+            className={sliderStyles.sliderInput}
           />
           <div
-            className={styles.sliderEmoji}
+            className={sliderStyles.sliderEmoji}
             style={{
               "--slider-percent": anxietyLevel / 10,
             }}
@@ -45,20 +45,32 @@ export const FlightForm = ({
             {getEmoji(anxietyLevel)}
           </div>
         </div>
-        <div className={styles.anxietyText}>
+        <div className={sliderStyles.anxietyText}>
           {getAnxietyText(anxietyLevel, extraMinutes)}
         </div>
       </div>
 
       <div className={styles.formGroup}>
-        <Form.Label className={styles.formLabel}>Boarding Time</Form.Label>
-        <Form.Control
+        <label className={styles.formLabel}>Boarding Time</label>
+        <input
           type="time"
           id="boardingTime"
           value={formValues.boardingTime}
           onChange={onFieldChange("boardingTime")}
           className={styles.timeInput}
         />
+      </div>
+
+      <div className={styles.formGroup}>
+        <label className={styles.formLabel}>Departure Date</label>
+        <div className={styles.dateInputWrapper}>
+          <DatePicker
+            selected={selectedDate}
+            onChange={onDateChange}
+            dateFormat="yyyy-MM-dd"
+            className={styles.dateInput}
+          />
+        </div>
       </div>
 
       <div className={styles.formGroup}>
@@ -152,18 +164,6 @@ export const FlightForm = ({
               +
             </button>
           </div>
-        </div>
-      </div>
-
-      <div className={styles.dateGroup}>
-        <Form.Label className={styles.dateLabel}>Departure Date</Form.Label>
-        <div className={styles.dateInputWrapper}>
-          <DatePicker
-            selected={selectedDate}
-            onChange={onDateChange}
-            dateFormat="yyyy-MM-dd"
-            className={styles.dateInput}
-          />
         </div>
       </div>
 

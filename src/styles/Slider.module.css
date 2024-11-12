@@ -1,0 +1,146 @@
+:root {
+  --slider-height: 44px;
+  --slider-padding: 22px;
+  --emoji-size: 32px;
+}
+.sliderContainer {
+  position: relative;
+  width: 100%;
+  height: var(--slider-height);
+  display: flex;
+  align-items: center;
+  padding: 0 var(--slider-padding);
+  margin: 10px 0;
+  touch-action: none;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+.sliderTrack {
+  position: absolute;
+  width: calc(100% - (var(--slider-padding) * 2));
+  height: 4px;
+  background: #e9ecef;
+  border-radius: 2px;
+  left: var(--slider-padding);
+}
+
+.sliderInput {
+  position: absolute;
+  width: 100%;
+  left: 0;
+  margin: 0;
+  height: var(--slider-height);
+  opacity: 0.0001;
+  cursor: pointer;
+  -webkit-appearance: none;
+  appearance: none;
+  z-index: 2;
+  touch-action: none;
+}
+
+.sliderInput::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: var(--slider-height);
+  height: var(--slider-height);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+.sliderInput::-moz-range-thumb {
+  width: var(--slider-height);
+  height: var(--slider-height);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+.sliderInput:focus {
+  outline: none !important;
+}
+
+.sliderEmoji {
+  position: absolute;
+  font-size: var(--emoji-size);
+  pointer-events: none;
+  transform: translateX(-50%);
+  left: calc(
+    var(--slider-padding) + var(--slider-percent, 0) *
+      (100% - var(--slider-padding) * 2)
+  );
+  z-index: 1;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.anxietyText {
+  font-size: var(--font-sm);
+  color: #444444;
+  text-align: left;
+  margin-bottom: var(--spacing-xs);
+}
+
+/* Touch-specific improvements */
+.sliderContainer:active {
+  cursor: grabbing;
+}
+
+.sliderContainer:active .sliderTrack {
+  background: #d1d5db;
+}
+
+/* Remove any highlight on touch */
+.sliderContainer *,
+.sliderInput * {
+  -webkit-tap-highlight-color: transparent !important;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+/* Range input resets */
+input[type="range"].sliderInput {
+  -webkit-appearance: none !important;
+  -webkit-tap-highlight-color: transparent !important;
+}
+
+input[type="range"].sliderInput:focus {
+  outline: none !important;
+}
+
+.sliderForm {
+  -webkit-tap-highlight-color: transparent !important;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
+  padding-top: var(--spacing-xs);
+}
+
+/* Additional slider-related styles migrated from Form.module.css */
+.sliderThumb:focus {
+  outline: none;
+  box-shadow: none;
+}
+
+.sliderThumb:active,
+.sliderThumb:focus-visible,
+.sliderThumb::selection {
+  outline: none;
+  -webkit-tap-highlight-color: transparent;
+  background: transparent;
+  box-shadow: none;
+}
+
+/* Global slider resets */
+:global(input[type="range"]) {
+  -webkit-appearance: none !important;
+  -webkit-tap-highlight-color: transparent !important;
+}
+
+:global(input[type="range"]:focus) {
+  outline: none !important;
+}

@@ -5,4 +5,10 @@
 [[headers]]
   for = "/*"
   [headers.values]
+    Cache-Control = "no-cache"
+    Pragma = "no-cache"
+
+[[headers]]
+  for = "/static/*"
+  [headers.values]
     Cache-Control = "public, max-age=31536000, immutable"
