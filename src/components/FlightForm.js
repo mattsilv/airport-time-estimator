@@ -57,6 +57,7 @@ export const FlightForm = ({
           id="boardingTime"
           value={formValues.boardingTime}
           onChange={onFieldChange("boardingTime")}
+          className={styles.timeInput}
         />
       </div>
 
@@ -74,7 +75,7 @@ export const FlightForm = ({
             onChange={handleNumberChange("drivingTime")}
             min="0"
             max="999"
-            className={`form-control-sm ${styles.numberControl}`}
+            className={styles.numberControl}
           />
           <div className="d-flex gap-2 ms-2">
             <button
@@ -121,7 +122,7 @@ export const FlightForm = ({
             onChange={handleNumberChange("arriveEarly")}
             min="0"
             max="999"
-            className={`form-control-sm ${styles.numberControl}`}
+            className={styles.numberControl}
           />
           <div className="d-flex gap-2 ms-2">
             <button
@@ -154,14 +155,16 @@ export const FlightForm = ({
         </div>
       </div>
 
-      <div className={styles.formGroup}>
-        <Form.Label className={styles.formLabel}>Departure Date</Form.Label>
-        <DatePicker
-          selected={selectedDate}
-          onChange={onDateChange}
-          dateFormat="yyyy-MM-dd"
-          className="form-control mx-2"
-        />
+      <div className={styles.dateGroup}>
+        <Form.Label className={styles.dateLabel}>Departure Date</Form.Label>
+        <div className={styles.dateInputWrapper}>
+          <DatePicker
+            selected={selectedDate}
+            onChange={onDateChange}
+            dateFormat="yyyy-MM-dd"
+            className={styles.dateInput}
+          />
+        </div>
       </div>
 
       <div className={styles.formGroup}>

@@ -6,10 +6,40 @@
   --spacing-lg: 1rem; /* 16px */
   --font-sm: 0.85em;
   --font-xs: 0.8em;
+  --system-font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    Helvetica, Arial, sans-serif;
+  --form-label-margin: 0.5rem;
+  --form-group-spacing: 1.25rem;
+  --input-height: 38px;
+  --label-line-height: 1.2;
+  --form-horizontal-padding: 0; /* Remove default padding */
 }
 
+/* Base form control styles - must be defined before being composed */
+.formControl {
+  font-family: var(--system-font);
+  font-size: 1rem;
+  color: #1c1c1e;
+  height: var(--input-height);
+  border-radius: 8px;
+  border: 1px solid #d1d5db;
+  padding: 0.5rem 0.75rem;
+  width: 100%;
+  background-color: white;
+  -webkit-appearance: none;
+}
+
+.formControl:focus {
+  outline: none;
+  border-color: #007aff;
+  box-shadow: 0 0 0 1px #007aff;
+}
+
+/* Number input styles */
 .numberControl {
+  composes: formControl;
   width: 100px;
+  text-align: center;
 }
 
 .buttonBase {
@@ -102,18 +132,23 @@
 }
 
 .formLabel {
+  font-family: var(--system-font);
   font-size: var(--font-sm);
   color: #6b7280;
   text-transform: uppercase;
   letter-spacing: 0.5px;
   font-weight: 500;
-  margin-bottom: var(--spacing-xs);
-  padding-left: var(--spacing-xs);
+  margin-bottom: var(--form-label-margin);
+  padding-left: 0; /* Remove left padding */
+  line-height: var(--label-line-height);
+  display: block;
 }
 
 .formGroup {
   position: relative;
-  margin-bottom: var(--spacing-md);
+  margin-bottom: var(--form-group-spacing);
+  display: flex;
+  flex-direction: column;
 }
 
 .sliderThumb:focus {
@@ -162,4 +197,99 @@ input[type="range"]:focus {
   font-size: var(--font-xs);
   color: #4b5563;
   margin-bottom: var(--spacing-xs);
+}
+
+/* Date picker and time input styles */
+.dateInput {
+  font-family: var(--system-font);
+  font-size: 1rem;
+  color: #1c1c1e;
+  height: var(--input-height);
+  border-radius: 8px;
+  border: 1px solid #d1d5db;
+  padding: 0.5rem 0.75rem;
+  width: 140px;
+  background-color: white;
+  -webkit-appearance: none;
+}
+
+.dateInput:focus {
+  outline: none;
+  border-color: #007aff;
+  box-shadow: 0 0 0 1px #007aff;
+}
+
+/* Apply styles globally to datepicker input */
+:global(.react-datepicker__input-container input) {
+  font-family: var(--system-font);
+  font-size: 1rem;
+  color: #1c1c1e;
+  height: var(--input-height);
+  border-radius: 8px;
+  border: 1px solid #d1d5db;
+  padding: 0.5rem 0.75rem;
+  width: 140px;
+  background-color: white;
+  -webkit-appearance: none;
+}
+
+:global(.react-datepicker__input-container input:focus) {
+  outline: none;
+  border-color: #007aff;
+  box-shadow: 0 0 0 1px #007aff;
+}
+
+/* Time input styles */
+.timeInput {
+  font-family: var(--system-font);
+  font-size: 1rem;
+  color: #1c1c1e;
+  height: var(--input-height);
+  border-radius: 8px;
+  border: 1px solid #d1d5db;
+  padding: 0.5rem 0.75rem;
+  width: 100%;
+  background-color: white;
+  -webkit-appearance: none;
+}
+
+.timeInput:focus {
+  outline: none;
+  border-color: #007aff;
+  box-shadow: 0 0 0 1px #007aff;
+}
+
+/* Checkbox label styles */
+.checkboxLabel {
+  font-family: var(--system-font);
+  font-size: 0.95rem;
+  color: #1c1c1e;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+}
+
+/* Add specific spacing for date input */
+.formGroup:nth-last-child(2) {
+  /* Targets the date picker group */
+  margin-top: var(--spacing-md);
+  margin-bottom: var(--spacing-md);
+}
+
+.formGroup:nth-last-child(2) .formLabel {
+  /* Targets the date picker label */
+  margin-bottom: var(--spacing-sm); /* Increased from spacing-xs */
+}
+
+.dateGroup {
+  display: flex;
+  align-items: center;
+  gap: 1rem; /* Consistent spacing between label and input */
+}
+
+.dateGroup .dateLabel {
+  margin-bottom: 0; /* Remove bottom margin when in horizontal layout */
+  min-width: 120px; /* Fixed width for alignment */
+  padding-top: calc(
+    (var(--input-height) - (var(--font-sm) * var(--label-line-height))) / 2
+  ); /* Center vertically */
 }
