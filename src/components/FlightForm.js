@@ -38,7 +38,10 @@ export const FlightForm = ({
           />
           <div
             className={styles.sliderEmoji}
-            style={{ left: `${(anxietyLevel / 10) * 100}%` }}
+            style={{
+              "--slider-percent": anxietyLevel / 10,
+              marginLeft: "16px",
+            }}
           >
             {getEmoji(anxietyLevel)}
           </div>

@@ -1,26 +1,27 @@
-import {Container, Navbar} from 'react-bootstrap';
+import { Container, Navbar } from "react-bootstrap";
 
 export function AppNavbar() {
   return (
-    <Navbar expand="lg" className="bg-body-tertiary">
+    <Navbar
+      expand="lg"
+      className="bg-light"
+      style={{
+        paddingTop: "env(safe-area-inset-top)",
+        marginBottom: "-1rem",
+        boxShadow: "0 1px 3px rgba(0,0,0,0.05)",
+      }}
+    >
       <Container>
-        <Navbar.Brand href="/">
-          {' '}
+        <Navbar.Brand href="/" className="py-2">
           <img
             alt=""
             src="./favicon-32x32.png"
             width="30"
             height="30"
             className="d-inline-block align-top"
-          />{' '}
-          Airport Time Calculator
+          />{" "}
+          Airport ETA Calculator
         </Navbar.Brand>
-        {/* <Navbar.Toggle aria-controls="basic-navbar-nav" />
-        <Navbar.Collapse id="basic-navbar-nav">
-          <Nav className="me-auto">
-            <Nav.Link href="/">Home</Nav.Link>
-          </Nav>
-        </Navbar.Collapse> */}
       </Container>
     </Navbar>
   );

@@ -19,14 +19,14 @@ export function Home() {
   const { calendarURL } = useCalenderLink(leaveTime, selectedDate);
 
   return (
-    <Stack className="mt-3" gap={2}>
-      <div>
-        <h3 className="text-center">
-          What time should I leave for the airport?
-        </h3>
-      </div>
-
-      <div className="px-4 pt-4 border rounded shadow-sm bg-light">
+    <Stack className="mt-0" gap={2}>
+      <div
+        className="px-4 pt-4 bg-light"
+        style={{
+          boxShadow: "0 2px 4px rgba(0,0,0,0.05)",
+          borderRadius: "0 0 8px 8px",
+        }}
+      >
         <FlightForm
           formValues={formValues}
           selectedDate={selectedDate}

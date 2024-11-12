@@ -1,0 +1,45 @@
+{
+  "rules": {
+    "touch": {
+      "interactive": {
+        "minSize": "44px",
+        "spacing": "8px",
+        "touchAction": "manipulation",
+        "userSelect": "none",
+        "tapHighlight": "transparent"
+      },
+      "sliders": {
+        "minTrackHeight": "4px",
+        "minThumbSize": "28px",
+        "touchAction": "none"
+      }
+    },
+    "cursor": {
+      "interactive": {
+        "hover": "pointer",
+        "active": "pointer",
+        "disabled": "not-allowed"
+      }
+    },
+    "accessibility": {
+      "focusOutline": "2px solid #0066cc",
+      "focusRing": true,
+      "tabIndex": true
+    }
+  },
+  "targets": {
+    "buttons": "44px",
+    "inputs": "44px",
+    "sliders": "38px",
+    "checkboxes": "24px"
+  },
+  "bestPractices": {
+    "preventZoom": true,
+    "preventScroll": true,
+    "preventHighlight": true,
+    "useNativeInputs": true,
+    "ensureContrastRatio": 4.5,
+    "minTapTargetSize": "44px",
+    "minTouchTargetSpacing": "8px"
+  }
+}
