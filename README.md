@@ -34,7 +34,8 @@ The Airport Time Estimator is a simple web application that helps you calculate 
 2. Install dependencies:
 
    ```sh
-   npm install
+   npm install // OR
+   npm install --legacy-peer-deps
    ```
 
 3. Start the development server:

@@ -1,8 +1,8 @@
-import {useEffect, useState} from 'react';
-import {useNavigate} from 'react-router-dom';
-import {parseISO, isValid, isAfter} from 'date-fns';
-import {formatTime, parseTimeString} from '../utils/timeUtils';
-import {useFormState} from './useFormState';
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { parseISO, isValid, isAfter } from "date-fns";
+import { formatTime, parseTimeString } from "../utils/timeUtils";
+import { useFormState } from "./useFormState";
 
 export function useFlightForm() {
   const navigate = useNavigate();
@@ -12,10 +12,8 @@ export function useFlightForm() {
   const {
     formValues,
     selectedDate,
-    boardingTime,
     handleFieldChange,
     setSelectedDate,
-    setBoardingTime,
     resetFields,
     setIsInitialLoad,
   } = useFormState();
@@ -36,30 +34,30 @@ export function useFlightForm() {
   const handleReset = () => {
     resetFields();
     setLeaveTime(null);
-    setBoardingTime('');
-    navigate('/', {replace: true});
-    console.log('Reset button clicked, URL and state reset');
+    navigate("/", { replace: true });
+    console.log("Reset button clicked, URL and state reset");
   };
 
   useEffect(() => {
-    if (!boardingTime) {
-      console.log('Boarding time is not set yet.');
+    if (!formValues.boardingTime) {
+      console.log("Boarding time is not set yet.");
       return;
     }
 
-    const {hours: boardingHours, minutes: boardingMinutes} =
-      parseTimeString(boardingTime);
-    const {drivingTime, arriveEarly, snackTime} = formValues;
+    const { hours: boardingHours, minutes: boardingMinutes } = parseTimeString(
+      formValues.boardingTime
+    );
+    const { drivingTime, arriveEarly, snackTime } = formValues;
     const totalMinutes =
       parseInt(drivingTime || 0, 10) +
       parseInt(arriveEarly || 0, 10) +
       parseInt(snackTime || 0, 10);
 
     let leaveDate;
-    if (typeof selectedDate === 'string') {
+    if (typeof selectedDate === "string") {
       leaveDate = parseISO(selectedDate);
       if (!isValid(leaveDate)) {
-        console.error('Invalid leave date:', leaveDate);
+        console.error("Invalid leave date:", leaveDate);
         return;
       }
     } else {
@@ -75,12 +73,11 @@ export function useFlightForm() {
     if (formattedLeaveTime) {
       setLeaveTime(formattedLeaveTime);
     }
-  }, [formValues, boardingTime, selectedDate]);
+  }, [formValues, selectedDate]);
 
   return {
     formValues,
     selectedDate,
-    boardingTime,
     leaveTime,
     handleFieldChange,
     handleDateChange,

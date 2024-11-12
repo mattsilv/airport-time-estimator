@@ -1,9 +1,8 @@
-import {useState, useEffect} from 'react';
-import {formatInputTime} from '../utils/timeUtils';
-import {isValid} from 'date-fns';
-import {formFieldsConfig} from '../config/formFieldsConfig';
-import {getDefaultDate, parseDate} from '../utils/dateUtils';
-import {useLocation} from 'react-router-dom';
+import { useState, useEffect } from "react";
+import { isValid } from "date-fns";
+import { formFieldsConfig } from "../config/formFieldsConfig";
+import { getDefaultDate, parseDate } from "../utils/dateUtils";
+import { useLocation } from "react-router-dom";
 
 export function useFormState() {
   const location = useLocation();
@@ -21,11 +20,10 @@ export function useFormState() {
   const [selectedDate, setSelectedDate] = useState(
     isValid(initialDate) ? initialDate : new Date()
   );
-  const [boardingTime, setBoardingTime] = useState('');
   const [isInitialLoad, setIsInitialLoad] = useState(true);
 
   const handleFieldChange = (name) => (e) => {
-    const {value} = e.target;
+    const { value } = e.target;
     setFormValues((prevValues) => ({
       ...prevValues,
       [name]: value,
@@ -45,22 +43,20 @@ export function useFormState() {
   };
 
   useEffect(() => {
-    const [hours, minutes] = formValues.departureTime.split(':').map(Number);
-    const boardingDate = new Date(selectedDate);
-    boardingDate.setHours(hours);
-    boardingDate.setMinutes(minutes - 30);
-    const newBoardingTime = formatInputTime(boardingDate);
-    setBoardingTime(newBoardingTime);
-  }, [formValues.departureTime, selectedDate]);
+    if (formValues.boardingTime) {
+      const [hours, minutes] = formValues.boardingTime.split(":").map(Number);
+      const boardingDate = new Date(selectedDate);
+      boardingDate.setHours(hours);
+      boardingDate.setMinutes(minutes);
+    }
+  }, [formValues.boardingTime, selectedDate]);
 
   return {
     formValues,
     selectedDate,
-    boardingTime,
     isInitialLoad,
     handleFieldChange,
     setSelectedDate,
-    setBoardingTime,
     resetFields,
     setIsInitialLoad,
   };

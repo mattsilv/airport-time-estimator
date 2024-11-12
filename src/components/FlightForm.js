@@ -1,33 +1,23 @@
-import React from 'react';
-import {Form} from 'react-bootstrap';
-import DatePicker from 'react-datepicker';
-import 'react-datepicker/dist/react-datepicker.css';
+import React from "react";
+import { Form } from "react-bootstrap";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 export const FlightForm = ({
   formValues,
   selectedDate,
-  boardingTime,
   onFieldChange,
   onDateChange,
 }) => {
   return (
     <Form>
       <Form.Group className="mb-3">
-        <Form.Label htmlFor="departureTime">Departure Time:</Form.Label>
-        <Form.Control
-          type="time"
-          id="departureTime"
-          value={formValues.departureTime}
-          onChange={onFieldChange('departureTime')}
-        />
-      </Form.Group>
-      <Form.Group className="mb-3">
         <Form.Label htmlFor="boardingTime">Boarding Time:</Form.Label>
         <Form.Control
           type="time"
           id="boardingTime"
-          value={boardingTime}
-          disabled
+          value={formValues.boardingTime}
+          onChange={onFieldChange("boardingTime")}
         />
       </Form.Group>
       <Form.Group className="mb-3">
@@ -38,7 +28,7 @@ export const FlightForm = ({
           type="number"
           id="drivingTime"
           value={formValues.drivingTime}
-          onChange={onFieldChange('drivingTime')}
+          onChange={onFieldChange("drivingTime")}
         />
       </Form.Group>
       <Form.Group className="mb-3">
@@ -49,7 +39,7 @@ export const FlightForm = ({
           type="number"
           id="arriveEarly"
           value={formValues.arriveEarly}
-          onChange={onFieldChange('arriveEarly')}
+          onChange={onFieldChange("arriveEarly")}
         />
       </Form.Group>
       <Form.Group className="mb-3">
@@ -58,7 +48,7 @@ export const FlightForm = ({
           type="number"
           id="snackTime"
           value={formValues.snackTime}
-          onChange={onFieldChange('snackTime')}
+          onChange={onFieldChange("snackTime")}
         />
       </Form.Group>
       <Form.Group className="mb-3">

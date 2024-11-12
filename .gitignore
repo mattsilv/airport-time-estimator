@@ -23,6 +23,7 @@ yarn-debug.log*
 yarn-error.log*
 
 package-lock.json
-mereged.txt
+merged.txt
+mergefiles.js
 yarn.lock
 merged.txt
