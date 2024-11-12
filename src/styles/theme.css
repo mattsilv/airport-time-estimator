@@ -1,0 +1,56 @@
+:root {
+  /* Light theme colors */
+  --bg-primary: #ffffff;
+  --bg-secondary: #ffffff;
+  --text-primary: #1c1c1e;
+  --text-secondary: #6b7280;
+  --border-color: #d1d5db;
+  --hover-bg: rgba(0, 0, 0, 0.05);
+  --link-color: #007aff;
+  --success-color: #69db7c;
+  --danger-color: #ff6b6b;
+  --input-bg: #ffffff;
+}
+
+:root.dark-mode {
+  /* Dark theme colors */
+  --bg-primary: #000000;
+  --bg-secondary: #000000;
+  --text-primary: #ffffff;
+  --text-secondary: #a0a0a5;
+  --border-color: #38383a;
+  --hover-bg: rgba(255, 255, 255, 0.1);
+  --link-color: #0a84ff;
+  --success-color: #32d74b;
+  --danger-color: #ff453a;
+  --input-bg: #2c2c2e;
+}
+
+/* Global styles */
+:root {
+  color-scheme: light dark;
+}
+
+html {
+  background-color: var(--bg-primary);
+}
+
+body {
+  background-color: var(--bg-primary);
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+}
+
+#root {
+  background-color: var(--bg-primary);
+  min-height: 100vh;
+}
+
+/* Smooth transitions */
+html,
+body,
+#root,
+.container {
+  transition: background-color 0.2s ease;
+}

@@ -221,8 +221,12 @@ input[type="range"]:focus {
 
 /* Checkbox specific styles */
 .formGroup:last-of-type label {
+  font-family: var(--system-font);
   font-size: var(--font-xs);
-  color: #4b5563;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-weight: 500;
   margin-bottom: var(--spacing-xs);
 }
 

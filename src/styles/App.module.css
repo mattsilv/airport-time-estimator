@@ -1,10 +1,24 @@
 .container {
   max-width: 430px;
   margin: 0 auto;
-  background-color: #f8f9fa;
+  background-color: var(--bg-primary);
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  position: relative;
+  z-index: 1;
+}
+
+/* Add a full viewport background */
+.container::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: var(--bg-primary);
+  z-index: -1;
 }
 
 .footer {

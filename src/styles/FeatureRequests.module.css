@@ -39,3 +39,12 @@
 .content li {
   margin-bottom: 0.25rem;
 }
+
+.completed {
+  color: var(--text-secondary);
+  opacity: 0.8;
+}
+
+.completed s {
+  text-decoration-color: var(--success-color);
+}

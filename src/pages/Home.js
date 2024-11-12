@@ -22,7 +22,13 @@ export function Home() {
 
   return (
     <Stack className="mt-0" gap={1}>
-      <div className="px-4 pt-2 pb-2 bg-light">
+      <div
+        className="px-4 pt-2 pb-2"
+        style={{
+          backgroundColor: "var(--bg-primary)",
+          color: "var(--text-primary)",
+        }}
+      >
         <FlightForm
           formValues={formValues}
           selectedDate={selectedDate}
