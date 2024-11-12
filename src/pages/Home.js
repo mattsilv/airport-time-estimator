@@ -3,6 +3,7 @@ import { Alert, Stack } from "react-bootstrap";
 import { FlightForm } from "../components/FlightForm";
 import { useFlightForm } from "../hooks/useFlightForm";
 import { useCalenderLink } from "../hooks/useCalenderLink";
+import { FeatureRequests } from "../components/FeatureRequests";
 import styles from "../styles/Home.module.css";
 
 export function Home() {
@@ -95,6 +96,8 @@ export function Home() {
                 silv.eth
               </a>
             </p>
+
+            <FeatureRequests />
           </Stack>
         )}
       </div>
