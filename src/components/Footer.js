@@ -1,8 +1,8 @@
-import React from 'react';
+import React from "react";
 
 function Footer() {
   return (
-    <footer className="footer mt-4">
+    <footer className="footer mt-2">
       <p className="text-center small">
         a silly&nbsp;
         <a
@@ -11,8 +11,8 @@ function Footer() {
           rel="noopener noreferrer"
         >
           open-source
-        </a>{' '}
-        app by{' '}
+        </a>{" "}
+        app by{" "}
         <a href="https://silv.blog" target="_blank" rel="noopener noreferrer">
           silv.eth
         </a>

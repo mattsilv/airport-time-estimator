@@ -2,20 +2,8 @@ import React from "react";
 import { Form } from "react-bootstrap";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-
-const anxietyLevels = {
-  0: "Cool as a cucumber 🥒",
-  1: "I like a little buffer 😮‍💨",
-  2: "Hope TSA doesn't shout at me 🤬",
-  3: "What if my Uber cancels twice? 🚗",
-  4: "Did I pack my ID? 🔍",
-  5: "Security line looking mighty long 〰️",
-  6: "I want to hear the announcements 📢",
-  7: "Please don't give my seat away 💺",
-  8: "Running through terminal in socks 🧦",
-  9: "Watching my connection take off 🛬",
-  10: "WHY AM I DOING THIS 😱",
-};
+import styles from "./FlightForm.module.css";
+import { getAnxietyText, getEmoji } from "../config/anxietyConfig";
 
 export const FlightForm = ({
   formValues,
@@ -25,60 +13,45 @@ export const FlightForm = ({
   onAnxietyChange,
   onCheckboxChange,
 }) => {
-  const getAnxietyText = (level) => {
-    const extraMinutes = level * 5;
-    return `${anxietyLevels[level]} (+${extraMinutes} min)`;
-  };
-
-  const getSliderColor = (level) => {
-    const red = Math.round((level / 10) * 255);
-    const green = Math.round(((10 - level) / 10) * 128 + 50);
-    return `rgb(${red}, ${green}, 0)`;
-  };
-
-  const sliderColor = getSliderColor(formValues.anxietyLevel || 0);
-
   const handleNumberChange = (fieldName) => (e) => {
     const value = Math.max(0, Math.min(999, parseInt(e.target.value) || 0));
     onFieldChange(fieldName)({ target: { value: value.toString() } });
   };
 
+  const anxietyLevel = formValues.anxietyLevel || 0;
+  const extraMinutes = anxietyLevel * 5;
+
   return (
     <Form>
       <Form.Group className="mb-3">
-        <Form.Label htmlFor="anxietyLevel">Travel Anxiety:</Form.Label>
-        <Form.Range
-          id="anxietyLevel"
-          min="0"
-          max="10"
-          value={formValues.anxietyLevel || 0}
-          onChange={(e) => onAnxietyChange(parseInt(e.target.value))}
-          style={{
-            touchAction: "none",
-            userSelect: "none",
-            WebkitUserSelect: "none",
-          }}
-        />
-        <style>
-          {`
-            #anxietyLevel::-webkit-slider-thumb {
-              background: ${sliderColor} !important;
-            }
-            #anxietyLevel::-moz-range-thumb {
-              background: ${sliderColor} !important;
-            }
-            #anxietyLevel::-ms-thumb {
-              background: ${sliderColor} !important;
-            }
-          `}
-        </style>
-        <div style={{ textAlign: "left" }}>
-          {getAnxietyText(formValues.anxietyLevel || 0)}
+        <Form.Label htmlFor="anxietyLevel" className={styles.formLabel}>
+          Travel Anxiety Slider:
+        </Form.Label>
+        <div className={styles.sliderContainer}>
+          <Form.Range
+            id="anxietyLevel"
+            min="0"
+            max="10"
+            value={anxietyLevel}
+            onChange={(e) => onAnxietyChange(parseInt(e.target.value))}
+            className={styles.sliderThumb}
+          />
+          <div
+            className={styles.sliderEmoji}
+            style={{ left: `${(anxietyLevel / 10) * 100}%` }}
+          >
+            {getEmoji(anxietyLevel)}
+          </div>
+        </div>
+        <div className={styles.anxietyText}>
+          {getAnxietyText(anxietyLevel, extraMinutes)}
         </div>
       </Form.Group>
 
       <Form.Group className="mb-3">
-        <Form.Label htmlFor="boardingTime">Boarding Time:</Form.Label>
+        <Form.Label htmlFor="boardingTime" className={styles.formLabel}>
+          Boarding Time:
+        </Form.Label>
         <Form.Control
           type="time"
           id="boardingTime"
@@ -87,8 +60,8 @@ export const FlightForm = ({
         />
       </Form.Group>
       <Form.Group className="mb-3">
-        <Form.Label htmlFor="drivingTime">
-          Driving Time to Airport (minutes):
+        <Form.Label htmlFor="drivingTime" className={styles.formLabel}>
+          Travel Time to Airport (min.):
         </Form.Label>
         <div className="d-flex align-items-center">
           <Form.Control
@@ -100,23 +73,12 @@ export const FlightForm = ({
             onChange={handleNumberChange("drivingTime")}
             min="0"
             max="999"
-            style={{ width: "100px" }}
-            className="form-control-sm"
+            className={`form-control-sm ${styles.numberControl}`}
           />
           <div className="d-flex gap-2 ms-2">
             <button
               type="button"
-              className="btn rounded-circle d-flex align-items-center justify-content-center"
-              style={{
-                backgroundColor: "#ff6b6b",
-                color: "white",
-                width: "32px",
-                height: "32px",
-                padding: "0",
-                fontSize: "20px",
-                border: "none",
-                touchAction: "manipulation",
-              }}
+              className={`btn rounded-circle d-flex align-items-center justify-content-center ${styles.decrementButton}`}
               onClick={() =>
                 handleNumberChange("drivingTime")({
                   target: {
@@ -129,17 +91,7 @@ export const FlightForm = ({
             </button>
             <button
               type="button"
-              className="btn rounded-circle d-flex align-items-center justify-content-center"
-              style={{
-                backgroundColor: "#69db7c",
-                color: "white",
-                width: "32px",
-                height: "32px",
-                padding: "0",
-                fontSize: "20px",
-                border: "none",
-                touchAction: "manipulation",
-              }}
+              className={`btn rounded-circle d-flex align-items-center justify-content-center ${styles.incrementButton}`}
               onClick={() =>
                 handleNumberChange("drivingTime")({
                   target: {
@@ -154,8 +106,8 @@ export const FlightForm = ({
         </div>
       </Form.Group>
       <Form.Group className="mb-3">
-        <Form.Label htmlFor="arriveEarly">
-          Arrive how soon before boarding? (minutes):
+        <Form.Label htmlFor="arriveEarly" className={styles.formLabel}>
+          Arrive how soon before boarding? (min.):
         </Form.Label>
         <div className="d-flex align-items-center">
           <Form.Control
@@ -167,23 +119,12 @@ export const FlightForm = ({
             onChange={handleNumberChange("arriveEarly")}
             min="0"
             max="999"
-            style={{ width: "100px" }}
-            className="form-control-sm"
+            className={`form-control-sm ${styles.numberControl}`}
           />
           <div className="d-flex gap-2 ms-2">
             <button
               type="button"
-              className="btn rounded-circle d-flex align-items-center justify-content-center"
-              style={{
-                backgroundColor: "#ff6b6b",
-                color: "white",
-                width: "32px",
-                height: "32px",
-                padding: "0",
-                fontSize: "20px",
-                border: "none",
-                touchAction: "manipulation",
-              }}
+              className={`btn rounded-circle d-flex align-items-center justify-content-center ${styles.decrementButton}`}
               onClick={() =>
                 handleNumberChange("arriveEarly")({
                   target: {
@@ -196,17 +137,7 @@ export const FlightForm = ({
             </button>
             <button
               type="button"
-              className="btn rounded-circle d-flex align-items-center justify-content-center"
-              style={{
-                backgroundColor: "#69db7c",
-                color: "white",
-                width: "32px",
-                height: "32px",
-                padding: "0",
-                fontSize: "20px",
-                border: "none",
-                touchAction: "manipulation",
-              }}
+              className={`btn rounded-circle d-flex align-items-center justify-content-center ${styles.incrementButton}`}
               onClick={() =>
                 handleNumberChange("arriveEarly")({
                   target: {
@@ -221,7 +152,9 @@ export const FlightForm = ({
         </div>
       </Form.Group>
       <Form.Group className="mb-3">
-        <Form.Label htmlFor="selectedDate">Departure Date:</Form.Label>
+        <Form.Label htmlFor="selectedDate" className={styles.formLabel}>
+          Departure Date:
+        </Form.Label>
         <DatePicker
           selected={selectedDate}
           onChange={onDateChange}
