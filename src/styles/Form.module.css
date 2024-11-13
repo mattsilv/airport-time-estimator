@@ -13,33 +13,79 @@
   --input-height: 38px;
   --label-line-height: 1.2;
   --form-horizontal-padding: 0; /* Remove default padding */
+  --bg-primary: #ffffff;
+  --bg-secondary: #ffffff;
+  --input-bg: #ffffff;
+  --input-text: #1c1c1e;
+  --input-text-secondary: #1c1c1e;
+  --border-color: #d1d5db;
 }
 
-/* Base form control styles - must be defined before being composed */
-.formControl {
+:root.dark-mode {
+  --bg-primary: #000000;
+  --bg-secondary: #000000;
+  --input-bg: #2c2c2e; /* Dark gray for input backgrounds */
+  --input-text: #ffffff; /* White text for inputs */
+  --input-text-secondary: #e0e0e0;
+  --border-color: #2c2c2e;
+}
+
+/* Base input styles - must be defined first */
+.inputBase {
   font-family: var(--system-font);
   font-size: 1rem;
-  color: #1c1c1e;
+  color: var(--input-text) !important;
   height: var(--input-height);
   border-radius: 8px;
-  border: 1px solid #d1d5db;
+  border: 1px solid var(--border-color);
   padding: 0.5rem 0.75rem;
   width: 100%;
-  background-color: white;
+  background-color: var(--input-bg) !important;
   -webkit-appearance: none;
 }
 
-.formControl:focus {
+.inputBase:focus {
   outline: none;
-  border-color: #007aff;
-  box-shadow: 0 0 0 1px #007aff;
+  border-color: var(--link-color);
+  box-shadow: 0 0 0 1px var(--link-color);
 }
 
-/* Number input styles */
+/* Number inputs */
 .numberControl {
-  composes: formControl;
+  composes: inputBase;
   width: 100px;
   text-align: center;
+  color: var(--input-text-secondary) !important;
+}
+
+/* Time input */
+.timeInput {
+  composes: inputBase;
+}
+
+/* Date input */
+.dateInput {
+  composes: inputBase;
+}
+
+/* Override datepicker styles */
+:global(.react-datepicker__input-container input) {
+  font-family: var(--system-font);
+  font-size: 1rem;
+  color: var(--input-text) !important;
+  height: var(--input-height);
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+  padding: 0.5rem 0.75rem;
+  width: 100%;
+  background-color: var(--input-bg) !important;
+  -webkit-appearance: none;
+}
+
+:global(.react-datepicker__input-container input:focus) {
+  outline: none;
+  border-color: var(--link-color);
+  box-shadow: 0 0 0 1px var(--link-color);
 }
 
 .buttonBase {
@@ -413,13 +459,13 @@ input[type="range"]:focus {
 .inputBase {
   font-family: var(--system-font);
   font-size: 1rem;
-  color: #1c1c1e;
+  color: var(--input-text) !important;
   height: var(--input-height);
   border-radius: 8px;
-  border: 1px solid #d1d5db;
+  border: 1px solid var(--border-color);
   padding: 0.5rem 0.75rem;
   width: 100%;
-  background-color: white;
+  background-color: var(--input-bg) !important;
   -webkit-appearance: none;
 }
 
@@ -432,11 +478,15 @@ input[type="range"]:focus {
 /* Time input */
 .timeInput {
   composes: inputBase;
+  background-color: var(--input-bg);
+  color: var(--input-text);
 }
 
 /* Date input */
 .dateInput {
   composes: inputBase;
+  background-color: var(--input-bg);
+  color: var(--input-text);
 }
 
 /* Override datepicker styles */
@@ -559,4 +609,9 @@ input[type="range"]:focus {
   user-select: none;
   margin: 0;
   padding: 0;
+}
+
+/* Force consistent colors for all number inputs */
+input[type="number"] {
+  color: var(--input-text-secondary) !important;
 }

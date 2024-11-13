@@ -2,6 +2,9 @@
   /* Light theme colors */
   --bg-primary: #ffffff;
   --bg-secondary: #ffffff;
+  --input-bg: #ffffff;
+  --input-text: #1c1c1e;
+  --input-text-secondary: #1c1c1e; /* For number inputs */
   --text-primary: #1c1c1e;
   --text-secondary: #6b7280;
   --border-color: #d1d5db;
@@ -9,13 +12,15 @@
   --link-color: #007aff;
   --success-color: #69db7c;
   --danger-color: #ff6b6b;
-  --input-bg: #ffffff;
 }
 
 :root.dark-mode {
   /* Dark theme colors */
   --bg-primary: #000000;
   --bg-secondary: #000000;
+  --input-bg: #2c2c2e;
+  --input-text: #ffffff; /* For date/time inputs */
+  --input-text-secondary: #e0e0e0; /* For number inputs */
   --text-primary: #ffffff;
   --text-secondary: #a0a0a5;
   --border-color: #38383a;
@@ -23,7 +28,6 @@
   --link-color: #0a84ff;
   --success-color: #32d74b;
   --danger-color: #ff453a;
-  --input-bg: #2c2c2e;
 }
 
 /* Global styles */
