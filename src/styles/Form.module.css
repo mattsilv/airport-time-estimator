@@ -512,3 +512,45 @@ input[type="number"] {
 .checkboxLabel label {
   color: var(--label-color) !important;
 }
+
+/* Add these styles to your existing Form.module.css */
+.checkboxContainer {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: var(--spacing-xs);
+}
+
+.infoIcon {
+  color: var(--text-secondary);
+  cursor: pointer;
+  opacity: 0.7;
+  transition: opacity 0.2s ease;
+  font-size: 0.9em;
+  display: flex;
+  align-items: center;
+  height: 100%;
+  padding-top: -1px;
+  transform: translateY(-3px);
+}
+
+.infoIcon:hover {
+  opacity: 1;
+}
+
+/* Style for Bootstrap Tooltip */
+:global(.tooltip) {
+  font-family: var(--system-font);
+  font-size: calc(var(--font-xs) * 0.85);
+  margin-right: 12px;
+}
+
+:global(.tooltip-inner) {
+  background-color: var(--input-bg);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+  padding: 10px 14px;
+  max-width: 200px;
+  text-align: left;
+  line-height: 1.4;
+}
