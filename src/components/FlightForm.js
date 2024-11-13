@@ -6,6 +6,7 @@ import styles from "../styles/Form.module.css";
 import sliderStyles from "../styles/Slider.module.css";
 import { getAnxietyText, getEmoji } from "../config/anxietyConfig";
 import { FlightCheckboxes } from "./FlightCheckboxes";
+import { InfoTooltip } from "./InfoTooltip";
 
 export const FlightForm = ({
   formValues,
@@ -26,9 +27,12 @@ export const FlightForm = ({
   return (
     <Form className={styles.sliderForm}>
       <div className={styles.formGroup}>
-        <Form.Label className={styles.formLabel}>
-          Travel Anxiety Slider
-        </Form.Label>
+        <div className={styles.labelContainer}>
+          <Form.Label className={styles.formLabel}>
+            Travel Anxiety Slider
+          </Form.Label>
+          <InfoTooltip text="Adds 5 minutes of buffer time for each level of anxiety" />
+        </div>
         <div className={sliderStyles.sliderContainer}>
           <div className={sliderStyles.sliderTrack} />
           <input

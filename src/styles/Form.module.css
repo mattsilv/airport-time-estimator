@@ -554,3 +554,11 @@ input[type="number"] {
   text-align: left;
   line-height: 1.4;
 }
+
+/* Add this new style */
+.labelContainer {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 4px;
+}
