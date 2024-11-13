@@ -194,7 +194,7 @@ export const FlightForm = ({
           className={styles.checkboxLabel}
           type="checkbox"
           id="tsaArgument"
-          label="TSA PreCheck debate (+3 min)"
+          label="TSA Pre ✓ debate (+3 min)"
           checked={formValues.tsaArgument || false}
           onChange={(e) => onCheckboxChange("tsaArgument", e.target.checked)}
         />
