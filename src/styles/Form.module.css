@@ -124,81 +124,6 @@
   color: white !important;
 }
 
-.sliderContainer {
-  position: relative;
-  width: 100%;
-  height: 44px;
-  display: flex;
-  align-items: center;
-  padding: 0 22px;
-  margin: 10px 0;
-}
-
-.sliderTrack {
-  position: absolute;
-  width: calc(100% - 44px);
-  height: 4px;
-  background: #e9ecef;
-  border-radius: 2px;
-  left: 22px;
-}
-
-.sliderInput {
-  position: absolute;
-  width: calc(100% - 44px);
-  left: 22px;
-  margin: 0;
-  height: 44px;
-  opacity: 0.0001; /* Nearly invisible but still interactive */
-  cursor: pointer;
-  -webkit-appearance: none;
-  appearance: none;
-  z-index: 2; /* Ensure input is above emoji */
-}
-
-.sliderInput::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  appearance: none;
-  width: 44px;
-  height: 44px;
-  background: transparent;
-  border: none;
-  cursor: pointer;
-}
-
-.sliderInput::-moz-range-thumb {
-  width: 44px;
-  height: 44px;
-  background: transparent;
-  border: none;
-  cursor: pointer;
-}
-
-.sliderEmoji {
-  position: absolute;
-  font-size: 32px;
-  pointer-events: none;
-  transform: translateX(-50%);
-  left: calc(22px + var(--slider-percent, 0) * (100% - 44px));
-  z-index: 1;
-  user-select: none;
-  -webkit-user-select: none;
-}
-
-.hiddenInput {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  opacity: 0;
-  cursor: pointer;
-  touch-action: pan-x;
-  -webkit-tap-highlight-color: transparent;
-  -webkit-user-select: none;
-  user-select: none;
-  margin: 0;
-  padding: 0;
-}
-
 .anxietyText {
   font-size: var(--font-sm);
   color: #444444;
@@ -224,37 +149,6 @@
   margin-bottom: var(--form-group-spacing);
   display: flex;
   flex-direction: column;
-}
-
-.sliderThumb:focus {
-  outline: none;
-  box-shadow: none;
-}
-
-.sliderThumb:active,
-.sliderThumb:focus-visible,
-.sliderThumb::selection {
-  outline: none;
-  -webkit-tap-highlight-color: transparent;
-  background: transparent;
-  box-shadow: none;
-}
-
-input[type="range"] {
-  -webkit-appearance: none !important;
-  -webkit-tap-highlight-color: transparent !important;
-}
-
-input[type="range"]:focus {
-  outline: none !important;
-}
-
-.sliderForm {
-  -webkit-tap-highlight-color: transparent !important;
-  -webkit-touch-callout: none;
-  -webkit-user-select: none;
-  user-select: none;
-  padding-top: var(--spacing-xs);
 }
 
 .formGroup:first-of-type {
@@ -375,14 +269,6 @@ input[type="range"]:focus {
   padding-top: calc(
     (var(--input-height) - (var(--font-sm) * var(--label-line-height))) / 2
   ); /* Center vertically */
-}
-
-.sliderContainer:active {
-  cursor: grabbing;
-}
-
-.sliderContainer:active .sliderTrack {
-  background: #d1d5db;
 }
 
 .timeAndDateContainer {
@@ -589,30 +475,6 @@ input[type="range"]:focus {
   opacity: 0.5;
   font-size: 1.1rem;
   line-height: 1;
-}
-
-/* Add touch-specific improvements */
-.sliderContainer:active {
-  cursor: grabbing;
-}
-
-.sliderContainer:active .sliderTrack {
-  background: #d1d5db; /* Visual feedback when active */
-}
-
-/* Prevent unwanted touch behaviors */
-.hiddenInput {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  opacity: 0;
-  cursor: pointer;
-  touch-action: pan-x; /* Only allow horizontal sliding */
-  -webkit-tap-highlight-color: transparent;
-  -webkit-user-select: none;
-  user-select: none;
-  margin: 0;
-  padding: 0;
 }
 
 /* Force consistent colors for all number inputs */
