@@ -190,6 +190,14 @@ export const FlightForm = ({
           checked={formValues.needParking === "true"}
           onChange={(e) => onCheckboxChange("needParking", e.target.checked)}
         />
+        <Form.Check
+          className={styles.checkboxLabel}
+          type="checkbox"
+          id="tsaArgument"
+          label="TSA PreCheck debate (+3 min)"
+          checked={formValues.tsaArgument || false}
+          onChange={(e) => onCheckboxChange("tsaArgument", e.target.checked)}
+        />
       </div>
 
       <div className={styles.formGroup}>
