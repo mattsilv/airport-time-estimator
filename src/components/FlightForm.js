@@ -1,10 +1,11 @@
 import React from "react";
-import { Form, OverlayTrigger, Tooltip } from "react-bootstrap";
+import { Form } from "react-bootstrap";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import styles from "../styles/Form.module.css";
 import sliderStyles from "../styles/Slider.module.css";
 import { getAnxietyText, getEmoji } from "../config/anxietyConfig";
+import { FlightCheckboxes } from "./FlightCheckboxes";
 
 export const FlightForm = ({
   formValues,
@@ -21,13 +22,6 @@ export const FlightForm = ({
 
   const anxietyLevel = formValues.anxietyLevel || 0;
   const extraMinutes = anxietyLevel * 5;
-
-  const renderTooltip = (props) => (
-    <Tooltip id="tsa-debate-tooltip" {...props}>
-      Allocated time to debate why your significant other does not have TSA Pre✓
-      yet
-    </Tooltip>
-  );
 
   return (
     <Form className={styles.sliderForm}>
@@ -162,59 +156,10 @@ export const FlightForm = ({
         />
       </div>
 
-      <div className={styles.formGroup}>
-        <Form.Check
-          className={styles.checkboxLabel}
-          type="checkbox"
-          id="internationalFlight"
-          label="International Flight (+40 min)"
-          checked={Boolean(formValues.isInternational)}
-          onChange={(e) =>
-            onCheckboxChange("isInternational", e.target.checked)
-          }
-        />
-        <Form.Check
-          className={styles.checkboxLabel}
-          type="checkbox"
-          id="noTSAPre"
-          label="No TSA Pre ✓ (+15 min)"
-          checked={Boolean(formValues.noTSAPre)}
-          onChange={(e) => onCheckboxChange("noTSAPre", e.target.checked)}
-        />
-        <Form.Check
-          className={styles.checkboxLabel}
-          type="checkbox"
-          id="needSnacks"
-          label="Time for Snacks (+10 min)"
-          checked={Boolean(formValues.needSnacks)}
-          onChange={(e) => onCheckboxChange("needSnacks", e.target.checked)}
-        />
-        <Form.Check
-          className={styles.checkboxLabel}
-          type="checkbox"
-          id="needParking"
-          label="Parking car (+15 min)"
-          checked={Boolean(formValues.needParking)}
-          onChange={(e) => onCheckboxChange("needParking", e.target.checked)}
-        />
-        <div className={styles.checkboxContainer}>
-          <Form.Check
-            className={styles.checkboxLabel}
-            type="checkbox"
-            id="tsaArgument"
-            label="TSA Pre✓ debate (+3 min)"
-            checked={Boolean(formValues.tsaArgument)}
-            onChange={(e) => onCheckboxChange("tsaArgument", e.target.checked)}
-          />
-          <OverlayTrigger
-            placement="right"
-            delay={{ show: 250, hide: 400 }}
-            overlay={renderTooltip}
-          >
-            <span className={styles.infoIcon}>ⓘ</span>
-          </OverlayTrigger>
-        </div>
-      </div>
+      <FlightCheckboxes
+        formValues={formValues}
+        onCheckboxChange={onCheckboxChange}
+      />
 
       <div className={styles.formGroup}>
         <label className={styles.formLabel}>Departure Date</label>
