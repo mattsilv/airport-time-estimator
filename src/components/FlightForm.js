@@ -51,29 +51,6 @@ export const FlightForm = ({
       </div>
 
       <div className={styles.formGroup}>
-        <label className={styles.formLabel}>Boarding Time</label>
-        <input
-          type="time"
-          id="boardingTime"
-          value={formValues.boardingTime}
-          onChange={onFieldChange("boardingTime")}
-          className={styles.timeInput}
-        />
-      </div>
-
-      <div className={styles.formGroup}>
-        <label className={styles.formLabel}>Departure Date</label>
-        <div className={styles.dateInputWrapper}>
-          <DatePicker
-            selected={selectedDate}
-            onChange={onDateChange}
-            dateFormat="yyyy-MM-dd"
-            className={styles.dateInput}
-          />
-        </div>
-      </div>
-
-      <div className={styles.formGroup}>
         <Form.Label className={styles.formLabel}>
           Travel Time to Airport
         </Form.Label>
@@ -168,6 +145,17 @@ export const FlightForm = ({
       </div>
 
       <div className={styles.formGroup}>
+        <label className={styles.formLabel}>Boarding Time</label>
+        <input
+          type="time"
+          id="boardingTime"
+          value={formValues.boardingTime}
+          onChange={onFieldChange("boardingTime")}
+          className={styles.timeInput}
+        />
+      </div>
+
+      <div className={styles.formGroup}>
         <Form.Check
           className={styles.checkboxLabel}
           type="checkbox"
@@ -202,6 +190,18 @@ export const FlightForm = ({
           checked={formValues.needParking === "true"}
           onChange={(e) => onCheckboxChange("needParking", e.target.checked)}
         />
+      </div>
+
+      <div className={styles.formGroup}>
+        <label className={styles.formLabel}>Departure Date</label>
+        <div className={styles.dateInputWrapper}>
+          <DatePicker
+            selected={selectedDate}
+            onChange={onDateChange}
+            dateFormat="yyyy-MM-dd"
+            className={styles.dateInput}
+          />
+        </div>
       </div>
     </Form>
   );

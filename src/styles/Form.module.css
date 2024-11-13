@@ -19,6 +19,7 @@
   --input-text: #1c1c1e;
   --input-text-secondary: #1c1c1e;
   --border-color: #d1d5db;
+  --label-color: #6b7280;
 }
 
 :root.dark-mode {
@@ -28,6 +29,7 @@
   --input-text: #ffffff; /* White text for inputs */
   --input-text-secondary: #e0e0e0;
   --border-color: #2c2c2e;
+  --label-color: #e0e0e0;
 }
 
 /* Base input styles - must be defined first */
@@ -207,13 +209,13 @@
 .formLabel {
   font-family: var(--system-font);
   font-size: var(--font-sm);
-  color: #6b7280;
+  color: var(--label-color);
   text-transform: uppercase;
   letter-spacing: 0.5px;
   font-weight: 500;
-  margin-bottom: var(--spacing-xs);
-  padding-left: 0;
-  line-height: var(--label-line-height);
+  margin-bottom: 4px !important;
+  padding: 0;
+  line-height: 1;
   display: block;
 }
 
@@ -269,9 +271,9 @@ input[type="range"]:focus {
 .formGroup:last-of-type label {
   font-family: var(--system-font);
   font-size: var(--font-xs);
-  color: var(--text-secondary);
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
+  color: var(--label-color);
+  text-transform: none;
+  letter-spacing: -0.01em;
   font-weight: 500;
   margin-bottom: var(--spacing-xs);
 }
@@ -341,10 +343,12 @@ input[type="range"]:focus {
 /* Checkbox label styles */
 .checkboxLabel {
   font-family: var(--system-font);
-  font-size: 0.95rem;
-  color: #1c1c1e;
-  font-weight: 400;
+  font-size: var(--font-xs);
+  color: var(--label-color);
+  text-transform: none;
   letter-spacing: -0.01em;
+  font-weight: 500;
+  margin-bottom: var(--spacing-xs);
 }
 
 /* Add specific spacing for date input */
@@ -397,7 +401,7 @@ input[type="range"]:focus {
 .dateGroup .formLabel {
   font-family: var(--system-font);
   font-size: var(--font-sm);
-  color: #6b7280;
+  color: var(--label-color);
   text-transform: uppercase;
   letter-spacing: 0.5px;
   font-weight: 500;
@@ -531,7 +535,7 @@ input[type="range"]:focus {
   display: block;
   font-family: var(--system-font);
   font-size: var(--font-sm);
-  color: #6b7280;
+  color: var(--label-color);
   text-transform: uppercase;
   letter-spacing: 0.5px;
   font-weight: 500;
@@ -614,4 +618,35 @@ input[type="range"]:focus {
 /* Force consistent colors for all number inputs */
 input[type="number"] {
   color: var(--input-text-secondary) !important;
+}
+
+/* Update form group spacing for reordered elements */
+.formGroup:nth-last-child(2) {
+  /* Remove specific targeting since groups are reordered */
+  margin-top: var(--spacing-md);
+  margin-bottom: var(--spacing-md);
+}
+
+/* Adjust checkbox group spacing */
+.formGroup:last-of-type {
+  order: 2; /* Move checkbox after boarding time */
+  margin-top: var(--spacing-sm);
+  margin-bottom: var(--spacing-lg);
+}
+
+/* Adjust date group spacing */
+.dateGroup {
+  order: 3; /* Move date picker after checkbox */
+  margin-top: var(--spacing-md);
+}
+
+/* Ensure proper spacing between reordered elements */
+.timeAndDateContainer {
+  order: 1;
+  margin-bottom: var(--spacing-md);
+}
+
+/* Remove any conflicting checkbox label styles */
+.checkboxLabel label {
+  color: var(--label-color) !important;
 }
