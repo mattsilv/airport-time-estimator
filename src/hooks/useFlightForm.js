@@ -73,6 +73,8 @@ export function useFlightForm() {
       const internationalBuffer = newValues.isInternational ? 40 : 0;
       const tsaBuffer = newValues.noTSAPre ? 15 : 0;
       const snackBuffer = newValues.needSnacks ? 10 : 0;
+      const parkingBuffer = newValues.needParking ? 15 : 0;
+      const tsaArgumentBuffer = newValues.tsaArgument ? 3 : 0;
       const anxietyMinutes = (parseInt(newValues.anxietyLevel) || 0) * 5;
 
       const totalBuffer =
@@ -80,6 +82,8 @@ export function useFlightForm() {
         internationalBuffer +
         tsaBuffer +
         snackBuffer +
+        parkingBuffer +
+        tsaArgumentBuffer +
         anxietyMinutes;
 
       return {
@@ -98,11 +102,24 @@ export function useFlightForm() {
     const { hours: boardingHours, minutes: boardingMinutes } = parseTimeString(
       formValues.boardingTime
     );
-    const { drivingTime, arriveEarly, snackTime } = formValues;
+
+    const baseArriveEarly = 30;
+    const internationalBuffer = formValues.isInternational ? 40 : 0;
+    const tsaBuffer = formValues.noTSAPre ? 15 : 0;
+    const snackBuffer = formValues.needSnacks ? 10 : 0;
+    const parkingBuffer = formValues.needParking ? 15 : 0;
+    const tsaArgumentBuffer = formValues.tsaArgument ? 3 : 0;
+    const anxietyMinutes = (parseInt(formValues.anxietyLevel) || 0) * 5;
+
     const totalMinutes =
-      parseInt(drivingTime || 0, 10) +
-      parseInt(arriveEarly || 0, 10) +
-      parseInt(snackTime || 0, 10);
+      parseInt(formValues.drivingTime || 0, 10) +
+      baseArriveEarly +
+      internationalBuffer +
+      tsaBuffer +
+      snackBuffer +
+      parkingBuffer +
+      tsaArgumentBuffer +
+      anxietyMinutes;
 
     let leaveDate;
     if (typeof selectedDate === "string") {

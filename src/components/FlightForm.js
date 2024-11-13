@@ -187,7 +187,7 @@ export const FlightForm = ({
           type="checkbox"
           id="needParking"
           label="Parking car (+15 min)"
-          checked={formValues.needParking === "true"}
+          checked={formValues.needParking || false}
           onChange={(e) => onCheckboxChange("needParking", e.target.checked)}
         />
         <Form.Check
