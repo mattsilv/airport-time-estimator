@@ -26,7 +26,9 @@ export const FlightForm = ({
   return (
     <Form className={styles.sliderForm}>
       <div className={styles.formGroup}>
-        <Form.Label className={styles.formLabel}>Travel Anxiety</Form.Label>
+        <Form.Label className={styles.formLabel}>
+          Travel Anxiety Slider
+        </Form.Label>
         <div className={sliderStyles.sliderContainer}>
           <div className={sliderStyles.sliderTrack} />
           <input
