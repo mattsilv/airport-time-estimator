@@ -12,6 +12,7 @@
   --link-color: #007aff;
   --success-color: #69db7c;
   --danger-color: #ff6b6b;
+  color-scheme: light;
 }
 
 :root.dark-mode {
@@ -28,6 +29,7 @@
   --link-color: #0a84ff;
   --success-color: #32d74b;
   --danger-color: #ff453a;
+  color-scheme: dark;
 }
 
 /* Global styles */
@@ -35,20 +37,19 @@
   color-scheme: light dark;
 }
 
-html {
-  background-color: var(--bg-primary);
-}
-
-body {
+html,
+body,
+#root {
   background-color: var(--bg-primary);
   margin: 0;
   padding: 0;
   min-height: 100vh;
+  min-height: -webkit-fill-available;
 }
 
-#root {
+/* Force background color on viewport */
+@viewport {
   background-color: var(--bg-primary);
-  min-height: 100vh;
 }
 
 /* Smooth transitions */

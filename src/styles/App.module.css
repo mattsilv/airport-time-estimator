@@ -3,10 +3,12 @@
   margin: 0 auto;
   background-color: var(--bg-primary);
   min-height: 100vh;
+  min-height: -webkit-fill-available;
   display: flex;
   flex-direction: column;
   position: relative;
   z-index: 1;
+  padding-top: env(safe-area-inset-top);
 }
 
 /* Add a full viewport background */
