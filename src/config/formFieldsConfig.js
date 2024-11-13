@@ -3,6 +3,9 @@ export const formFieldsConfig = [
   { name: "boardingTime", defaultValue: "10:30" },
   { name: "drivingTime", defaultValue: "45" },
   { name: "arriveEarly", defaultValue: "30" },
-  { name: "snackTime", defaultValue: "5" },
-  { name: "needParking", defaultValue: "false" },
+  { name: "isInternational", defaultValue: false },
+  { name: "noTSAPre", defaultValue: false },
+  { name: "needSnacks", defaultValue: false },
+  { name: "needParking", defaultValue: false },
+  { name: "tsaArgument", defaultValue: false },
 ];

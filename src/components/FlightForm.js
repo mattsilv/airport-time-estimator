@@ -161,7 +161,7 @@ export const FlightForm = ({
           type="checkbox"
           id="internationalFlight"
           label="International Flight (+40 min)"
-          checked={formValues.isInternational || false}
+          checked={Boolean(formValues.isInternational)}
           onChange={(e) =>
             onCheckboxChange("isInternational", e.target.checked)
           }
@@ -171,7 +171,7 @@ export const FlightForm = ({
           type="checkbox"
           id="noTSAPre"
           label="No TSA Pre ✓ (+15 min)"
-          checked={formValues.noTSAPre || false}
+          checked={Boolean(formValues.noTSAPre)}
           onChange={(e) => onCheckboxChange("noTSAPre", e.target.checked)}
         />
         <Form.Check
@@ -179,7 +179,7 @@ export const FlightForm = ({
           type="checkbox"
           id="needSnacks"
           label="Time for Snacks (+10 min)"
-          checked={formValues.needSnacks || false}
+          checked={Boolean(formValues.needSnacks)}
           onChange={(e) => onCheckboxChange("needSnacks", e.target.checked)}
         />
         <Form.Check
@@ -187,7 +187,7 @@ export const FlightForm = ({
           type="checkbox"
           id="needParking"
           label="Parking car (+15 min)"
-          checked={formValues.needParking || false}
+          checked={Boolean(formValues.needParking)}
           onChange={(e) => onCheckboxChange("needParking", e.target.checked)}
         />
         <Form.Check
@@ -195,7 +195,7 @@ export const FlightForm = ({
           type="checkbox"
           id="tsaArgument"
           label="TSA Pre ✓ debate (+3 min)"
-          checked={formValues.tsaArgument || false}
+          checked={Boolean(formValues.tsaArgument)}
           onChange={(e) => onCheckboxChange("tsaArgument", e.target.checked)}
         />
       </div>
