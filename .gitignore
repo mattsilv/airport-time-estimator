@@ -28,3 +28,21 @@ mergefiles.js
 yarn.lock
 merged.txt
 yarn.lock
+
+/temp
+
+# SSL Certificates
+/certificates
+*.pem
+*.key
+*.crt
+*.csr
+*.srl
+*.cert
+*.der
+*.p12
+*.pfx
+ca.*
+localhost.*
+
+.env

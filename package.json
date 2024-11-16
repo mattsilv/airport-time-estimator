@@ -10,6 +10,7 @@
     "ajv": "^6.12.6",
     "ajv-keywords": "^3.5.2",
     "bootstrap": "^5.3.3",
+    "http-proxy-middleware": "^2.0.7",
     "lodash": "^4.17.21",
     "query-string": "^9.0.0",
     "react": "^18.3.1",
@@ -21,8 +22,11 @@
     "typescript": "^4.9.5"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "CI=false react-scripts build",
+    "prestart": "node scripts/generate-cert.js",
+    "start": "HTTPS=true SSL_CRT_FILE=./certificates/localhost-cert.pem SSL_KEY_FILE=./certificates/localhost-key.pem react-scripts start",
+    "start-remote": "HTTPS=true SSL_CRT_FILE=./certificates/cert.pem SSL_KEY_FILE=./certificates/key.pem GENERATE_SOURCEMAP=false DISABLE_ESLINT_PLUGIN=true react-scripts start --host $(ipconfig getifaddr en0)",
+    "start-windows": "set HTTPS=true&&set SSL_CRT_FILE=./certificates/localhost-cert.pem&&set SSL_KEY_FILE=./certificates/localhost-key.pem&&react-scripts start",
+    "build": "CI=false GENERATE_SOURCEMAP=false react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },

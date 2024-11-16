@@ -34,16 +34,19 @@
 
 /* Base input styles - must be defined first */
 .inputBase {
-  font-family: var(--system-font);
-  font-size: 1rem;
-  color: var(--input-text) !important;
-  height: var(--input-height);
-  border-radius: 8px;
+  height: 38px !important;
+  padding: 0 0.75rem !important;
   border: 1px solid var(--border-color);
-  padding: 0.5rem 0.75rem;
+  border-radius: 4px;
+  font-size: 16px !important;
+  background-color: var(--input-bg);
+  color: var(--input-text);
   width: 100%;
-  background-color: var(--input-bg) !important;
   -webkit-appearance: none;
+  -webkit-text-size-adjust: 100%;
+  touch-action: manipulation;
+  box-sizing: border-box !important;
+  line-height: 36px !important;
 }
 
 .inputBase:focus {
@@ -65,7 +68,7 @@
   max-width: 70px !important;
   text-align: center;
   color: var(--input-text-secondary) !important;
-  padding: 0.5rem 0.25rem !important;
+  padding: 0 0.25rem !important;
 }
 
 .numberButtonGroup {
@@ -640,4 +643,250 @@ input[type="number"] {
   transform: translateY(-2px);
   display: inline-flex;
   align-items: center;
+}
+
+.timeAirportContainer {
+  display: flex;
+  gap: 1rem;
+  width: 100%;
+  align-items: flex-start; /* Align inputs at the top */
+}
+
+.halfWidth {
+  flex: 1;
+  max-width: 50%;
+  display: flex;
+  flex-direction: column;
+}
+
+.halfWidth > label {
+  margin-bottom: 4px;
+}
+
+/* If you don't already have these styles, add them too */
+.timeInput {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 1rem;
+}
+
+.autocompleteWrapper {
+  position: relative;
+  width: 100%;
+}
+
+.suggestionsList {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  background-color: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  max-height: 200px;
+  overflow-y: auto;
+  margin-top: 4px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  font-size: 0.8em;
+}
+
+.suggestionItem {
+  padding: 6px 12px;
+  cursor: pointer;
+  border-bottom: 1px solid var(--border-color);
+  color: var(--input-text);
+  background-color: var(--bg-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.2;
+  display: block;
+}
+
+.suggestionItem:hover {
+  background-color: var(--input-bg);
+}
+
+.suggestionItem.loading,
+.suggestionItem.error {
+  font-size: 0.8em;
+  padding: 6px 12px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.formControl {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  font-size: 16px !important; /* iOS minimum font size to prevent zoom */
+  background-color: var(--input-bg);
+  color: var(--input-text);
+  -webkit-appearance: none; /* Remove iOS default styling */
+  -webkit-text-size-adjust: 100%; /* Prevent iOS text size adjust */
+  touch-action: manipulation; /* Prevent double-tap zoom */
+}
+
+.airportCode {
+  font-weight: 500;
+  color: var(--input-text);
+  font-size: 0.8em;
+  flex-shrink: 0;
+}
+
+.airportName {
+  font-size: 0.72em;
+  color: var(--label-color);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 200px;
+}
+
+.loading {
+  position: relative;
+  opacity: 0.7;
+  pointer-events: none;
+}
+
+.loadingSpinner {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 20px;
+  height: 20px;
+  border: 2px solid rgba(0, 0, 0, 0.1);
+  border-left-color: #007bff;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: translate(-50%, -50%) rotate(360deg);
+  }
+}
+
+/* Make the input look disabled when loading */
+.loading .numberControl,
+.loading .decrementButton,
+.loading .incrementButton {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.airportDistance {
+  color: var(--label-color);
+  font-size: 0.9em;
+  opacity: 0.8;
+}
+
+.inputError {
+  border-color: #dc3545 !important;
+}
+
+.errorMessage {
+  color: #dc3545;
+  font-size: 0.8em;
+  margin-top: 4px;
+  padding: 4px 8px;
+  background-color: rgba(220, 53, 69, 0.1);
+  border-radius: 4px;
+}
+
+.timeInput {
+  /* ... existing styles ... */
+  -webkit-appearance: none; /* Remove iOS default styling */
+  -webkit-tap-highlight-color: transparent;
+  cursor: pointer;
+}
+
+/* Add meta viewport rules to prevent zooming */
+@viewport {
+  width: device-width;
+  zoom: 1;
+  min-zoom: 1;
+  max-zoom: 1;
+  user-zoom: fixed;
+}
+
+/* Prevent zoom on iOS focus */
+input[type="text"],
+input[type="number"],
+input[type="email"],
+input[type="tel"],
+input[type="search"],
+select,
+textarea {
+  font-size: 16px !important; /* iOS minimum font size to prevent zoom */
+  max-height: 100%;
+  -webkit-text-size-adjust: 100%;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.suggestionItem {
+  padding: 6px 12px;
+  cursor: pointer;
+  border-bottom: 1px solid var(--border-color);
+  color: var(--input-text);
+  background-color: var(--bg-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.2;
+  display: block;
+  font-size: 16px !important; /* Match input font size */
+  touch-action: manipulation;
+}
+
+/* Ensure all inputs have the same effective height including borders */
+.timeInput,
+.formControl,
+.numberControl {
+  box-sizing: border-box;
+  min-height: var(--input-height, 38px);
+  max-height: var(--input-height, 38px);
+}
+
+/* Airport input */
+.formControl {
+  composes: inputBase;
+  height: 38px !important;
+  line-height: 36px !important;
+  padding: 0 0.75rem !important;
+  margin: 0 !important;
+  box-sizing: border-box !important;
+}
+
+/* Number input */
+.numberControl {
+  composes: inputBase;
+  width: 70px !important;
+  min-width: 70px !important;
+  max-width: 70px !important;
+  text-align: center;
+  padding: 0 0.25rem !important;
+}
+
+/* Remove any Bootstrap overrides */
+input.formControl {
+  height: 38px !important;
+  min-height: 38px !important;
+  max-height: 38px !important;
+}
+
+/* Ensure consistent height across all browsers */
+.timeInput,
+.formControl,
+.numberControl {
+  height: 38px !important;
+  min-height: 38px !important;
+  max-height: 38px !important;
+  box-sizing: border-box !important;
 }

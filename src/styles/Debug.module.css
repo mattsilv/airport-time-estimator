@@ -1,0 +1,59 @@
+.debugContainer {
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  max-width: 300px;
+  max-height: 40vh;
+  background: rgba(0, 0, 0, 0.8);
+  color: #00ff00;
+  font-family: monospace;
+  font-size: 12px;
+  padding: 10px;
+  border-top-left-radius: 8px;
+  z-index: 1000;
+  overflow: auto;
+  pointer-events: none;
+}
+
+.debugContent {
+  pointer-events: auto;
+}
+
+.debugContainer h6 {
+  color: #fff;
+  margin: 0 0 8px 0;
+  font-size: 14px;
+}
+
+.debugContainer pre {
+  margin: 0;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  color: inherit;
+  font-size: inherit;
+}
+
+.debugItem {
+  margin-bottom: 8px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding-bottom: 4px;
+}
+
+.debugItem strong {
+  color: #ff9;
+  margin-right: 4px;
+}
+
+/* Hide scrollbar but keep functionality */
+.debugContainer::-webkit-scrollbar {
+  width: 0px;
+  background: transparent;
+}
+
+@media (max-width: 768px) {
+  .debugContainer {
+    max-width: 200px;
+    max-height: 30vh;
+    font-size: 10px;
+  }
+}
