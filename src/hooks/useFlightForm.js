@@ -107,6 +107,10 @@ export function useFlightForm() {
       parseInt(formValues.drivingTime || 0, 10) +
       parseInt(formValues.arriveEarly || 0, 10);
 
+    const finalTotalMinutes = formValues.withKids
+      ? Math.ceil(totalMinutes * 1.15)
+      : totalMinutes;
+
     let leaveDate;
     if (typeof selectedDate === "string") {
       leaveDate = parseISO(selectedDate);
@@ -119,10 +123,13 @@ export function useFlightForm() {
     }
 
     leaveDate.setHours(boardingHours);
-    leaveDate.setMinutes(boardingMinutes - totalMinutes);
+    leaveDate.setMinutes(boardingMinutes - finalTotalMinutes);
 
     const formattedLeaveTime = formatTime(leaveDate);
     console.log(`Calculated leave time: ${formattedLeaveTime}`);
+    console.log(
+      `Kids buffer applied: ${formValues.withKids ? "Yes (+15%)" : "No"}`
+    );
 
     if (formattedLeaveTime) {
       setLeaveTime(formattedLeaveTime);

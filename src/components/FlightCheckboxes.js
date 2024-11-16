@@ -26,6 +26,12 @@ const CHECKBOX_CONFIG = [
     name: "needParking",
   },
   {
+    id: "withKids",
+    label: "Kids? (+15%)",
+    name: "withKids",
+    tooltip: "Adds 15% to total travel time for kid-related delays",
+  },
+  {
     id: "tsaArgument",
     label: "TSA Pre✓ debate (+3m)",
     name: "tsaArgument",
