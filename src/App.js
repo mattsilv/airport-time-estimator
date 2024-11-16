@@ -1,5 +1,6 @@
 import React from "react";
 import AppRouter from "./routes/AppRouter";
+import { HomeScreenPrompt } from "./components/HomeScreenPrompt";
 import styles from "./styles/App.module.css";
 import "./styles/theme.css";
 
@@ -15,6 +16,7 @@ function App() {
       }}
     >
       <AppRouter />
+      <HomeScreenPrompt />
     </div>
   );
 }
