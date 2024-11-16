@@ -22,16 +22,15 @@ export function FeatureRequests() {
               <li className={styles.completed}>
                 <s>Dark mode for late night flight planning</s> ✓
               </li>
+              <li className={styles.completed}>
+                <s>Real-time traffic using TomTom API</s> ✓
+              </li>
             </ul>
           </div>
 
           <div className={styles.section}>
             <p className={styles.sectionTitle}>Not Happening:</p>
             <ul>
-              <li>
-                Real-time traffic (Google Maps API credits don't grow on trees
-                🌳)
-              </li>
               <li>Flight tracking (just use FlightAware like everyone else)</li>
               <li>TSA wait times (good luck finding that API)</li>
             </ul>

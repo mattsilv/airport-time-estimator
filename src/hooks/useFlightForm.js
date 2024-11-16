@@ -103,23 +103,9 @@ export function useFlightForm() {
       formValues.boardingTime
     );
 
-    const baseArriveEarly = 30;
-    const internationalBuffer = formValues.isInternational ? 40 : 0;
-    const tsaBuffer = formValues.noTSAPre ? 15 : 0;
-    const snackBuffer = formValues.needSnacks ? 10 : 0;
-    const parkingBuffer = formValues.needParking ? 15 : 0;
-    const tsaArgumentBuffer = formValues.tsaArgument ? 3 : 0;
-    const anxietyMinutes = (parseInt(formValues.anxietyLevel) || 0) * 5;
-
     const totalMinutes =
       parseInt(formValues.drivingTime || 0, 10) +
-      baseArriveEarly +
-      internationalBuffer +
-      tsaBuffer +
-      snackBuffer +
-      parkingBuffer +
-      tsaArgumentBuffer +
-      anxietyMinutes;
+      parseInt(formValues.arriveEarly || 0, 10);
 
     let leaveDate;
     if (typeof selectedDate === "string") {
