@@ -1,18 +1,30 @@
 let airports = [];
-let nearestAirportsCache = new Map(); // Cache for nearest airports calculations
+let nearestAirportsCache = new Map();
+let isPreloading = false;
+let preloadPromise = null;
 
-// Load airports data
+export const preloadAirports = async () => {
+  if (isPreloading || airports.length > 0) return preloadPromise;
+
+  isPreloading = true;
+  preloadPromise = loadAirports();
+
+  try {
+    await preloadPromise;
+  } finally {
+    isPreloading = false;
+  }
+
+  return preloadPromise;
+};
+
 const loadAirports = async () => {
   if (airports.length === 0) {
     try {
-      console.log("Fetching airports data...");
       const response = await fetch("/data/airports-min.json");
-      if (!response.ok) {
+      if (!response.ok)
         throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      const data = await response.json();
-      console.log("Loaded airports:", data.length);
-      airports = data; // Keep original format
+      airports = await response.json();
     } catch (error) {
       console.error("Error loading airports:", error);
       return [];

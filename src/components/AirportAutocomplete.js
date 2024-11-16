@@ -1,5 +1,9 @@
 import { useState, useRef, useEffect, useCallback } from "react";
-import { filterAirports, getNearestAirports } from "../utils/airportUtils";
+import {
+  filterAirports,
+  getNearestAirports,
+  preloadAirports,
+} from "../utils/airportUtils";
 import { calculateRoute } from "../services/tomtom";
 import styles from "../styles/Form.module.css";
 
@@ -20,33 +24,28 @@ export const AirportAutocomplete = ({
   const wrapperRef = useRef(null);
   const listId = "airport-list";
 
-  const loadSuggestions = useCallback(
-    async (query = "") => {
-      try {
-        let results;
-        if (!query && userLocation) {
-          results = await getNearestAirports(userLocation);
-        } else if (query) {
-          results = await filterAirports(query);
-        } else {
-          results = [];
-        }
-        setSuggestions(results);
-        setIsLoading(false);
-      } catch (err) {
-        console.error("Error loading suggestions:", err);
-        setError("Failed to load airports");
-        setIsLoading(false);
-      }
-    },
-    [userLocation]
-  );
+  // Preload airports data when component mounts
+  useEffect(() => {
+    preloadAirports();
+  }, []);
 
+  // Start loading nearest airports as soon as we get location
   useEffect(() => {
     if (userLocation) {
-      loadSuggestions();
+      getNearestAirports(userLocation).then((airports) => {
+        setSuggestions(airports);
+        setIsLoading(false);
+      });
     }
-  }, [userLocation, loadSuggestions]);
+  }, [userLocation]);
+
+  const handleFocus = () => {
+    setIsOpen(true);
+    if (!userLocation && onRequestLocation) {
+      setIsLoading(true); // Show loading state immediately
+      onRequestLocation();
+    }
+  };
 
   useEffect(() => {
     function handleClickOutside(event) {
@@ -62,9 +61,15 @@ export const AirportAutocomplete = ({
     const inputValue = e.target.value;
     onChange(inputValue);
     if (inputValue.trim()) {
-      loadSuggestions(inputValue);
+      filterAirports(inputValue).then((results) => {
+        setSuggestions(results);
+        setIsLoading(false);
+      });
     } else if (userLocation) {
-      loadSuggestions();
+      getNearestAirports(userLocation).then((airports) => {
+        setSuggestions(airports);
+        setIsLoading(false);
+      });
     } else {
       setSuggestions([]);
     }
@@ -98,16 +103,6 @@ export const AirportAutocomplete = ({
       onAirportSelect({ airport });
     }
     setIsOpen(false);
-  };
-
-  const handleFocus = () => {
-    setIsOpen(true);
-    if (!userLocation && onRequestLocation) {
-      onRequestLocation();
-    }
-    if (userLocation) {
-      loadSuggestions();
-    }
   };
 
   return (
