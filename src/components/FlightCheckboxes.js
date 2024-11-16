@@ -6,28 +6,28 @@ import { InfoTooltip } from "./InfoTooltip";
 const CHECKBOX_CONFIG = [
   {
     id: "internationalFlight",
-    label: "International Flight (+40 min)",
+    label: "International Flight (+40m)",
     name: "isInternational",
   },
   {
     id: "noTSAPre",
-    label: "No TSA Pre ✓ (+15 min)",
+    label: "No TSA Pre ✓ (+15m)",
     name: "noTSAPre",
   },
   {
     id: "needSnacks",
-    label: "Time for Snacks (+10 min)",
+    label: "Time for Snacks (+10m)",
     name: "needSnacks",
     tooltip: "There's probably no good food on the plane.",
   },
   {
     id: "needParking",
-    label: "Parking car (+15 min)",
+    label: "Parking car (+15m)",
     name: "needParking",
   },
   {
     id: "tsaArgument",
-    label: "TSA Pre✓ debate (+3 min)",
+    label: "TSA Pre✓ debate (+3m)",
     name: "tsaArgument",
     tooltip:
       "Allocated time to debate why your significant other does not have TSA Pre✓ yet",
