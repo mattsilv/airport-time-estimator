@@ -28,9 +28,8 @@ export const FlightForm = ({
     <Form className={styles.sliderForm}>
       <div className={styles.formGroup}>
         <div className={styles.labelContainer}>
-          <Form.Label className={styles.formLabel}>
-            Travel Anxiety Slider
-          </Form.Label>
+          <Form.Label className={styles.formLabel}>Travel Anxiety</Form.Label>
+          <span className={styles.anxietyLevel}>LVL {anxietyLevel}</span>
           <InfoTooltip text="Adds 5 minutes of buffer time for each level of anxiety" />
         </div>
         <div className={sliderStyles.sliderContainer}>
