@@ -79,6 +79,10 @@ export const AirportAutocomplete = ({
           long: airport.long,
         });
 
+        if (routeInfo) {
+          routeInfo.travelTimeMinutes = routeInfo.travelTimeMinutes + 5;
+        }
+
         onAirportSelect({
           airport,
           routeInfo,
@@ -101,6 +105,9 @@ export const AirportAutocomplete = ({
     if (!userLocation && onRequestLocation) {
       onRequestLocation();
     }
+    if (userLocation) {
+      loadSuggestions();
+    }
   };
 
   return (
@@ -116,11 +123,7 @@ export const AirportAutocomplete = ({
             onRequestLocation();
           }
         }}
-        placeholder={
-          !userLocation
-            ? "Tap to find nearest airports"
-            : placeholder || "Search airports..."
-        }
+        placeholder="Airport Code"
         className={styles.formControl}
         role="combobox"
         aria-controls={listId}
@@ -131,9 +134,7 @@ export const AirportAutocomplete = ({
         <div id={listId} className={styles.suggestionsList} role="listbox">
           {isLoading ? (
             <div className={`${styles.suggestionItem} ${styles.loading}`}>
-              {!userLocation
-                ? "Requesting location access..."
-                : "Loading airports..."}
+              Loading airports...
             </div>
           ) : error ? (
             <div className={`${styles.suggestionItem} ${styles.error}`}>
