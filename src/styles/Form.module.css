@@ -890,3 +890,39 @@ input.formControl {
   max-height: 38px !important;
   box-sizing: border-box !important;
 }
+
+/* Base number input styles */
+.numberInputBase {
+  composes: inputBase;
+  width: 70px !important;
+  min-width: 70px !important;
+  max-width: 70px !important;
+  text-align: center !important;
+  padding: 0 !important; /* Remove padding to ensure perfect centering */
+  -moz-appearance: textfield !important; /* Firefox */
+}
+
+/* Remove spinner buttons in Chrome/Safari/Edge */
+.numberInputBase::-webkit-outer-spin-button,
+.numberInputBase::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Apply the base styles to number control */
+.numberControl {
+  composes: numberInputBase;
+  color: var(--input-text-secondary) !important;
+}
+
+/* Ensure Bootstrap doesn't override our styles */
+input[type="number"].numberControl {
+  text-align: center !important;
+  padding: 0 !important;
+}
+
+/* Force center alignment in all browsers */
+.numberInputContainer input {
+  text-align: center !important;
+  padding: 0 !important;
+}
