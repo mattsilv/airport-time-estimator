@@ -168,7 +168,7 @@ export const FlightForm = ({
       />
 
       <div className={styles.formGroup}>
-        <label className={styles.formLabel}>Departure Date</label>
+        <Form.Label className={styles.formLabel}>DEPARTURE DATE</Form.Label>
         <div className={styles.dateInputWrapper}>
           <DatePicker
             selected={selectedDate}

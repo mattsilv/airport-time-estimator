@@ -6,7 +6,7 @@ import { InfoTooltip } from "./InfoTooltip";
 const CHECKBOX_CONFIG = [
   {
     id: "internationalFlight",
-    label: "International Flight (+40m)",
+    label: "Int'l Flight (+40m)",
     name: "isInternational",
   },
   {

@@ -585,3 +585,21 @@ input[type="number"] {
   margin: 0;
   padding: 0;
 }
+
+/* Add these styles for checkbox background color */
+.checkboxLabel input[type="checkbox"] {
+  background-color: var(--input-bg) !important;
+  border-color: var(--border-color) !important;
+}
+
+/* Style for checked state in dark mode */
+:global(.dark-mode) .checkboxLabel input[type="checkbox"] {
+  background-color: var(--input-bg) !important;
+  border-color: var(--border-color) !important;
+}
+
+/* Style for checked state */
+.checkboxLabel input[type="checkbox"]:checked {
+  background-color: var(--link-color) !important;
+  border-color: var(--link-color) !important;
+}
