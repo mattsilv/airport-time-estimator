@@ -20,20 +20,8 @@ export const AirportAutocomplete = ({
   const wrapperRef = useRef(null);
   const listId = "airport-list";
 
-  const handleFocus = () => {
-    setIsOpen(true);
-    if (!userLocation && onRequestLocation) {
-      onRequestLocation();
-      setIsLoading(true);
-    } else if (suggestions.length === 0) {
-      loadSuggestions();
-    }
-  };
-
   const loadSuggestions = useCallback(
     async (query = "") => {
-      setIsLoading(true);
-      setError(null);
       try {
         let results;
         if (!query && userLocation) {
@@ -43,12 +31,11 @@ export const AirportAutocomplete = ({
         } else {
           results = [];
         }
-        console.log("Loaded suggestions:", results);
         setSuggestions(results);
+        setIsLoading(false);
       } catch (err) {
         console.error("Error loading suggestions:", err);
         setError("Failed to load airports");
-      } finally {
         setIsLoading(false);
       }
     },
@@ -107,6 +94,13 @@ export const AirportAutocomplete = ({
       onAirportSelect({ airport });
     }
     setIsOpen(false);
+  };
+
+  const handleFocus = () => {
+    setIsOpen(true);
+    if (!userLocation && onRequestLocation) {
+      onRequestLocation();
+    }
   };
 
   return (

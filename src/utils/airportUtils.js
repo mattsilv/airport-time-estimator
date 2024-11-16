@@ -1,4 +1,5 @@
 let airports = [];
+let nearestAirportsCache = new Map(); // Cache for nearest airports calculations
 
 // Load airports data
 const loadAirports = async () => {
@@ -45,8 +46,16 @@ export const filterAirports = async (query) => {
 export const getNearestAirports = async (userLocation) => {
   if (!userLocation) return [];
 
+  // Create cache key from location
+  const cacheKey = `${userLocation.lat},${userLocation.long}`;
+
+  // Check cache first
+  if (nearestAirportsCache.has(cacheKey)) {
+    return nearestAirportsCache.get(cacheKey);
+  }
+
   const airportList = await loadAirports();
-  return airportList
+  const nearest = airportList
     .map((airport) => ({
       ...airport,
       distance: calculateDistance(
@@ -58,6 +67,10 @@ export const getNearestAirports = async (userLocation) => {
     }))
     .sort((a, b) => a.distance - b.distance)
     .slice(0, 10);
+
+  // Cache the results
+  nearestAirportsCache.set(cacheKey, nearest);
+  return nearest;
 };
 
 export const calculateDistance = (lat1, lon1, lat2, lon2) => {
