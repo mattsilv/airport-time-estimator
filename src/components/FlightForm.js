@@ -32,21 +32,67 @@ export const FlightForm = ({
   const [locationRequested, setLocationRequested] = useState(false);
 
   const requestLocation = useCallback(() => {
-    if ("geolocation" in navigator && !locationRequested) {
-      setLocationRequested(true);
+    if (!("geolocation" in navigator)) {
+      console.log("Geolocation not supported");
+      return;
+    }
 
-      const isIOS =
-        /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+    // Check if permission is already denied
+    if (navigator.permissions && navigator.permissions.query) {
+      navigator.permissions.query({ name: "geolocation" }).then((result) => {
+        console.log("Geolocation permission status:", result.state);
+        if (result.state === "denied") {
+          console.log("Geolocation permission previously denied");
+          return;
+        }
 
-      if (isIOS) {
-        // iOS-specific location request
+        // Only request if not already requested
+        if (!locationRequested) {
+          setLocationRequested(true);
+
+          const isIOS =
+            /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+          console.log("Device is iOS:", isIOS);
+
+          navigator.geolocation.getCurrentPosition(
+            (position) => {
+              const location = {
+                lat: position.coords.latitude,
+                long: position.coords.longitude,
+              };
+              console.log("Location obtained:", location);
+              setUserLocation(location);
+              setDebugData((prev) => ({
+                ...prev,
+                userLocation: location,
+              }));
+            },
+            (error) => {
+              console.error("Geolocation error:", error.code, error.message);
+              setUserLocation(null);
+              if (error.code === error.PERMISSION_DENIED) {
+                setLocationRequested(false);
+              }
+            },
+            {
+              enableHighAccuracy: true,
+              timeout: 20000,
+              maximumAge: 0,
+            }
+          );
+        }
+      });
+    } else {
+      // Fallback for browsers that don't support permissions API
+      if (!locationRequested) {
+        setLocationRequested(true);
         navigator.geolocation.getCurrentPosition(
           (position) => {
             const location = {
               lat: position.coords.latitude,
               long: position.coords.longitude,
             };
-            console.log("iOS location obtained:", location);
+            console.log("Location obtained:", location);
             setUserLocation(location);
             setDebugData((prev) => ({
               ...prev,
@@ -54,51 +100,17 @@ export const FlightForm = ({
             }));
           },
           (error) => {
-            console.error("iOS geolocation error:", error.code, error.message);
+            console.error("Geolocation error:", error.code, error.message);
             setUserLocation(null);
             if (error.code === error.PERMISSION_DENIED) {
               setLocationRequested(false);
             }
           },
           {
-            maximumAge: 50000,
-            timeout: 20000,
             enableHighAccuracy: true,
+            timeout: 20000,
+            maximumAge: 0,
           }
-        );
-      } else {
-        // Android and other devices
-        const options = {
-          enableHighAccuracy: true,
-          timeout: 10000,
-          maximumAge: 0,
-        };
-
-        navigator.geolocation.getCurrentPosition(
-          (position) => {
-            const location = {
-              lat: position.coords.latitude,
-              long: position.coords.longitude,
-            };
-            console.log("Android location obtained:", location);
-            setUserLocation(location);
-            setDebugData((prev) => ({
-              ...prev,
-              userLocation: location,
-            }));
-          },
-          (error) => {
-            console.error(
-              "Android geolocation error:",
-              error.code,
-              error.message
-            );
-            setUserLocation(null);
-            if (error.code === error.PERMISSION_DENIED) {
-              setLocationRequested(false);
-            }
-          },
-          options
         );
       }
     }

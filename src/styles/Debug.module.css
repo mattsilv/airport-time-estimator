@@ -7,7 +7,7 @@
   background: rgba(0, 0, 0, 0.8);
   color: #00ff00;
   font-family: monospace;
-  font-size: 12px;
+  font-size: 10px;
   padding: 10px;
   border-top-left-radius: 8px;
   z-index: 1000;
@@ -22,7 +22,7 @@
 .debugContainer h6 {
   color: #fff;
   margin: 0 0 8px 0;
-  font-size: 14px;
+  font-size: 12px;
 }
 
 .debugContainer pre {
@@ -54,6 +54,6 @@
   .debugContainer {
     max-width: 200px;
     max-height: 30vh;
-    font-size: 10px;
+    font-size: 8px;
   }
 }

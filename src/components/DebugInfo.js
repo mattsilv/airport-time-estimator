@@ -12,11 +12,10 @@ export const DebugInfo = ({
   const formatData = (data) => {
     if (!data) return "null";
     if (typeof data === "object") {
-      // Remove circular references and format nicely
       return JSON.stringify(
         data,
         (key, value) => {
-          if (key === "route") return "[Route Object]"; // Simplify route object
+          if (key === "route") return "[Route Object]";
           return value;
         },
         2
@@ -25,7 +24,38 @@ export const DebugInfo = ({
     return data.toString();
   };
 
+  // Get browser and device info
+  const browserInfo = {
+    userAgent: navigator.userAgent,
+    platform: navigator.platform,
+    vendor: navigator.vendor,
+    isIOS: /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream,
+    isSafari: /^((?!chrome|android).)*safari/i.test(navigator.userAgent),
+  };
+
+  // Get geolocation permission status
+  const [geoPermission, setGeoPermission] = React.useState("checking");
+  React.useEffect(() => {
+    if (navigator.permissions && navigator.permissions.query) {
+      navigator.permissions
+        .query({ name: "geolocation" })
+        .then((result) => {
+          setGeoPermission(result.state);
+          result.onchange = () => setGeoPermission(result.state);
+        })
+        .catch(() => setGeoPermission("error checking"));
+    } else {
+      setGeoPermission("API not supported");
+    }
+  }, []);
+
   const debugData = {
+    device: {
+      ...browserInfo,
+      geolocationSupported: "geolocation" in navigator,
+      geolocationPermission: geoPermission,
+      https: window.location.protocol === "https:",
+    },
     userLocation: userLocation
       ? {
           lat: userLocation.lat.toFixed(6),

@@ -19,6 +19,7 @@ export function FeatureRequests() {
             <p className={styles.sectionTitle}>Coming Soon:</p>
             <ul>
               <li>Save your settings for next time</li>
+              <li>View detailed time calculation breakdown</li>
               <li className={styles.completed}>
                 <s>Dark mode for late night flight planning</s> ✓
               </li>
