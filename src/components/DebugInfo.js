@@ -7,6 +7,22 @@ export const DebugInfo = ({
   routeInfo,
   departAt,
 }) => {
+  const [geoPermission, setGeoPermission] = React.useState("checking");
+
+  React.useEffect(() => {
+    if (navigator.permissions && navigator.permissions.query) {
+      navigator.permissions
+        .query({ name: "geolocation" })
+        .then((result) => {
+          setGeoPermission(result.state);
+          result.onchange = () => setGeoPermission(result.state);
+        })
+        .catch(() => setGeoPermission("error checking"));
+    } else {
+      setGeoPermission("API not supported");
+    }
+  }, []);
+
   if (process.env.NODE_ENV !== "development") return null;
 
   const formatData = (data) => {
@@ -24,7 +40,6 @@ export const DebugInfo = ({
     return data.toString();
   };
 
-  // Get browser and device info
   const browserInfo = {
     userAgent: navigator.userAgent,
     platform: navigator.platform,
@@ -32,22 +47,6 @@ export const DebugInfo = ({
     isIOS: /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream,
     isSafari: /^((?!chrome|android).)*safari/i.test(navigator.userAgent),
   };
-
-  // Get geolocation permission status
-  const [geoPermission, setGeoPermission] = React.useState("checking");
-  React.useEffect(() => {
-    if (navigator.permissions && navigator.permissions.query) {
-      navigator.permissions
-        .query({ name: "geolocation" })
-        .then((result) => {
-          setGeoPermission(result.state);
-          result.onchange = () => setGeoPermission(result.state);
-        })
-        .catch(() => setGeoPermission("error checking"));
-    } else {
-      setGeoPermission("API not supported");
-    }
-  }, []);
 
   const debugData = {
     device: {

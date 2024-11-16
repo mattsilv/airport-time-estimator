@@ -276,10 +276,17 @@ export const FlightForm = ({
         </div>
 
         <div className={styles.formGroup}>
-          <Form.Label className={styles.formLabel}>
-            BUFFER BEFORE BOARDING
-          </Form.Label>
-          <div className={styles.numberInputContainer}>
+          <div className={styles.labelContainer}>
+            <Form.Label className={styles.formLabel}>
+              AIRPORT BUFFER TIME
+            </Form.Label>
+            <InfoTooltip text="How early you want to arrive at the airport before your boarding time. This includes time for security, check-in, and getting to your gate." />
+          </div>
+          <div
+            className={`${styles.numberInputContainer} ${
+              isLoadingTravelTime ? styles.loading : ""
+            }`}
+          >
             <Form.Control
               type="number"
               inputMode="numeric"
@@ -290,6 +297,7 @@ export const FlightForm = ({
               min="0"
               max="999"
               className={styles.numberControl}
+              disabled={isLoadingTravelTime}
             />
             <div className={styles.numberButtonGroup}>
               <button
@@ -302,6 +310,7 @@ export const FlightForm = ({
                     },
                   })
                 }
+                disabled={isLoadingTravelTime}
               >
                 −
               </button>
@@ -315,10 +324,12 @@ export const FlightForm = ({
                     },
                   })
                 }
+                disabled={isLoadingTravelTime}
               >
                 +
               </button>
             </div>
+            {isLoadingTravelTime && <div className={styles.loadingSpinner} />}
           </div>
         </div>
 

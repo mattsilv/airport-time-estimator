@@ -29,7 +29,7 @@ const CHECKBOX_CONFIG = [
     id: "withKids",
     label: "Kids? (+15%)",
     name: "withKids",
-    tooltip: "Adds 15% to total travel time for kid-related delays",
+    tooltip: "Preemptively adds 15% to total travel time for gremlin attacks",
   },
   {
     id: "tsaArgument",
