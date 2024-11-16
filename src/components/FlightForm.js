@@ -59,9 +59,9 @@ export const FlightForm = ({
 
       <div className={styles.formGroup}>
         <Form.Label className={styles.formLabel}>
-          Travel Time to Airport
+          TRAVEL TIME TO AIRPORT
         </Form.Label>
-        <div className="d-flex align-items-center">
+        <div className={styles.numberInputContainer}>
           <Form.Control
             type="number"
             inputMode="numeric"
@@ -73,7 +73,7 @@ export const FlightForm = ({
             max="999"
             className={styles.numberControl}
           />
-          <div className="d-flex gap-2 ms-2">
+          <div className={styles.numberButtonGroup}>
             <button
               type="button"
               className={`btn rounded-circle d-flex align-items-center justify-content-center ${styles.decrementButton}`}
@@ -106,9 +106,9 @@ export const FlightForm = ({
 
       <div className={styles.formGroup}>
         <Form.Label className={styles.formLabel}>
-          Buffer Time Before Boarding
+          BUFFER BEFORE BOARDING
         </Form.Label>
-        <div className="d-flex align-items-center">
+        <div className={styles.numberInputContainer}>
           <Form.Control
             type="number"
             inputMode="numeric"
@@ -120,7 +120,7 @@ export const FlightForm = ({
             max="999"
             className={styles.numberControl}
           />
-          <div className="d-flex gap-2 ms-2">
+          <div className={styles.numberButtonGroup}>
             <button
               type="button"
               className={`btn rounded-circle d-flex align-items-center justify-content-center ${styles.decrementButton}`}

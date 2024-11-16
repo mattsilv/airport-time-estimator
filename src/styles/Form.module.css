@@ -52,12 +52,26 @@
   box-shadow: 0 0 0 1px var(--link-color);
 }
 
-/* Number inputs */
+/* Shared number input styles */
+.numberInputContainer {
+  display: flex;
+  align-items: center;
+}
+
 .numberControl {
   composes: inputBase;
-  width: 100px;
+  width: 70px !important;
+  min-width: 70px !important;
+  max-width: 70px !important;
   text-align: center;
   color: var(--input-text-secondary) !important;
+  padding: 0.5rem 0.25rem !important;
+}
+
+.numberButtonGroup {
+  display: flex;
+  gap: 0.5rem;
+  margin-left: 0.5rem;
 }
 
 /* Time input */
@@ -602,4 +616,11 @@ input[type="number"] {
 .checkboxLabel input[type="checkbox"]:checked {
   background-color: var(--link-color) !important;
   border-color: var(--link-color) !important;
+}
+
+/* Override any Bootstrap form control widths */
+:global(.form-control).numberControl {
+  width: 70px !important;
+  min-width: 70px !important;
+  max-width: 70px !important;
 }
