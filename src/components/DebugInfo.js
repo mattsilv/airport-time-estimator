@@ -23,7 +23,13 @@ export const DebugInfo = ({
     }
   }, []);
 
-  if (process.env.NODE_ENV !== "development") return null;
+  // Check for debug flag in URL or development environment
+  const isDebugEnabled = React.useMemo(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    return process.env.NODE_ENV === "development" || urlParams.has("debug");
+  }, []);
+
+  if (!isDebugEnabled) return null;
 
   const formatData = (data) => {
     if (!data) return "null";
