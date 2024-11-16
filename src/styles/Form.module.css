@@ -237,7 +237,7 @@
 /* Checkbox label styles */
 .checkboxLabel {
   font-family: var(--system-font);
-  font-size: var(--font-xs);
+  font-size: calc(var(--font-xs) * 0.95);
   color: var(--label-color);
   text-transform: none;
   letter-spacing: -0.01em;
@@ -518,7 +518,7 @@ input[type="number"] {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  margin-bottom: var(--spacing-xs);
+  margin-bottom: 0; /* Remove margin since grid handles spacing */
 }
 
 .infoIcon {
@@ -561,4 +561,27 @@ input[type="number"] {
   align-items: center;
   gap: 0.5rem;
   margin-bottom: 4px;
+}
+
+/* Add these new styles */
+.checkboxGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.5rem 1rem;
+  width: 100%;
+}
+
+/* Update existing styles */
+.checkboxContainer {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0; /* Remove margin since grid handles spacing */
+}
+
+.checkboxLabel {
+  font-size: calc(var(--font-xs) * 0.95);
+  color: var(--label-color);
+  margin: 0;
+  padding: 0;
 }
