@@ -26,7 +26,13 @@ export const DebugInfo = ({
   // Check for debug flag in URL or development environment
   const isDebugEnabled = React.useMemo(() => {
     const urlParams = new URLSearchParams(window.location.search);
-    return process.env.NODE_ENV === "development" || urlParams.has("debug");
+    const isDebug =
+      process.env.NODE_ENV === "development" || urlParams.has("debug");
+
+    // Set debug attribute on root element
+    document.documentElement.setAttribute("data-debug", isDebug.toString());
+
+    return isDebug;
   }, []);
 
   if (!isDebugEnabled) return null;

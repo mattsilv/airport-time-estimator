@@ -7,6 +7,9 @@
   position: relative;
   padding: 1rem 0;
   width: 100%;
+  touch-action: pan-x;
+  -webkit-user-select: none;
+  user-select: none;
 }
 
 .sliderTrack {
@@ -42,37 +45,40 @@
 .sliderInput {
   -webkit-appearance: none;
   width: 100%;
-  height: 44px;
+  height: 60px;
   background: transparent;
   position: relative;
   z-index: 2;
   cursor: pointer;
-  margin: -12px 0;
+  margin: -20px 0;
   padding: 0;
   box-sizing: border-box;
+  touch-action: pan-x;
+  -webkit-user-select: none;
+  user-select: none;
 }
 
-/* Hide the default thumb */
+/* Make the invisible thumb larger for better touch target */
 .sliderInput::-webkit-slider-thumb {
   -webkit-appearance: none;
   appearance: none;
-  width: 44px;
-  height: 44px;
+  width: 60px;
+  height: 60px;
   background: transparent;
   border: none;
   box-shadow: none;
   cursor: grab;
-  transform: translateX(-22px);
+  border-radius: 50%;
 }
 
 .sliderInput::-moz-range-thumb {
-  width: 44px;
-  height: 44px;
+  width: 60px;
+  height: 60px;
   background: transparent;
   border: none;
   box-shadow: none;
   cursor: grab;
-  transform: translateX(-22px);
+  border-radius: 50%;
 }
 
 .sliderEmoji {
@@ -121,10 +127,11 @@
 /* Remove any highlight on touch */
 .sliderContainer *,
 .sliderInput * {
+  touch-action: pan-x !important;
   -webkit-tap-highlight-color: transparent !important;
-  -webkit-touch-callout: none;
-  -webkit-user-select: none;
-  user-select: none;
+  -webkit-touch-callout: none !important;
+  -webkit-user-select: none !important;
+  user-select: none !important;
 }
 
 /* Range input resets */
