@@ -75,6 +75,7 @@ export function useFlightForm() {
       const snackBuffer = newValues.needSnacks ? 10 : 0;
       const parkingBuffer = newValues.needParking ? 15 : 0;
       const tsaArgumentBuffer = newValues.tsaArgument ? 3 : 0;
+      const checkingBagsBuffer = newValues.checkingBags ? 20 : 0;
       const anxietyMinutes = (parseInt(newValues.anxietyLevel) || 0) * 5;
 
       const totalBuffer =
@@ -84,6 +85,7 @@ export function useFlightForm() {
         snackBuffer +
         parkingBuffer +
         tsaArgumentBuffer +
+        checkingBagsBuffer +
         anxietyMinutes;
 
       return {
