@@ -14,7 +14,7 @@ const CHECKBOX_GROUPS = {
       },
       {
         id: "checkingBags",
-        label: "Checking bags (+20m)",
+        label: "Bag Check (+20m)",
         name: "checkingBags",
         tooltip:
           "Time for bag check and praying they make it to your destination",
@@ -49,7 +49,7 @@ const CHECKBOX_GROUPS = {
       },
       {
         id: "tsaArgument",
-        label: "TSA Pre✓ debate (+3m)",
+        label: "Pre ✓ debate (+3m)",
         name: "tsaArgument",
         tooltip:
           "Allocated time to debate why your significant other does not have TSA Pre✓ yet",
