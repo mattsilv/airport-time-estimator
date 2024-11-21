@@ -5,6 +5,7 @@ import { useFlightForm } from "../hooks/useFlightForm";
 import { useCalenderLink } from "../hooks/useCalenderLink";
 import { FeatureRequests } from "../components/FeatureRequests";
 import { DebugInfo } from "../components/DebugInfo";
+import { ReceiptBreakdown } from "../components/ReceiptBreakdown";
 import styles from "../styles/Home.module.css";
 
 export function Home() {
@@ -83,6 +84,20 @@ export function Home() {
               </div>
             </Stack>
 
+            <ReceiptBreakdown
+              formValues={formValues}
+              routeInfo={formValues.routeInfo}
+            />
+
+            <FeatureRequests />
+
+            <DebugInfo
+              userLocation={formValues.userLocation}
+              airportData={formValues.airport}
+              routeInfo={formValues.routeInfo}
+              departAt={formValues.departAt}
+            />
+
             <p className={styles.footerText}>
               a silly{" "}
               <a
@@ -103,15 +118,6 @@ export function Home() {
                 silv.eth
               </a>
             </p>
-
-            <FeatureRequests />
-
-            <DebugInfo
-              userLocation={formValues.userLocation}
-              airportData={formValues.airport}
-              routeInfo={formValues.routeInfo}
-              departAt={formValues.departAt}
-            />
           </Stack>
         )}
       </div>
