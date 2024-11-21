@@ -1,6 +1,5 @@
-import { tomtomRateLimiter } from "./rateLimiter";
-
-const TOMTOM_API_BASE = "https://api.tomtom.com/routing/1";
+// eslint-disable-next-line no-unused-vars
+export const TOMTOM_API_BASE = "https://api.tomtom.com";
 const TOMTOM_API_KEY = process.env.REACT_APP_TOMTOM_API_KEY;
 
 export const calculateRoute = async (origin, destination) => {

@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect, useCallback } from "react";
+import { useState, useRef, useEffect } from "react";
 import {
   filterAirports,
   getNearestAirports,
@@ -20,7 +20,6 @@ export const AirportAutocomplete = ({
   const [isOpen, setIsOpen] = useState(false);
   const [suggestions, setSuggestions] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(null);
   const wrapperRef = useRef(null);
   const listId = "airport-list";
 
@@ -130,10 +129,6 @@ export const AirportAutocomplete = ({
           {isLoading ? (
             <div className={`${styles.suggestionItem} ${styles.loading}`}>
               Loading airports...
-            </div>
-          ) : error ? (
-            <div className={`${styles.suggestionItem} ${styles.error}`}>
-              {error}
             </div>
           ) : suggestions.length > 0 ? (
             suggestions.map((airport) => (
