@@ -8,7 +8,6 @@ import { getAnxietyText, getEmoji } from "../config/anxietyConfig";
 import { FlightCheckboxes } from "./FlightCheckboxes";
 import { InfoTooltip } from "./InfoTooltip";
 import { AirportAutocomplete } from "./AirportAutocomplete";
-import { DebugInfo } from "./DebugInfo";
 
 // console.log("All env vars:", process.env);
 // console.log("TOMTOM API KEY:", process.env.REACT_APP_TOMTOM_API_KEY);
@@ -21,12 +20,6 @@ export const FlightForm = ({
   onAnxietyChange,
   onCheckboxChange,
 }) => {
-  const [debugData, setDebugData] = useState({
-    userLocation: null,
-    airportData: null,
-    routeInfo: null,
-    departAt: null,
-  });
   const [isLoadingTravelTime, setIsLoadingTravelTime] = useState(false);
   const [userLocation, setUserLocation] = useState(null);
   const [locationRequested, setLocationRequested] = useState(false);
@@ -62,10 +55,6 @@ export const FlightForm = ({
               };
               console.log("Location obtained:", location);
               setUserLocation(location);
-              setDebugData((prev) => ({
-                ...prev,
-                userLocation: location,
-              }));
             },
             (error) => {
               console.error("Geolocation error:", error.code, error.message);
@@ -94,10 +83,6 @@ export const FlightForm = ({
             };
             console.log("Location obtained:", location);
             setUserLocation(location);
-            setDebugData((prev) => ({
-              ...prev,
-              userLocation: location,
-            }));
           },
           (error) => {
             console.error("Geolocation error:", error.code, error.message);
@@ -127,10 +112,6 @@ export const FlightForm = ({
 
     if (data.userLocation) {
       setUserLocation(data.userLocation);
-      setDebugData((prev) => ({
-        ...prev,
-        userLocation: data.userLocation,
-      }));
     }
 
     // Update the airport code in the form
@@ -144,13 +125,6 @@ export const FlightForm = ({
         target: { value: data.routeInfo.travelTimeMinutes.toString() },
       });
     }
-
-    setDebugData((prev) => ({
-      ...prev,
-      airportData: data.airport,
-      routeInfo: data.routeInfo,
-      departAt: data.departAt,
-    }));
 
     setIsLoadingTravelTime(false);
   };
@@ -350,7 +324,6 @@ export const FlightForm = ({
           </div>
         </div>
       </Form>
-      <DebugInfo {...debugData} />
     </>
   );
 };

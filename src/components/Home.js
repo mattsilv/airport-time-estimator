@@ -103,17 +103,17 @@ export function Home() {
                 silv.eth
               </a>
             </p>
-
-            <FeatureRequests />
-
-            <DebugInfo
-              userLocation={formValues.userLocation}
-              airportData={formValues.airport}
-              routeInfo={formValues.routeInfo}
-              departAt={formValues.departAt}
-            />
           </Stack>
         )}
+
+        <FeatureRequests />
+
+        <DebugInfo
+          userLocation={formValues.userLocation}
+          airportData={formValues.airport}
+          routeInfo={formValues.routeInfo}
+          departAt={formValues.departAt}
+        />
       </div>
     </Stack>
   );

@@ -53,3 +53,68 @@
     width: calc(100% - 20px);
   }
 }
+
+.debugToggleContainer {
+  width: 100%;
+  max-width: 430px;
+  margin: 10px auto;
+  padding: 0 10px;
+  position: relative;
+  z-index: 1000;
+}
+
+.debugToggleLabel {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  color: var(--text-primary);
+  font-size: 14px;
+  padding: 8px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+}
+
+.debugToggleInput {
+  display: none;
+}
+
+.debugToggleSlider {
+  position: relative;
+  width: 40px;
+  height: 20px;
+  background: var(--border-color);
+  border-radius: 20px;
+  transition: 0.3s;
+  margin-left: 10px;
+}
+
+.debugToggleSlider:before {
+  position: absolute;
+  content: "";
+  height: 16px;
+  width: 16px;
+  left: 2px;
+  bottom: 2px;
+  background: var(--bg-primary);
+  border-radius: 50%;
+  transition: 0.3s;
+}
+
+.debugToggleInput:checked + .debugToggleSlider {
+  background: var(--link-color);
+}
+
+.debugToggleInput:checked + .debugToggleSlider:before {
+  transform: translateX(20px);
+}
+
+.debugWrapper {
+  position: relative;
+  width: 100%;
+  max-width: 430px;
+  margin: 0 auto;
+  padding: 10px;
+  z-index: 1000;
+}
