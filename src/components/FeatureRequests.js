@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import styles from "../styles/FeatureRequests.module.css";
 
 export function FeatureRequests() {
-  const [isExpanded, setIsExpanded] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(true);
 
   return (
     <div className={styles.container}>
