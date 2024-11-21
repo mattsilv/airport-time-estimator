@@ -18,6 +18,7 @@ export function Home() {
     handleReset,
     handleAnxietyChange,
     handleCheckboxChange,
+    handleAirportSelect,
   } = useFlightForm();
 
   const { calendarURL } = useCalenderLink(leaveTime, selectedDate);
@@ -38,6 +39,7 @@ export function Home() {
           onDateChange={handleDateChange}
           onAnxietyChange={handleAnxietyChange}
           onCheckboxChange={handleCheckboxChange}
+          onAirportSelect={handleAirportSelect}
         />
 
         {!!leaveTime && leaveTime !== "00:00" && (

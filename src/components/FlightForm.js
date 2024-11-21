@@ -19,8 +19,8 @@ export const FlightForm = ({
   onDateChange,
   onAnxietyChange,
   onCheckboxChange,
+  onAirportSelect,
 }) => {
-  const [isLoadingTravelTime, setIsLoadingTravelTime] = useState(false);
   const [userLocation, setUserLocation] = useState(null);
   const [locationRequested, setLocationRequested] = useState(false);
 
@@ -106,29 +106,6 @@ export const FlightForm = ({
     onFieldChange(fieldName)({ target: { value: value.toString() } });
   };
 
-  const handleAirportSelect = (data) => {
-    console.log("FlightForm received airport data:", data);
-    setIsLoadingTravelTime(true);
-
-    if (data.userLocation) {
-      setUserLocation(data.userLocation);
-    }
-
-    // Update the airport code in the form
-    if (data.airport) {
-      onFieldChange("airport")({ target: { value: data.airport.code } });
-    }
-
-    // If we got route info, update the driving time
-    if (data.routeInfo) {
-      onFieldChange("drivingTime")({
-        target: { value: data.routeInfo.travelTimeMinutes.toString() },
-      });
-    }
-
-    setIsLoadingTravelTime(false);
-  };
-
   const anxietyLevel = formValues.anxietyLevel || 0;
   const extraMinutes = anxietyLevel * 5;
 
@@ -180,11 +157,13 @@ export const FlightForm = ({
             <div className={styles.halfWidth}>
               <label className={styles.formLabel}>Airport</label>
               <AirportAutocomplete
-                value={formValues.airport || ""}
-                onChange={(value) =>
-                  onFieldChange("airport")({ target: { value } })
-                }
-                onAirportSelect={handleAirportSelect}
+                value={formValues.airport?.code || ""}
+                onChange={(value) => {
+                  if (!value) {
+                    onFieldChange("airport")({ target: { value: null } });
+                  }
+                }}
+                onAirportSelect={onAirportSelect}
                 boardingTime={formValues.boardingTime}
                 selectedDate={selectedDate}
                 userLocation={userLocation}
@@ -198,11 +177,7 @@ export const FlightForm = ({
           <Form.Label className={styles.formLabel}>
             TRAVEL TIME TO AIRPORT
           </Form.Label>
-          <div
-            className={`${styles.numberInputContainer} ${
-              isLoadingTravelTime ? styles.loading : ""
-            }`}
-          >
+          <div className={styles.numberInputContainer}>
             <Form.Control
               type="number"
               inputMode="numeric"
@@ -213,7 +188,6 @@ export const FlightForm = ({
               min="0"
               max="999"
               className={styles.numberControl}
-              disabled={isLoadingTravelTime}
             />
             <div className={styles.numberButtonGroup}>
               <button
@@ -226,7 +200,6 @@ export const FlightForm = ({
                     },
                   })
                 }
-                disabled={isLoadingTravelTime}
               >
                 −
               </button>
@@ -240,12 +213,10 @@ export const FlightForm = ({
                     },
                   })
                 }
-                disabled={isLoadingTravelTime}
               >
                 +
               </button>
             </div>
-            {isLoadingTravelTime && <div className={styles.loadingSpinner} />}
           </div>
         </div>
 
@@ -254,13 +225,9 @@ export const FlightForm = ({
             <Form.Label className={styles.formLabel}>
               AIRPORT BUFFER TIME
             </Form.Label>
-            <InfoTooltip text="How early you want to arrive at the airport before your boarding time. This includes time for security, check-in, and getting to your gate." />
+            <InfoTooltip text="How long it takes you from arrival to airport to getting to your gate. Security, check-in, walking to gate." />
           </div>
-          <div
-            className={`${styles.numberInputContainer} ${
-              isLoadingTravelTime ? styles.loading : ""
-            }`}
-          >
+          <div className={styles.numberInputContainer}>
             <Form.Control
               type="number"
               inputMode="numeric"
@@ -271,7 +238,6 @@ export const FlightForm = ({
               min="0"
               max="999"
               className={styles.numberControl}
-              disabled={isLoadingTravelTime}
             />
             <div className={styles.numberButtonGroup}>
               <button
@@ -284,7 +250,6 @@ export const FlightForm = ({
                     },
                   })
                 }
-                disabled={isLoadingTravelTime}
               >
                 −
               </button>
@@ -298,12 +263,10 @@ export const FlightForm = ({
                     },
                   })
                 }
-                disabled={isLoadingTravelTime}
               >
                 +
               </button>
             </div>
-            {isLoadingTravelTime && <div className={styles.loadingSpinner} />}
           </div>
         </div>
 

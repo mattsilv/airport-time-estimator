@@ -9,13 +9,31 @@ export function useFormState() {
   const defaultDate = getDefaultDate(location);
   const initialDate = parseDate(defaultDate);
 
-  const [formValues, setFormValues] = useState(() =>
-    formFieldsConfig.reduce((acc, field) => {
+  const initialState = {
+    boardingTime: "",
+    airport: null,
+    drivingTime: "0",
+    arriveEarly: "30",
+    anxietyLevel: "0",
+    isInternational: false,
+    noTSAPre: false,
+    needSnacks: false,
+    needParking: false,
+    tsaArgument: false,
+    checkingBags: false,
+    withKids: false,
+    userLocation: null,
+    routeInfo: null,
+  };
+
+  const [formValues, setFormValues] = useState(() => ({
+    ...initialState,
+    ...formFieldsConfig.reduce((acc, field) => {
       const params = new URLSearchParams(location.search);
       acc[field.name] = params.get(field.name) ?? field.defaultValue;
       return acc;
-    }, {})
-  );
+    }, {}),
+  }));
 
   const [selectedDate, setSelectedDate] = useState(
     isValid(initialDate) ? initialDate : new Date()

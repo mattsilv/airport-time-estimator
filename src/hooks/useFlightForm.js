@@ -95,6 +95,38 @@ export function useFlightForm() {
     });
   };
 
+  const handleAirportSelect = (data) => {
+    console.log("handleAirportSelect received:", data);
+
+    setFormValues((prev) => {
+      const newValues = {
+        ...prev,
+        airport: data.airport
+          ? {
+              code: data.airport.code,
+              display: data.airport.display,
+              lat: data.airport.lat,
+              long: data.airport.long,
+            }
+          : null,
+        routeInfo: data.routeInfo
+          ? {
+              distance: data.routeInfo.distance || 0,
+              duration: data.routeInfo.duration || 0,
+              travelTimeMinutes: data.routeInfo.travelTimeMinutes || 0,
+            }
+          : null,
+        userLocation: data.userLocation || prev.userLocation,
+        drivingTime: data.routeInfo
+          ? Math.ceil(data.routeInfo.travelTimeMinutes || 0).toString()
+          : prev.drivingTime,
+      };
+
+      console.log("Updated form values:", newValues);
+      return newValues;
+    });
+  };
+
   useEffect(() => {
     if (!formValues.boardingTime) {
       console.log("Boarding time is not set yet.");
@@ -147,5 +179,6 @@ export function useFlightForm() {
     handleReset,
     handleAnxietyChange,
     handleCheckboxChange,
+    handleAirportSelect,
   };
 }

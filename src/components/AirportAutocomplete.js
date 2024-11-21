@@ -24,24 +24,29 @@ export const AirportAutocomplete = ({
   const wrapperRef = useRef(null);
   const listId = "airport-list";
 
-  // Preload airports data when component mounts
+  // Preload airports once on mount - no dependencies needed
   useEffect(() => {
-    preloadAirports();
-  }, []);
+    const loadInitialData = async () => {
+      await preloadAirports();
+    };
+    loadInitialData();
+  }, []); // Empty dependency array is fine here as we only want to preload once
 
-  // Start loading nearest airports as soon as we get location
+  // Handle user location and nearest airports
   useEffect(() => {
-    if (userLocation) {
+    if (!userLocation) return;
+
+    const loadNearestAirports = async () => {
       setIsLoading(true);
-      getNearestAirports(userLocation)
-        .then((airports) => {
-          setSuggestions(airports);
-        })
-        .finally(() => {
-          setIsLoading(false);
-        });
-    }
-  }, [userLocation]);
+      try {
+        const airports = await getNearestAirports(userLocation);
+        setSuggestions(airports);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    loadNearestAirports();
+  }, [userLocation]); // This effect handles all userLocation changes
 
   const handleFocus = () => {
     setIsOpen(true);
@@ -51,52 +56,38 @@ export const AirportAutocomplete = ({
     }
   };
 
-  useEffect(() => {
-    function handleClickOutside(event) {
-      if (wrapperRef.current && !wrapperRef.current.contains(event.target)) {
-        setIsOpen(false);
-      }
-    }
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
-
   const handleInputChange = async (e) => {
     const inputValue = e.target.value;
     onChange(inputValue);
     setIsLoading(true);
 
-    if (inputValue.trim()) {
-      filterAirports(inputValue)
-        .then((results) => {
-          setSuggestions(results);
-        })
-        .finally(() => {
-          setIsLoading(false);
-        });
-    } else if (userLocation) {
-      getNearestAirports(userLocation)
-        .then((airports) => {
-          setSuggestions(airports);
-        })
-        .finally(() => {
-          setIsLoading(false);
-        });
-    } else {
-      setSuggestions([]);
+    try {
+      if (inputValue.trim()) {
+        const results = await filterAirports(inputValue);
+        setSuggestions(results);
+      } else if (userLocation) {
+        const airports = await getNearestAirports(userLocation);
+        setSuggestions(airports);
+      } else {
+        setSuggestions([]);
+      }
+    } finally {
       setIsLoading(false);
     }
   };
 
   const handleAirportSelection = async (airport) => {
-    // Track airport selection with more structured data
-    ReactGA.event({
-      category: "Airport Selection",
-      action: "Select Airport",
-      label: airport.code,
-      airport_code: airport.code,
-      airport_name: airport.display,
-    });
+    try {
+      ReactGA.event({
+        category: "Airport Selection",
+        action: "Select Airport",
+        label: airport.code,
+        airport_code: airport.code,
+        airport_name: airport.display,
+      });
+    } catch (error) {
+      console.debug("GA tracking error:", error);
+    }
 
     if (userLocation) {
       try {
@@ -111,18 +102,44 @@ export const AirportAutocomplete = ({
         }
 
         onAirportSelect({
-          airport,
-          routeInfo,
-          userLocation,
+          airport: {
+            code: airport.code,
+            display: airport.display,
+            lat: airport.lat,
+            long: airport.long,
+          },
+          routeInfo: routeInfo
+            ? {
+                distance: routeInfo.distance,
+                duration: routeInfo.duration,
+                travelTimeMinutes: routeInfo.travelTimeMinutes,
+              }
+            : null,
+          userLocation: userLocation,
         });
       } catch (error) {
         console.error("Error calculating route:", error);
-        onAirportSelect({ airport }); // Still send airport even if route calc fails
+        onAirportSelect({
+          airport: {
+            code: airport.code,
+            display: airport.display,
+            lat: airport.lat,
+            long: airport.long,
+          },
+          userLocation: userLocation,
+        });
       } finally {
         setIsLoading(false);
       }
     } else {
-      onAirportSelect({ airport });
+      onAirportSelect({
+        airport: {
+          code: airport.code,
+          display: airport.display,
+          lat: airport.lat,
+          long: airport.long,
+        },
+      });
     }
     setIsOpen(false);
   };

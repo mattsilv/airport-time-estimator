@@ -1,59 +1,77 @@
 import React from "react";
 import { OverlayTrigger, Tooltip } from "react-bootstrap";
-import { format, subMinutes } from "date-fns";
 import styles from "../styles/ReceiptBreakdown.module.css";
+import sliderStyles from "../styles/Slider.module.css";
 
 export function ReceiptBreakdown({ formValues, routeInfo }) {
+  console.log("ReceiptBreakdown formValues:", {
+    airport: formValues?.airport || "No airport selected",
+    drivingTime: formValues?.drivingTime || "No driving time",
+    arriveEarly: formValues?.arriveEarly || "No arrival buffer",
+  });
+
+  console.log(
+    "ReceiptBreakdown routeInfo:",
+    routeInfo || "No route info available"
+  );
+
   const getTimeBreakdown = () => {
     const items = [];
 
-    // Base time - use arriveEarly as the base buffer
     items.push({
-      label: "Base arrival buffer",
-      minutes: parseInt(formValues.arriveEarly || 0),
+      label: "Airport Buffer Time",
+      minutes: parseInt(formValues?.arriveEarly || 0),
+      info: "How long it takes you from arrival to airport to getting to your gate. Security, check-in, walking to gate.",
     });
 
-    // Travel time - always show, but with different context
-    if (formValues.airport?.code) {
-      // If we have an airport selected
-      if (routeInfo && formValues.boardingTime) {
-        // Calculate travel time date (2 hours before boarding)
-        const [hours, minutes] = formValues.boardingTime.split(":").map(Number);
-        const boardingDate = new Date(formValues.departAt);
-        boardingDate.setHours(hours);
-        boardingDate.setMinutes(minutes);
-        const travelDate = subMinutes(boardingDate, 120); // 2 hours before boarding
-        const formattedDate = format(travelDate, "EEE MMM d 'at' h:mm a");
+    const hasAirport = formValues?.airport?.code;
+    console.log(
+      "Airport status:",
+      hasAirport
+        ? `Selected: ${formValues.airport.code}`
+        : "No airport selected"
+    );
 
+    if (hasAirport) {
+      items.push({
+        label: `Travel time to ${formValues.airport.code}`,
+        minutes: parseInt(formValues.drivingTime || 0),
+        info:
+          routeInfo && routeInfo.distance
+            ? `Historical traffic data for ${
+                formValues.airport.code
+              }. Distance: ${(routeInfo.distance / 1609.34).toFixed(1)} miles`
+            : `Estimated travel time to ${formValues.airport.code}`,
+      });
+
+      if (routeInfo && routeInfo.distance) {
         items.push({
-          label: `Travel to ${formValues.airport.code} w/ Traffic`,
-          minutes: Math.ceil(routeInfo.duration / 60), // Convert seconds to minutes
-          info: `Historical traffic data for ${formattedDate}. Distance: ${(
-            routeInfo.distance / 1609.34
-          ).toFixed(1)} miles`,
-        });
-      } else {
-        items.push({
-          label: `Historic traffic estimate`,
-          minutes: parseInt(formValues.drivingTime || 0),
-          info: `Estimated travel time to ${formValues.airport.code}`,
+          label: `Travel buffer to ${formValues.airport.code}`,
+          minutes: 5,
+          info: "Extra buffer added to TomTom travel estimate",
         });
       }
     } else {
+      console.log("Using manual travel time (no airport selected)");
       items.push({
         label: "Manual travel time",
-        minutes: parseInt(formValues.drivingTime || 0),
+        minutes: parseInt(formValues?.drivingTime || 0),
         info: "Based on manually entered travel time",
       });
     }
 
-    // Anxiety level (always shown)
     items.push({
-      label: `Anxiety buffer (level ${formValues.anxietyLevel || 0})`,
+      label: (
+        <span className="d-flex align-items-center gap-2">
+          Anxiety buffer{" "}
+          <span className={styles.anxietyLevel}>
+            LVL {formValues.anxietyLevel || 0}
+          </span>
+        </span>
+      ),
       minutes: (parseInt(formValues.anxietyLevel) || 0) * 5,
     });
 
-    // Conditional buffers
     if (formValues.isInternational) {
       items.push({ label: "International flight", minutes: 40 });
     }
