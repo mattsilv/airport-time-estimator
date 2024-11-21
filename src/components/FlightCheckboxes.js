@@ -2,6 +2,7 @@ import React from "react";
 import { Form } from "react-bootstrap";
 import styles from "../styles/Form.module.css";
 import { InfoTooltip } from "./InfoTooltip";
+import ReactGA from "react-ga4";
 
 const CHECKBOX_GROUPS = {
   impediments: {
@@ -59,6 +60,17 @@ const CHECKBOX_GROUPS = {
 };
 
 export const FlightCheckboxes = ({ formValues, onCheckboxChange }) => {
+  const handleCheckboxChange = (checkboxName) => (event) => {
+    ReactGA.event({
+      category: "Flight Checkbox",
+      action: `${checkboxName} ${
+        event.target.checked ? "Checked" : "Unchecked"
+      }`,
+      label: checkboxName,
+    });
+    onCheckboxChange(checkboxName, event.target.checked);
+  };
+
   return (
     <div className={styles.formGroup}>
       <div className={styles.checkboxGroupsContainer}>
@@ -74,7 +86,7 @@ export const FlightCheckboxes = ({ formValues, onCheckboxChange }) => {
                     id={id}
                     label={label}
                     checked={Boolean(formValues[name])}
-                    onChange={(e) => onCheckboxChange(name, e.target.checked)}
+                    onChange={handleCheckboxChange(name)}
                   />
                   {tooltip && <InfoTooltip text={tooltip} />}
                 </div>

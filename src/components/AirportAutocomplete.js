@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from "react";
+import ReactGA from "react-ga4";
 import {
   filterAirports,
   getNearestAirports,
@@ -31,17 +32,21 @@ export const AirportAutocomplete = ({
   // Start loading nearest airports as soon as we get location
   useEffect(() => {
     if (userLocation) {
-      getNearestAirports(userLocation).then((airports) => {
-        setSuggestions(airports);
-        setIsLoading(false);
-      });
+      setIsLoading(true);
+      getNearestAirports(userLocation)
+        .then((airports) => {
+          setSuggestions(airports);
+        })
+        .finally(() => {
+          setIsLoading(false);
+        });
     }
   }, [userLocation]);
 
   const handleFocus = () => {
     setIsOpen(true);
     if (!userLocation && onRequestLocation) {
-      setIsLoading(true); // Show loading state immediately
+      setIsLoading(true);
       onRequestLocation();
     }
   };
@@ -59,22 +64,40 @@ export const AirportAutocomplete = ({
   const handleInputChange = async (e) => {
     const inputValue = e.target.value;
     onChange(inputValue);
+    setIsLoading(true);
+
     if (inputValue.trim()) {
-      filterAirports(inputValue).then((results) => {
-        setSuggestions(results);
-        setIsLoading(false);
-      });
+      filterAirports(inputValue)
+        .then((results) => {
+          setSuggestions(results);
+        })
+        .finally(() => {
+          setIsLoading(false);
+        });
     } else if (userLocation) {
-      getNearestAirports(userLocation).then((airports) => {
-        setSuggestions(airports);
-        setIsLoading(false);
-      });
+      getNearestAirports(userLocation)
+        .then((airports) => {
+          setSuggestions(airports);
+        })
+        .finally(() => {
+          setIsLoading(false);
+        });
     } else {
       setSuggestions([]);
+      setIsLoading(false);
     }
   };
 
   const handleAirportSelection = async (airport) => {
+    // Track airport selection with more structured data
+    ReactGA.event({
+      category: "Airport Selection",
+      action: "Select Airport",
+      label: airport.code,
+      airport_code: airport.code,
+      airport_name: airport.display,
+    });
+
     if (userLocation) {
       try {
         setIsLoading(true);
