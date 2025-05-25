@@ -99,23 +99,22 @@ export function Home() {
             />
 
             <p className={styles.footerText}>
-              a silly{" "}
               <a
                 href="https://github.com/mattsilv/airport-time-estimator"
                 target="_blank"
                 rel="noopener noreferrer"
                 className={styles.footerLink}
               >
-                open-source
+                open source
               </a>{" "}
-              app by{" "}
+              app vibe coded by{" "}
               <a
-                href="https://silv.blog"
+                href="https://silv.app"
                 target="_blank"
                 rel="noopener noreferrer"
                 className={styles.footerLink}
               >
-                silv.eth
+                silv
               </a>
             </p>
           </Stack>
