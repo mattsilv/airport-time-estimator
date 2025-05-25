@@ -1,8 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 import { OverlayTrigger, Tooltip } from "react-bootstrap";
 import styles from "../styles/ReceiptBreakdown.module.css";
+import { calculateTimeline, formatDuration } from "../utils/timelineUtils";
 
-export function ReceiptBreakdown({ formValues, routeInfo }) {
+export function ReceiptBreakdown({ formValues, routeInfo, selectedDate }) {
+  const [viewMode, setViewMode] = useState('timeline'); // 'timeline' or 'breakdown'
+  
   console.log("ReceiptBreakdown formValues:", {
     airport: formValues?.airport || "No airport selected",
     drivingTime: formValues?.drivingTime || "No driving time",
@@ -118,6 +121,10 @@ export function ReceiptBreakdown({ formValues, routeInfo }) {
     return `${hours}h ${remainingMinutes}m`;
   };
 
+  // Calculate timeline data
+  const timeline = calculateTimeline(formValues, routeInfo, selectedDate);
+  
+  // Legacy breakdown for comparison/fallback
   const timeBreakdown = getTimeBreakdown();
   const totalMinutes = timeBreakdown.reduce(
     (sum, item) => sum + item.minutes,
@@ -127,34 +134,116 @@ export function ReceiptBreakdown({ formValues, routeInfo }) {
     ? Math.ceil(totalMinutes * 1.15)
     : totalMinutes;
 
-  return (
-    <div className={styles.receipt}>
-      <h6 className={styles.receiptTitle}>Time Breakdown</h6>
-      <div className={styles.items}>
-        {timeBreakdown.map((item, index) => (
-          <div key={index} className={styles.item}>
-            <span className={styles.label}>
-              {item.label}
-              {item.info && <InfoIcon tooltip={item.info} />}
-            </span>
-            <span className={styles.minutes}>+{item.minutes} min</span>
+  const ViewToggle = () => (
+    <div className={styles.viewToggle}>
+      <button
+        className={`${styles.toggleButton} ${viewMode === 'timeline' ? styles.active : ''}`}
+        onClick={() => setViewMode('timeline')}
+      >
+        📅 Timeline
+      </button>
+      <button
+        className={`${styles.toggleButton} ${viewMode === 'breakdown' ? styles.active : ''}`}
+        onClick={() => setViewMode('breakdown')}
+      >
+        📄 Breakdown
+      </button>
+    </div>
+  );
+
+  const TimelineView = () => (
+    <div className={styles.timeline}>
+      <div className={styles.timelineSteps}>
+        {timeline.steps.map((step, index) => (
+          <div key={step.id} className={styles.timelineStep}>
+            <div className={styles.timelineTime}>
+              {step.timestamp}
+            </div>
+            <div className={styles.timelineIcon}>
+              {step.icon}
+            </div>
+            <div className={styles.timelineContent}>
+              <div className={styles.timelineLabel}>
+                {step.label}
+              </div>
+              {step.minutes > 0 && (
+                <div className={styles.timelineDuration}>
+                  {formatDuration(step.minutes)}
+                </div>
+              )}
+            </div>
           </div>
         ))}
-        <div className={styles.subtotal}>
-          <span>Subtotal</span>
-          <span>{formatTimeHrMin(totalMinutes)}</span>
+      </div>
+      
+      {timeline.modifiers.length > 0 && (
+        <div className={styles.timelineModifiers}>
+          <h6 className={styles.modifiersTitle}>Additional Buffers</h6>
+          {timeline.modifiers.map((modifier, index) => (
+            <div key={modifier.id} className={styles.modifier}>
+              <span className={styles.modifierIcon}>{modifier.icon}</span>
+              <span className={styles.modifierLabel}>{modifier.label}</span>
+              <span className={styles.modifierMinutes}>
+                {modifier.percentage 
+                  ? `+${Math.round(modifier.percentage * 100)}%`
+                  : `+${formatDuration(modifier.minutes)}`
+                }
+              </span>
+            </div>
+          ))}
         </div>
-        {formValues.withKids && (
-          <div className={styles.kidsBuffer}>
-            <span>Kids buffer (15%)</span>
-            <span>+{Math.ceil(totalMinutes * 0.15)} min</span>
-          </div>
-        )}
-        <div className={styles.total}>
-          <span>Total Buffer</span>
-          <span>{formatTimeHrMin(finalTotal)}</span>
+      )}
+
+      <div className={styles.timelineSummary}>
+        <div className={styles.summaryItem}>
+          <span>Total Journey Time</span>
+          <span>{formatDuration(timeline.totals.final)}</span>
+        </div>
+        <div className={styles.summaryItem}>
+          <span>Leave at</span>
+          <span className={styles.leaveTime}>{timeline.totals.leaveTime}</span>
         </div>
       </div>
+    </div>
+  );
+
+  const BreakdownView = () => (
+    <div className={styles.items}>
+      {timeBreakdown.map((item, index) => (
+        <div key={index} className={styles.item}>
+          <span className={styles.label}>
+            {item.label}
+            {item.info && <InfoIcon tooltip={item.info} />}
+          </span>
+          <span className={styles.minutes}>+{item.minutes} min</span>
+        </div>
+      ))}
+      <div className={styles.subtotal}>
+        <span>Subtotal</span>
+        <span>{formatTimeHrMin(totalMinutes)}</span>
+      </div>
+      {formValues.withKids && (
+        <div className={styles.kidsBuffer}>
+          <span>Kids buffer (15%)</span>
+          <span>+{Math.ceil(totalMinutes * 0.15)} min</span>
+        </div>
+      )}
+      <div className={styles.total}>
+        <span>Total Buffer</span>
+        <span>{formatTimeHrMin(finalTotal)}</span>
+      </div>
+    </div>
+  );
+
+  return (
+    <div className={styles.receipt}>
+      <div className={styles.header}>
+        <h6 className={styles.receiptTitle}>
+          {viewMode === 'timeline' ? 'Flight Timeline' : 'Time Breakdown'}
+        </h6>
+        <ViewToggle />
+      </div>
+      {viewMode === 'timeline' ? <TimelineView /> : <BreakdownView />}
     </div>
   );
 }

@@ -89,6 +89,7 @@ export function Home() {
             <ReceiptBreakdown
               formValues={formValues}
               routeInfo={formValues.routeInfo}
+              selectedDate={selectedDate}
             />
 
             <FeatureRequests />
