@@ -1,0 +1,148 @@
+/* Airport Timeline Component */
+.timeline {
+  background: var(--bg-secondary);
+  border-radius: 8px;
+  padding: 0.75rem;
+  margin: 0.5rem 0;
+  font-size: 0.9rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  border: 1px solid var(--border-color);
+}
+
+.title {
+  text-align: center;
+  margin-bottom: 1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+/* Timeline Steps */
+.steps {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.step {
+  display: grid;
+  grid-template-columns: 4rem 2rem 1fr;
+  gap: 0.5rem;
+  align-items: center;
+  padding: 0.5rem;
+  min-height: 2.5rem;
+  background: var(--bg-primary);
+}
+
+.step:not(:last-child) {
+  border-bottom: 1px solid var(--border-color);
+}
+
+.step:hover {
+  background: var(--bg-secondary);
+}
+
+.time {
+  font-variant-numeric: tabular-nums;
+  font-size: 0.8rem;
+  text-align: center;
+}
+
+.singleTime {
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.icon {
+  font-size: 1rem;
+  text-align: center;
+}
+
+.content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.label {
+  font-weight: 500;
+  color: var(--text-primary);
+  font-size: 0.85rem;
+}
+
+.duration {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Modifiers */
+.modifiers {
+  margin-top: 0;
+  padding: 0.5rem;
+  background: var(--bg-primary);
+  border-radius: 4px;
+  border: 1px solid var(--border-color);
+}
+
+.modifiersTitle {
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  margin-bottom: 0.25rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.modifier {
+  display: grid;
+  grid-template-columns: 1.5rem 1fr auto;
+  gap: 0.5rem;
+  align-items: center;
+  padding: 0.125rem 0;
+  font-size: 0.8rem;
+}
+
+.modifierIcon {
+  text-align: center;
+}
+
+.modifierLabel {
+  color: var(--text-primary);
+}
+
+.modifierTime {
+  color: var(--text-secondary);
+  font-variant-numeric: tabular-nums;
+  font-weight: 500;
+}
+
+/* Summary */
+.summary {
+  margin-top: 0;
+  padding: 0.5rem;
+  background: var(--bg-primary);
+  border-radius: 4px;
+  border: 1px solid var(--border-color);
+}
+
+.summaryRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.85rem;
+  margin-bottom: 0.25rem;
+}
+
+.summaryRow:last-child {
+  margin-bottom: 0;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.leaveTime {
+  font-variant-numeric: tabular-nums;
+  color: var(--text-primary);
+  font-weight: 700;
+}

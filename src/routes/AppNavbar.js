@@ -1,6 +1,9 @@
 import { Container, Navbar } from "react-bootstrap";
 import { ThemeToggle } from "../components/ThemeToggle";
 import styles from "../styles/Navbar.module.css";
+import { createRequire } from 'module';
+
+const require = createRequire(import.meta.url);
 
 export function AppNavbar() {
   return (

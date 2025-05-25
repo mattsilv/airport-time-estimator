@@ -53,3 +53,5 @@ localhost.*
 .env.production.local
 .env*.local
 *.lock
+temp_auto_push.bat
+temp_interactive_push.bat

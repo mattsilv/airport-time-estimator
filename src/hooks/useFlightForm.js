@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { parseISO, isValid, isAfter } from "date-fns";
-import { formatTime, parseTimeString } from "../utils/timeUtils";
+import { isAfter } from "date-fns";
+import { calculateTimeline } from "../utils/timelineUtils";
 import { useFormState } from "./useFormState";
 
 export function useFlightForm() {
@@ -40,59 +40,17 @@ export function useFlightForm() {
   };
 
   const handleAnxietyChange = (level) => {
-    const baseArriveEarly = 30;
-    const internationalBuffer = formValues.isInternational ? 40 : 0;
-    const tsaBuffer = formValues.noTSAPre ? 15 : 0;
-    const snackBuffer = formValues.needSnacks ? 10 : 0;
-    const parkingBuffer = formValues.needParking ? 15 : 0;
-    const additionalMinutes = level * 5;
-
-    const totalBuffer =
-      baseArriveEarly +
-      internationalBuffer +
-      tsaBuffer +
-      snackBuffer +
-      parkingBuffer +
-      additionalMinutes;
-
     setFormValues((prev) => ({
       ...prev,
       anxietyLevel: level,
-      arriveEarly: totalBuffer.toString(),
     }));
   };
 
   const handleCheckboxChange = (name, checked) => {
-    setFormValues((prev) => {
-      const newValues = {
-        ...prev,
-        [name]: checked,
-      };
-
-      const baseArriveEarly = 30;
-      const internationalBuffer = newValues.isInternational ? 40 : 0;
-      const tsaBuffer = newValues.noTSAPre ? 15 : 0;
-      const snackBuffer = newValues.needSnacks ? 10 : 0;
-      const parkingBuffer = newValues.needParking ? 15 : 0;
-      const tsaArgumentBuffer = newValues.tsaArgument ? 3 : 0;
-      const checkingBagsBuffer = newValues.checkingBags ? 20 : 0;
-      const anxietyMinutes = (parseInt(newValues.anxietyLevel) || 0) * 5;
-
-      const totalBuffer =
-        baseArriveEarly +
-        internationalBuffer +
-        tsaBuffer +
-        snackBuffer +
-        parkingBuffer +
-        tsaArgumentBuffer +
-        checkingBagsBuffer +
-        anxietyMinutes;
-
-      return {
-        ...newValues,
-        arriveEarly: totalBuffer.toString(),
-      };
-    });
+    setFormValues((prev) => ({
+      ...prev,
+      [name]: checked,
+    }));
   };
 
   const handleAirportSelect = (data) => {
@@ -133,40 +91,12 @@ export function useFlightForm() {
       return;
     }
 
-    const { hours: boardingHours, minutes: boardingMinutes } = parseTimeString(
-      formValues.boardingTime
-    );
-
-    const totalMinutes =
-      parseInt(formValues.drivingTime || 0, 10) +
-      parseInt(formValues.arriveEarly || 0, 10);
-
-    const finalTotalMinutes = formValues.withKids
-      ? Math.ceil(totalMinutes * 1.15)
-      : totalMinutes;
-
-    let leaveDate;
-    if (typeof selectedDate === "string") {
-      leaveDate = parseISO(selectedDate);
-      if (!isValid(leaveDate)) {
-        console.error("Invalid leave date:", leaveDate);
-        return;
-      }
-    } else {
-      leaveDate = new Date(selectedDate);
-    }
-
-    leaveDate.setHours(boardingHours);
-    leaveDate.setMinutes(boardingMinutes - finalTotalMinutes);
-
-    const formattedLeaveTime = formatTime(leaveDate);
-    console.log(`Calculated leave time: ${formattedLeaveTime}`);
-    console.log(
-      `Kids buffer applied: ${formValues.withKids ? "Yes (+15%)" : "No"}`
-    );
-
-    if (formattedLeaveTime) {
-      setLeaveTime(formattedLeaveTime);
+    // Use timeline calculation for accurate leave time
+    const timeline = calculateTimeline(formValues, formValues.routeInfo, selectedDate);
+    
+    if (timeline.totals?.leaveTime) {
+      setLeaveTime(timeline.totals.leaveTime);
+      console.log(`Calculated leave time via timeline: ${timeline.totals.leaveTime}`);
     }
   }, [formValues, selectedDate]);
 

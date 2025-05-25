@@ -59,15 +59,24 @@ try {
 
   // Copy CA cert to system store location
   if (process.platform === "darwin") {
-    console.log("Installing CA certificate in system trust store...");
+    console.log("Skipping system trust store installation (requires manual sudo)...");
+    console.log("To manually install the CA certificate in system trust store, run:");
+    console.log(`sudo security add-trusted-cert -d -r trustRoot -k /Library/Keychains/System.keychain "${path.join(certDir, "ca-cert.pem")}"`);
+    console.log("Or simply accept the browser security warning for localhost development.");
+    
+    // Optional: Install in user keychain instead (no sudo required)
     const caCertPath = path.join(certDir, "ca-cert.pem");
     if (fs.existsSync(caCertPath)) {
-      execSync(
-        `sudo security add-trusted-cert -d -r trustRoot -k /Library/Keychains/System.keychain "${caCertPath}"`,
-        { stdio: "inherit" }
-      );
-    } else {
-      console.error("CA certificate not found at:", caCertPath);
+      try {
+        console.log("Installing CA certificate in user keychain...");
+        execSync(
+          `security add-trusted-cert -d -r trustRoot -k ~/Library/Keychains/login.keychain "${caCertPath}"`,
+          { stdio: "inherit" }
+        );
+        console.log("CA certificate installed in user keychain successfully!");
+      } catch (error) {
+        console.log("Could not install in user keychain, but certificates are still usable.");
+      }
     }
   }
 

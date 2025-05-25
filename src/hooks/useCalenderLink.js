@@ -9,7 +9,7 @@ import {
 } from "../utils/calendarUtils";
 
 export function useCalenderLink(leaveTime, selectedDate, formValues = {}, routeInfo = {}) {
-  const makeGoogleCalenderLink = useCallback((date, formValues, routeInfo) => {
+  const makeGoogleCalenderLink = useCallback((date, formValues, routeInfo, selectedDate) => {
     const start = formatDateTime(date);
     const end = formatDateTime(new Date(date.getTime() + 3600000));
 
@@ -18,7 +18,7 @@ export function useCalenderLink(leaveTime, selectedDate, formValues = {}, routeI
       text: generateCalendarTitle(formValues),
       dates: `${start}/${end}`,
       location: getCalendarLocation(formValues),
-      details: generateCalendarDescription(formValues, routeInfo),
+      details: generateCalendarDescription(formValues, routeInfo, selectedDate),
     });
     return `https://www.google.com/calendar/render?${params.toString()}`;
   }, []);
@@ -35,7 +35,7 @@ export function useCalenderLink(leaveTime, selectedDate, formValues = {}, routeI
     leaveDate.setHours(hours);
     leaveDate.setMinutes(minutes);
 
-    return makeGoogleCalenderLink(leaveDate, formValues, routeInfo);
+    return makeGoogleCalenderLink(leaveDate, formValues, routeInfo, selectedDate);
   }, [leaveTime, selectedDate, formValues, routeInfo, makeGoogleCalenderLink]);
 
   return { calendarURL };
