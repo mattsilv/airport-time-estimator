@@ -130,6 +130,7 @@ export const FlightForm = ({
               type="range"
               min="0"
               max="10"
+              step="1"
               value={anxietyLevel}
               onChange={(e) => onAnxietyChange(parseInt(e.target.value))}
               className={sliderStyles.sliderInput}

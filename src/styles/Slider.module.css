@@ -44,6 +44,8 @@
 
 .sliderInput {
   -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
   width: 100%;
   height: 60px;
   background: transparent;
@@ -56,29 +58,39 @@
   touch-action: pan-x;
   -webkit-user-select: none;
   user-select: none;
+  outline: none;
+  border: none;
+}
+
+.sliderInput::-moz-range-track {
+  background: transparent;
+  border: none;
+  height: 60px;
 }
 
 /* Make the invisible thumb larger for better touch target */
 .sliderInput::-webkit-slider-thumb {
   -webkit-appearance: none;
   appearance: none;
-  width: 60px;
-  height: 60px;
+  width: 44px;
+  height: 44px;
   background: transparent;
   border: none;
   box-shadow: none;
   cursor: grab;
   border-radius: 50%;
+  position: relative;
 }
 
 .sliderInput::-moz-range-thumb {
-  width: 60px;
-  height: 60px;
+  width: 44px;
+  height: 44px;
   background: transparent;
   border: none;
   box-shadow: none;
   cursor: grab;
   border-radius: 50%;
+  -moz-appearance: none;
 }
 
 .sliderEmoji {
@@ -87,7 +99,7 @@
   left: calc(var(--slider-percent) * 100%);
   transform: translate(-50%, -50%);
   font-size: 2.2rem;
-  transition: left 0.1s ease;
+  transition: left 0.15s ease-out;
   pointer-events: none;
   z-index: 3;
   cursor: grab;
