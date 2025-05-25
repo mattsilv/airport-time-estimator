@@ -16,6 +16,16 @@ export const TIMELINE_STEPS = {
       return baseTravelTime;
     },
   },
+  BUFFER_TIME: {
+    id: 'buffer_time',
+    order: 9.5,
+    icon: '🥒',
+    label: 'Buffer time',
+    getMinutes: (formValues, routeInfo, calculatedModifiers) => {
+      // This will be set during timeline calculation to match total modifier minutes
+      return calculatedModifiers || 0;
+    },
+  },
   PARKING: {
     id: 'parking',
     order: 4,
@@ -124,44 +134,18 @@ export function calculateTimeline(formValues, routeInfo, selectedDate) {
   }
   boardingDate.setHours(boardingHours, boardingMinutes, 0, 0);
 
-  // Calculate timeline steps in reverse order (working backwards from boarding)
-  const timelineSteps = [];
-  const stepOrder = Object.values(TIMELINE_STEPS).sort((a, b) => b.order - a.order);
-  
-  let currentTime = new Date(boardingDate);
-  let totalMinutesBeforeModifiers = 0;
-
-  for (const step of stepOrder) {
-    // Check if step should be included
-    if (step.condition && !step.condition(formValues)) {
-      continue;
-    }
-
-    const minutes = step.getMinutes(formValues, routeInfo);
-    
-    // For steps that take time, subtract from current time
-    if (minutes > 0) {
-      currentTime.setMinutes(currentTime.getMinutes() - minutes);
-      totalMinutesBeforeModifiers += minutes;
-    }
-
-    const label = typeof step.label === 'function' 
-      ? step.label(formValues) 
-      : step.label;
-
-    timelineSteps.unshift({
-      id: step.id,
-      order: step.order,
-      icon: step.icon,
-      label,
-      minutes,
-      timestamp: formatTime(currentTime),
-      timestampDate: new Date(currentTime),
-    });
-  }
-
-  // Calculate modifiers
+  // First calculate modifiers to know total buffer time
   const modifiers = [];
+  let totalMinutesBeforeModifiers = 0;
+  
+  // Calculate base timeline minutes (excluding buffer time step)
+  for (const step of Object.values(TIMELINE_STEPS)) {
+    if (step.id === 'buffer_time') continue; // Skip buffer step for base calculation
+    if (step.condition && !step.condition(formValues)) continue;
+    const minutes = step.getMinutes(formValues, routeInfo);
+    totalMinutesBeforeModifiers += minutes;
+  }
+  // Calculate modifiers
   for (const modifier of Object.values(TIMELINE_MODIFIERS)) {
     if (modifier.condition && !modifier.condition(formValues)) {
       continue;
@@ -196,8 +180,48 @@ export function calculateTimeline(formValues, routeInfo, selectedDate) {
     }
   }
 
-  // Calculate totals
+  // Calculate total modifier minutes
   const modifierMinutes = modifiers.reduce((sum, mod) => sum + (mod.minutes || 0), 0);
+
+  // Now calculate timeline steps with correct buffer time
+  const timelineSteps = [];
+  const stepOrder = Object.values(TIMELINE_STEPS).sort((a, b) => b.order - a.order);
+  
+  let currentTime = new Date(boardingDate);
+
+  for (const step of stepOrder) {
+    // Check if step should be included
+    if (step.condition && !step.condition(formValues)) {
+      continue;
+    }
+
+    let minutes;
+    if (step.id === 'buffer_time') {
+      // Use calculated modifier minutes for buffer time step
+      minutes = modifierMinutes;
+    } else {
+      minutes = step.getMinutes(formValues, routeInfo);
+    }
+    
+    // For steps that take time, subtract from current time
+    if (minutes > 0) {
+      currentTime.setMinutes(currentTime.getMinutes() - minutes);
+    }
+
+    const label = typeof step.label === 'function' 
+      ? step.label(formValues) 
+      : step.label;
+
+    timelineSteps.unshift({
+      id: step.id,
+      order: step.order,
+      icon: step.icon,
+      label,
+      minutes,
+      timestamp: formatTime(currentTime),
+      timestampDate: new Date(currentTime),
+    });
+  }
   
   // Kids buffer is already included in modifiers, so don't apply it twice
   const finalTotalMinutes = totalMinutesBeforeModifiers + modifierMinutes;

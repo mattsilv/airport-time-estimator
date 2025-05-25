@@ -28,7 +28,7 @@ export function FlightTimeline({ formValues, routeInfo, selectedDate }) {
         {timeline.modifiers.length > 0 && (
           <div className={styles.modifiers}>
             <div className={styles.modifiersTitle}>
-              Buffers Accounted For ({formatDuration(timeline.modifiers.reduce((sum, mod) => sum + (mod.minutes || 0), 0))})
+              Buffers Accounted For ({timeline.modifiers.reduce((sum, mod) => sum + (mod.minutes || 0), 0)}min)
             </div>
             {timeline.modifiers.map((modifier) => (
               <div key={modifier.id} className={styles.modifier}>
