@@ -13,7 +13,6 @@ export function useFormState() {
     boardingTime: "",
     airport: null,
     drivingTime: "0",
-    arriveEarly: "30",
     anxietyLevel: "0",
     isInternational: false,
     noTSAPre: false,

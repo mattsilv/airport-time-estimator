@@ -235,55 +235,6 @@ export const FlightForm = ({
           </div>
         </div>
 
-        <div className={styles.formGroup}>
-          <div className={styles.labelContainer}>
-            <Form.Label className={styles.formLabel}>
-              AIRPORT BUFFER TIME
-            </Form.Label>
-            <InfoTooltip text="How long it takes you from arrival to airport to getting to your gate. Security, check-in, walking to gate." />
-          </div>
-          <div className={styles.numberInputContainer}>
-            <Form.Control
-              type="number"
-              inputMode="numeric"
-              pattern="[0-9]*"
-              id="arriveEarly"
-              value={formValues.arriveEarly}
-              onChange={handleNumberChange("arriveEarly")}
-              min="0"
-              max="999"
-              className={styles.numberControl}
-            />
-            <div className={styles.numberButtonGroup}>
-              <button
-                type="button"
-                className={`btn rounded-circle d-flex align-items-center justify-content-center ${styles.decrementButton}`}
-                onClick={() =>
-                  handleNumberChange("arriveEarly")({
-                    target: {
-                      value: (parseInt(formValues.arriveEarly) - 5).toString(),
-                    },
-                  })
-                }
-              >
-                −
-              </button>
-              <button
-                type="button"
-                className={`btn rounded-circle d-flex align-items-center justify-content-center ${styles.incrementButton}`}
-                onClick={() =>
-                  handleNumberChange("arriveEarly")({
-                    target: {
-                      value: (parseInt(formValues.arriveEarly) + 5).toString(),
-                    },
-                  })
-                }
-              >
-                +
-              </button>
-            </div>
-          </div>
-        </div>
 
         <FlightCheckboxes
           formValues={formValues}

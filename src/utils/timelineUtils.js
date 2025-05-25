@@ -16,13 +16,6 @@ export const TIMELINE_STEPS = {
       return baseTravelTime;
     },
   },
-  BUFFER_TIME: {
-    id: 'buffer_time',
-    order: 9.5,
-    icon: '🥒',
-    label: 'Buffer time',
-    getMinutes: (formValues) => parseInt(formValues?.arriveEarly || 0),
-  },
   PARKING: {
     id: 'parking',
     order: 4,

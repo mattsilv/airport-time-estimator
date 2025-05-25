@@ -36,12 +36,6 @@ export function generateCalendarDescription(formValues, routeInfo, selectedDate,
 function generateLegacyCalendarDescription(formValues, routeInfo) {
   const items = [];
 
-  // Airport Buffer Time
-  items.push({
-    label: "Airport Buffer Time",
-    minutes: parseInt(formValues?.arriveEarly || 0),
-    info: "Security, check-in, walking to gate",
-  });
 
   // Travel Time
   const hasAirport = formValues?.airport?.code;
