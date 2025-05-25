@@ -23,6 +23,12 @@ export const FlightForm = ({
 }) => {
   const [userLocation, setUserLocation] = useState(null);
   const [locationRequested, setLocationRequested] = useState(false);
+  const [airportInputText, setAirportInputText] = useState(formValues.airport?.code || "");
+
+  // Sync input text when airport changes (from selection, reset, etc.)
+  React.useEffect(() => {
+    setAirportInputText(formValues.airport?.code || "");
+  }, [formValues.airport?.code]);
 
   const requestLocation = useCallback(() => {
     if (!("geolocation" in navigator)) {
@@ -124,6 +130,7 @@ export const FlightForm = ({
               type="range"
               min="0"
               max="10"
+              step="1"
               value={anxietyLevel}
               onChange={(e) => onAnxietyChange(parseInt(e.target.value))}
               className={sliderStyles.sliderInput}
@@ -157,13 +164,21 @@ export const FlightForm = ({
             <div className={styles.halfWidth}>
               <label className={styles.formLabel}>Airport</label>
               <AirportAutocomplete
-                value={formValues.airport?.code || ""}
+                value={airportInputText}
                 onChange={(value) => {
-                  if (!value) {
+                  // CRITICAL: Always update input text state to enable typing
+                  // Bug fix: Previously only handled empty values, causing typed chars to disappear
+                  setAirportInputText(value);
+                  // Clear airport selection when typing (partial match shouldn't be treated as valid airport)
+                  if (value !== formValues.airport?.code) {
                     onFieldChange("airport")({ target: { value: null } });
                   }
                 }}
-                onAirportSelect={onAirportSelect}
+                onAirportSelect={(data) => {
+                  // Update both the airport data and the input text
+                  setAirportInputText(data.airport?.code || "");
+                  onAirportSelect(data);
+                }}
                 boardingTime={formValues.boardingTime}
                 selectedDate={selectedDate}
                 userLocation={userLocation}
@@ -220,55 +235,6 @@ export const FlightForm = ({
           </div>
         </div>
 
-        <div className={styles.formGroup}>
-          <div className={styles.labelContainer}>
-            <Form.Label className={styles.formLabel}>
-              AIRPORT BUFFER TIME
-            </Form.Label>
-            <InfoTooltip text="How long it takes you from arrival to airport to getting to your gate. Security, check-in, walking to gate." />
-          </div>
-          <div className={styles.numberInputContainer}>
-            <Form.Control
-              type="number"
-              inputMode="numeric"
-              pattern="[0-9]*"
-              id="arriveEarly"
-              value={formValues.arriveEarly}
-              onChange={handleNumberChange("arriveEarly")}
-              min="0"
-              max="999"
-              className={styles.numberControl}
-            />
-            <div className={styles.numberButtonGroup}>
-              <button
-                type="button"
-                className={`btn rounded-circle d-flex align-items-center justify-content-center ${styles.decrementButton}`}
-                onClick={() =>
-                  handleNumberChange("arriveEarly")({
-                    target: {
-                      value: (parseInt(formValues.arriveEarly) - 5).toString(),
-                    },
-                  })
-                }
-              >
-                −
-              </button>
-              <button
-                type="button"
-                className={`btn rounded-circle d-flex align-items-center justify-content-center ${styles.incrementButton}`}
-                onClick={() =>
-                  handleNumberChange("arriveEarly")({
-                    target: {
-                      value: (parseInt(formValues.arriveEarly) + 5).toString(),
-                    },
-                  })
-                }
-              >
-                +
-              </button>
-            </div>
-          </div>
-        </div>
 
         <FlightCheckboxes
           formValues={formValues}

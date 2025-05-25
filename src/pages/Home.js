@@ -3,9 +3,8 @@ import { Alert, Stack } from "react-bootstrap";
 import { FlightForm } from "../components/FlightForm";
 import { useFlightForm } from "../hooks/useFlightForm";
 import { useCalenderLink } from "../hooks/useCalenderLink";
-import { FeatureRequests } from "../components/FeatureRequests";
 import { DebugInfo } from "../components/DebugInfo";
-import { ReceiptBreakdown } from "../components/ReceiptBreakdown";
+import { FlightTimeline } from "../components/FlightTimeline";
 import styles from "../styles/Home.module.css";
 
 export function Home() {
@@ -86,12 +85,11 @@ export function Home() {
               </div>
             </Stack>
 
-            <ReceiptBreakdown
+            <FlightTimeline
               formValues={formValues}
               routeInfo={formValues.routeInfo}
+              selectedDate={selectedDate}
             />
-
-            <FeatureRequests />
 
             <DebugInfo
               userLocation={formValues.userLocation}
@@ -101,23 +99,22 @@ export function Home() {
             />
 
             <p className={styles.footerText}>
-              a silly{" "}
               <a
                 href="https://github.com/mattsilv/airport-time-estimator"
                 target="_blank"
                 rel="noopener noreferrer"
                 className={styles.footerLink}
               >
-                open-source
+                open source
               </a>{" "}
-              app by{" "}
+              app vibe coded by{" "}
               <a
-                href="https://silv.blog"
+                href="https://silv.app"
                 target="_blank"
                 rel="noopener noreferrer"
                 className={styles.footerLink}
               >
-                silv.eth
+                silv
               </a>
             </p>
           </Stack>

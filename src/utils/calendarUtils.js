@@ -2,21 +2,40 @@
  * Utility functions for calendar integration
  */
 
+import { calculateTimeline, generateTimelineDescription } from './timelineUtils';
+
 /**
  * Generate a detailed breakdown of time calculation for calendar description
+ * Uses timeline format by default, falls back to legacy format if needed
+ * @param {Object} formValues - Form values object
+ * @param {Object} routeInfo - Route information object
+ * @param {Date|string} selectedDate - Selected flight date
+ * @param {boolean} useTimeline - Whether to use timeline format (default: true)
+ * @returns {string} Formatted description text for calendar
+ */
+export function generateCalendarDescription(formValues, routeInfo, selectedDate, useTimeline = true) {
+  // Use timeline format if available and requested
+  if (useTimeline && selectedDate && formValues?.boardingTime) {
+    const timeline = calculateTimeline(formValues, routeInfo, selectedDate);
+    if (timeline.steps.length > 0) {
+      return generateTimelineDescription(timeline, formValues) + 
+             "\n\nCreated by https://airportcalc.silv.app/";
+    }
+  }
+
+  // Fallback to legacy breakdown format
+  return generateLegacyCalendarDescription(formValues, routeInfo);
+}
+
+/**
+ * Legacy breakdown format for calendar description
  * @param {Object} formValues - Form values object
  * @param {Object} routeInfo - Route information object
  * @returns {string} Formatted breakdown text for calendar description
  */
-export function generateCalendarDescription(formValues, routeInfo) {
+function generateLegacyCalendarDescription(formValues, routeInfo) {
   const items = [];
 
-  // Airport Buffer Time
-  items.push({
-    label: "Airport Buffer Time",
-    minutes: parseInt(formValues?.arriveEarly || 0),
-    info: "Security, check-in, walking to gate",
-  });
 
   // Travel Time
   const hasAirport = formValues?.airport?.code;
