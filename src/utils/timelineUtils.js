@@ -19,8 +19,7 @@ export const TIMELINE_STEPS = {
         : 'Travel to airport',
     getMinutes: (formValues, routeInfo) => {
       const baseTravelTime = parseInt(formValues?.drivingTime || 0);
-      // Add 5min buffer for route calculation if we have route info
-      return routeInfo?.distance ? baseTravelTime + 5 : baseTravelTime;
+      return baseTravelTime;
     },
   },
   ARRIVE_AT_AIRPORT: {
@@ -182,12 +181,13 @@ export function calculateTimeline(formValues, routeInfo, selectedDate) {
       : modifier.label;
 
     if (modifier.id === 'kids_buffer') {
+      const kidsBufferMinutes = Math.ceil(totalMinutesBeforeModifiers * modifier.getPercentage());
       modifiers.push({
         id: modifier.id,
         icon: modifier.icon,
         label,
         percentage: modifier.getPercentage(),
-        minutes: Math.ceil(totalMinutesBeforeModifiers * modifier.getPercentage()),
+        minutes: kidsBufferMinutes,
       });
     } else {
       const minutes = modifier.getMinutes(formValues);
@@ -204,12 +204,13 @@ export function calculateTimeline(formValues, routeInfo, selectedDate) {
 
   // Calculate totals
   const modifierMinutes = modifiers.reduce((sum, mod) => sum + (mod.minutes || 0), 0);
-  const totalMinutes = totalMinutesBeforeModifiers + modifierMinutes;
   
-  // Apply kids buffer to final calculation if present
-  const finalTotalMinutes = formValues.withKids
-    ? Math.ceil(totalMinutesBeforeModifiers * 1.15) + modifierMinutes
-    : totalMinutes;
+  // Apply kids buffer to base time before adding other modifiers
+  const baseTimeWithKidsBuffer = formValues.withKids
+    ? Math.ceil(totalMinutesBeforeModifiers * 1.15)
+    : totalMinutesBeforeModifiers;
+    
+  const finalTotalMinutes = baseTimeWithKidsBuffer + modifierMinutes;
 
   // Calculate final leave time
   const leaveTime = new Date(boardingDate);
@@ -226,8 +227,8 @@ export function calculateTimeline(formValues, routeInfo, selectedDate) {
     modifiers,
     totals: {
       beforeModifiers: totalMinutesBeforeModifiers,
+      baseWithKidsBuffer: baseTimeWithKidsBuffer,
       modifiers: modifierMinutes,
-      total: totalMinutes,
       final: finalTotalMinutes,
       leaveTime: formatTime(leaveTime),
       leaveTimeDate: leaveTime,
