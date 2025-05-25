@@ -2,16 +2,9 @@ import { parseTimeString, formatTime } from './timeUtils';
 
 // Timeline step configuration with icons and logical ordering
 export const TIMELINE_STEPS = {
-  LEAVE_HOME: {
-    id: 'leave_home',
-    order: 1,
-    icon: '🏠',
-    label: 'Leave home',
-    getMinutes: () => 0, // Starting point
-  },
   TRAVEL_TO_AIRPORT: {
     id: 'travel_to_airport',
-    order: 2,
+    order: 1,
     icon: '🚗',
     label: (formValues) => 
       formValues?.airport?.code 
@@ -24,7 +17,7 @@ export const TIMELINE_STEPS = {
   },
   ARRIVE_AT_AIRPORT: {
     id: 'arrive_at_airport',
-    order: 3,
+    order: 2,
     icon: '✈️',
     label: (formValues) =>
       formValues?.airport?.code
@@ -34,7 +27,7 @@ export const TIMELINE_STEPS = {
   },
   PARKING: {
     id: 'parking',
-    order: 4,
+    order: 3,
     icon: '🅿️',
     label: 'Find parking',
     getMinutes: (formValues) => (formValues?.needParking ? 15 : 0),
@@ -42,7 +35,7 @@ export const TIMELINE_STEPS = {
   },
   CHECK_IN_BAGS: {
     id: 'check_in_bags',
-    order: 5,
+    order: 4,
     icon: '🧳',
     label: 'Check in bags',
     getMinutes: (formValues) => (formValues?.checkingBags ? 20 : 0),
@@ -50,20 +43,19 @@ export const TIMELINE_STEPS = {
   },
   SECURITY_CHECKPOINT: {
     id: 'security_checkpoint',
-    order: 6,
+    order: 5,
     icon: '🔒',
     label: 'Security checkpoint',
     getMinutes: (formValues) => {
-      let securityTime = 0;
+      let securityTime = 30; // Base security time always included
       if (formValues?.noTSAPre) securityTime += 15;
       if (formValues?.tsaArgument) securityTime += 3;
       return securityTime;
     },
-    condition: (formValues) => formValues?.noTSAPre || formValues?.tsaArgument,
   },
   GET_SNACKS: {
     id: 'get_snacks',
-    order: 7,
+    order: 6,
     icon: '🍿',
     label: 'Get airport snacks',
     getMinutes: (formValues) => (formValues?.needSnacks ? 10 : 0),
@@ -71,18 +63,18 @@ export const TIMELINE_STEPS = {
   },
   NAVIGATE_TO_GATE: {
     id: 'navigate_to_gate',
-    order: 8,
+    order: 7,
     icon: '🚶',
     label: 'Navigate to gate',
     getMinutes: (formValues) => {
-      const baseBuffer = 30; // Base airport buffer time
+      const baseBuffer = 15; // Reduced from 30 to 15 minutes
       const internationalBuffer = formValues?.isInternational ? 40 : 0;
       return baseBuffer + internationalBuffer;
     },
   },
   BOARDING_TIME: {
     id: 'boarding_time',
-    order: 9,
+    order: 8,
     icon: '🎫',
     label: 'Boarding begins',
     getMinutes: () => 0, // End point

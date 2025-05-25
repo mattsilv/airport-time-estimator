@@ -5,7 +5,7 @@ import { useFlightForm } from "../hooks/useFlightForm";
 import { useCalenderLink } from "../hooks/useCalenderLink";
 import { FeatureRequests } from "../components/FeatureRequests";
 import { DebugInfo } from "../components/DebugInfo";
-import { ReceiptBreakdown } from "../components/ReceiptBreakdown";
+import { FlightTimeline } from "../components/FlightTimeline";
 import styles from "../styles/Home.module.css";
 
 export function Home() {
@@ -86,7 +86,7 @@ export function Home() {
               </div>
             </Stack>
 
-            <ReceiptBreakdown
+            <FlightTimeline
               formValues={formValues}
               routeInfo={formValues.routeInfo}
               selectedDate={selectedDate}
