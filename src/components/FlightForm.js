@@ -23,6 +23,12 @@ export const FlightForm = ({
 }) => {
   const [userLocation, setUserLocation] = useState(null);
   const [locationRequested, setLocationRequested] = useState(false);
+  const [airportInputText, setAirportInputText] = useState(formValues.airport?.code || "");
+
+  // Sync input text when airport changes (from selection, reset, etc.)
+  React.useEffect(() => {
+    setAirportInputText(formValues.airport?.code || "");
+  }, [formValues.airport?.code]);
 
   const requestLocation = useCallback(() => {
     if (!("geolocation" in navigator)) {
@@ -157,13 +163,21 @@ export const FlightForm = ({
             <div className={styles.halfWidth}>
               <label className={styles.formLabel}>Airport</label>
               <AirportAutocomplete
-                value={formValues.airport?.code || ""}
+                value={airportInputText}
                 onChange={(value) => {
-                  if (!value) {
+                  // CRITICAL: Always update input text state to enable typing
+                  // Bug fix: Previously only handled empty values, causing typed chars to disappear
+                  setAirportInputText(value);
+                  // Clear airport selection when typing (partial match shouldn't be treated as valid airport)
+                  if (value !== formValues.airport?.code) {
                     onFieldChange("airport")({ target: { value: null } });
                   }
                 }}
-                onAirportSelect={onAirportSelect}
+                onAirportSelect={(data) => {
+                  // Update both the airport data and the input text
+                  setAirportInputText(data.airport?.code || "");
+                  onAirportSelect(data);
+                }}
                 boardingTime={formValues.boardingTime}
                 selectedDate={selectedDate}
                 userLocation={userLocation}
