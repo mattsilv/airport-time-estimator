@@ -38,7 +38,7 @@ export const TIMELINE_STEPS = {
     id: 'check_in_bags',
     order: 5,
     icon: '🧳',
-    label: 'Check in bags',
+    label: 'Check bags',
     getMinutes: (formValues) => (formValues?.checkingBags ? 20 : 0),
     condition: (formValues) => formValues?.checkingBags,
   },
@@ -46,7 +46,7 @@ export const TIMELINE_STEPS = {
     id: 'security_checkpoint',
     order: 6,
     icon: '🔒',
-    label: 'Traverse through Security',
+    label: 'Time w/ TSA',
     getMinutes: (formValues) => {
       let securityTime = 30; // Base security time always included
       if (formValues?.noTSAPre) securityTime += 15;
