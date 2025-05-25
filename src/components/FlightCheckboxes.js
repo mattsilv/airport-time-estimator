@@ -54,6 +54,7 @@ const CHECKBOX_GROUPS = {
         id: "noTSAPre",
         label: "No TSA Pre ✓ (+15m)",
         name: "noTSAPre",
+        tooltip: "I hope you wore cool socks.",
       },
       {
         id: "tsaArgument",

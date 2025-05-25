@@ -1,4 +1,5 @@
 import { parseTimeString, formatTime } from './timeUtils';
+import { getEmoji } from '../config/anxietyConfig';
 
 // Timeline step configuration with icons and logical ordering
 export const TIMELINE_STEPS = {
@@ -93,15 +94,15 @@ export const TIMELINE_STEPS = {
 export const TIMELINE_MODIFIERS = {
   ANXIETY_BUFFER: {
     id: 'anxiety_buffer',
-    icon: '😰',
-    label: (formValues) => `Anxiety buffer (Level ${formValues?.anxietyLevel || 0})`,
+    icon: (formValues) => getEmoji(parseInt(formValues?.anxietyLevel) || 0),
+    label: (formValues) => `Anxiety buffer (LVL ${formValues?.anxietyLevel || 0})`,
     getMinutes: (formValues) => (parseInt(formValues?.anxietyLevel) || 0) * 5,
     condition: (formValues) => parseInt(formValues?.anxietyLevel) > 0,
   },
   KIDS_BUFFER: {
     id: 'kids_buffer',
     icon: '👶',
-    label: 'Kids buffer (15%)',
+    label: 'Kids buffer (+15%)',
     getPercentage: () => 0.15,
     condition: (formValues) => formValues?.withKids,
   },
@@ -192,9 +193,12 @@ export function calculateTimeline(formValues, routeInfo, selectedDate) {
     } else {
       const minutes = modifier.getMinutes(formValues);
       if (minutes > 0) {
+        const icon = typeof modifier.icon === 'function'
+          ? modifier.icon(formValues)
+          : modifier.icon;
         modifiers.push({
           id: modifier.id,
-          icon: modifier.icon,
+          icon,
           label,
           minutes,
         });

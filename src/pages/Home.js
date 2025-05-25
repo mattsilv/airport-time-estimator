@@ -3,7 +3,6 @@ import { Alert, Stack } from "react-bootstrap";
 import { FlightForm } from "../components/FlightForm";
 import { useFlightForm } from "../hooks/useFlightForm";
 import { useCalenderLink } from "../hooks/useCalenderLink";
-import { FeatureRequests } from "../components/FeatureRequests";
 import { DebugInfo } from "../components/DebugInfo";
 import { FlightTimeline } from "../components/FlightTimeline";
 import styles from "../styles/Home.module.css";
@@ -91,8 +90,6 @@ export function Home() {
               routeInfo={formValues.routeInfo}
               selectedDate={selectedDate}
             />
-
-            <FeatureRequests />
 
             <DebugInfo
               userLocation={formValues.userLocation}

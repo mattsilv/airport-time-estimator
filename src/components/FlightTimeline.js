@@ -7,7 +7,7 @@ export function FlightTimeline({ formValues, routeInfo, selectedDate }) {
 
   return (
     <div className={styles.timeline}>
-      <h5 className={styles.title}>Flight Timeline</h5>
+      <h5 className={styles.title}>Airport Timeline</h5>
       
       <div className={styles.steps}>
         {timeline.steps.map((step) => (
@@ -33,10 +33,7 @@ export function FlightTimeline({ formValues, routeInfo, selectedDate }) {
                 <span className={styles.modifierIcon}>{modifier.icon}</span>
                 <span className={styles.modifierLabel}>{modifier.label}</span>
                 <span className={styles.modifierTime}>
-                  {modifier.percentage 
-                    ? `+${Math.round(modifier.percentage * 100)}% (+${formatDuration(modifier.minutes)})`
-                    : `+${formatDuration(modifier.minutes)}`
-                  }
+                  +{formatDuration(modifier.minutes)}
                 </span>
               </div>
             ))}
