@@ -5,8 +5,8 @@ import { InfoTooltip } from "./InfoTooltip";
 import ReactGA from "react-ga4";
 
 const CHECKBOX_GROUPS = {
-  impediments: {
-    title: "Impediments",
+  extras: {
+    title: "Extras",
     items: [
       {
         id: "internationalFlight",
@@ -24,6 +24,13 @@ const CHECKBOX_GROUPS = {
         id: "needParking",
         label: "Parking car (+15m)",
         name: "needParking",
+      },
+      {
+        id: "loungeTime",
+        label: "Lounge time (+15m)",
+        name: "loungeTime",
+        tooltip:
+          "Leave yourself time to enjoy the airport lounge your credit card pays for.",
       },
     ],
   },

@@ -20,7 +20,9 @@
 .steps {
   display: flex;
   flex-direction: column;
-  gap: 0.25rem;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  overflow: hidden;
 }
 
 .step {
@@ -28,10 +30,13 @@
   grid-template-columns: 4rem 2rem 1fr;
   gap: 0.5rem;
   align-items: center;
-  padding: 0.25rem 0.5rem;
-  border-radius: 4px;
+  padding: 0.5rem;
+  min-height: 2.5rem;
   background: var(--bg-primary);
-  border: 1px solid var(--border-color);
+}
+
+.step:not(:last-child) {
+  border-bottom: 1px solid var(--border-color);
 }
 
 .step:hover {
@@ -42,16 +47,6 @@
   font-variant-numeric: tabular-nums;
   font-size: 0.8rem;
   text-align: center;
-}
-
-.startTime {
-  font-weight: 600;
-  color: var(--text-primary);
-}
-
-.endTime {
-  font-size: 0.75rem;
-  color: var(--text-secondary);
 }
 
 .singleTime {
@@ -84,7 +79,7 @@
 
 /* Modifiers */
 .modifiers {
-  margin-top: 0.75rem;
+  margin-top: 0.5rem;
   padding: 0.5rem;
   background: var(--bg-primary);
   border-radius: 4px;
@@ -125,7 +120,7 @@
 
 /* Summary */
 .summary {
-  margin-top: 0.75rem;
+  margin-top: 0.5rem;
   padding: 0.5rem;
   background: var(--bg-primary);
   border-radius: 4px;

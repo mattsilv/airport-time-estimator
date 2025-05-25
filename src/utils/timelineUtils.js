@@ -61,9 +61,17 @@ export const TIMELINE_STEPS = {
     getMinutes: (formValues) => (formValues?.needSnacks ? 10 : 0),
     condition: (formValues) => formValues?.needSnacks,
   },
+  LOUNGE_TIME: {
+    id: 'lounge_time',
+    order: 7,
+    icon: '🛋️',
+    label: 'Airport lounge',
+    getMinutes: (formValues) => (formValues?.loungeTime ? 15 : 0),
+    condition: (formValues) => formValues?.loungeTime,
+  },
   NAVIGATE_TO_GATE: {
     id: 'navigate_to_gate',
-    order: 7,
+    order: 8,
     icon: '🚶',
     label: 'Navigate to gate',
     getMinutes: (formValues) => {
@@ -74,7 +82,7 @@ export const TIMELINE_STEPS = {
   },
   BOARDING_TIME: {
     id: 'boarding_time',
-    order: 8,
+    order: 9,
     icon: '🎫',
     label: 'Boarding begins',
     getMinutes: () => 0, // End point
