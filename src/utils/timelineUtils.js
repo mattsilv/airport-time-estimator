@@ -16,19 +16,16 @@ export const TIMELINE_STEPS = {
       return baseTravelTime;
     },
   },
-  ARRIVE_AT_AIRPORT: {
-    id: 'arrive_at_airport',
-    order: 2,
-    icon: '✈️',
-    label: (formValues) =>
-      formValues?.airport?.code
-        ? `Arrive at ${formValues.airport.code}`
-        : 'Arrive at airport',
-    getMinutes: () => 0, // Milestone
+  BUFFER_TIME: {
+    id: 'buffer_time',
+    order: 9.5,
+    icon: '🥒',
+    label: 'Buffer time',
+    getMinutes: (formValues) => parseInt(formValues?.arriveEarly || 0),
   },
   PARKING: {
     id: 'parking',
-    order: 3,
+    order: 4,
     icon: '🅿️',
     label: 'Find parking',
     getMinutes: (formValues) => (formValues?.needParking ? 15 : 0),
@@ -36,7 +33,7 @@ export const TIMELINE_STEPS = {
   },
   CHECK_IN_BAGS: {
     id: 'check_in_bags',
-    order: 4,
+    order: 5,
     icon: '🧳',
     label: 'Check in bags',
     getMinutes: (formValues) => (formValues?.checkingBags ? 20 : 0),
@@ -44,9 +41,9 @@ export const TIMELINE_STEPS = {
   },
   SECURITY_CHECKPOINT: {
     id: 'security_checkpoint',
-    order: 5,
+    order: 6,
     icon: '🔒',
-    label: 'Security checkpoint',
+    label: 'Traverse through Security',
     getMinutes: (formValues) => {
       let securityTime = 30; // Base security time always included
       if (formValues?.noTSAPre) securityTime += 15;
@@ -56,7 +53,7 @@ export const TIMELINE_STEPS = {
   },
   GET_SNACKS: {
     id: 'get_snacks',
-    order: 6,
+    order: 7,
     icon: '🍿',
     label: 'Get airport snacks',
     getMinutes: (formValues) => (formValues?.needSnacks ? 10 : 0),
@@ -64,7 +61,7 @@ export const TIMELINE_STEPS = {
   },
   LOUNGE_TIME: {
     id: 'lounge_time',
-    order: 7,
+    order: 8,
     icon: '🛋️',
     label: 'Airport lounge',
     getMinutes: (formValues) => (formValues?.loungeTime ? 15 : 0),
@@ -72,7 +69,7 @@ export const TIMELINE_STEPS = {
   },
   NAVIGATE_TO_GATE: {
     id: 'navigate_to_gate',
-    order: 8,
+    order: 9,
     icon: '🚶',
     label: 'Navigate to gate',
     getMinutes: (formValues) => {
@@ -83,7 +80,7 @@ export const TIMELINE_STEPS = {
   },
   BOARDING_TIME: {
     id: 'boarding_time',
-    order: 9,
+    order: 10,
     icon: '🎫',
     label: 'Boarding begins',
     getMinutes: () => 0, // End point
@@ -209,12 +206,8 @@ export function calculateTimeline(formValues, routeInfo, selectedDate) {
   // Calculate totals
   const modifierMinutes = modifiers.reduce((sum, mod) => sum + (mod.minutes || 0), 0);
   
-  // Apply kids buffer to base time before adding other modifiers
-  const baseTimeWithKidsBuffer = formValues.withKids
-    ? Math.ceil(totalMinutesBeforeModifiers * 1.15)
-    : totalMinutesBeforeModifiers;
-    
-  const finalTotalMinutes = baseTimeWithKidsBuffer + modifierMinutes;
+  // Kids buffer is already included in modifiers, so don't apply it twice
+  const finalTotalMinutes = totalMinutesBeforeModifiers + modifierMinutes;
 
   // Calculate final leave time
   const leaveTime = new Date(boardingDate);
@@ -231,7 +224,6 @@ export function calculateTimeline(formValues, routeInfo, selectedDate) {
     modifiers,
     totals: {
       beforeModifiers: totalMinutesBeforeModifiers,
-      baseWithKidsBuffer: baseTimeWithKidsBuffer,
       modifiers: modifierMinutes,
       final: finalTotalMinutes,
       leaveTime: formatTime(leaveTime),
