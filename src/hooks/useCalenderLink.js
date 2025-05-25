@@ -2,18 +2,23 @@ import { useCallback, useMemo } from "react";
 import { isValid } from "date-fns";
 import { formatDateTime, parseTimeString } from "../utils/timeUtils";
 import { parseDate } from "../utils/dateUtils";
+import { 
+  generateCalendarDescription, 
+  generateCalendarTitle, 
+  getCalendarLocation 
+} from "../utils/calendarUtils";
 
-export function useCalenderLink(leaveTime, selectedDate) {
-  const makeGoogleCalenderLink = useCallback((date) => {
+export function useCalenderLink(leaveTime, selectedDate, formValues = {}, routeInfo = {}) {
+  const makeGoogleCalenderLink = useCallback((date, formValues, routeInfo) => {
     const start = formatDateTime(date);
     const end = formatDateTime(new Date(date.getTime() + 3600000));
 
     const params = new URLSearchParams({
       action: "TEMPLATE",
-      text: "Depart for Airport",
+      text: generateCalendarTitle(formValues),
       dates: `${start}/${end}`,
-      details:
-        "Time to leave for the airport. Created by https://airportcalc.silv.app/",
+      location: getCalendarLocation(formValues),
+      details: generateCalendarDescription(formValues, routeInfo),
     });
     return `https://www.google.com/calendar/render?${params.toString()}`;
   }, []);
@@ -30,8 +35,8 @@ export function useCalenderLink(leaveTime, selectedDate) {
     leaveDate.setHours(hours);
     leaveDate.setMinutes(minutes);
 
-    return makeGoogleCalenderLink(leaveDate);
-  }, [leaveTime, selectedDate, makeGoogleCalenderLink]);
+    return makeGoogleCalenderLink(leaveDate, formValues, routeInfo);
+  }, [leaveTime, selectedDate, formValues, routeInfo, makeGoogleCalenderLink]);
 
   return { calendarURL };
 }
