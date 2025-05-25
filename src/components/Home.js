@@ -19,7 +19,7 @@ export function Home() {
     handleCheckboxChange,
   } = useFlightForm();
 
-  const { calendarURL } = useCalenderLink(leaveTime, selectedDate);
+  const { calendarURL } = useCalenderLink(leaveTime, selectedDate, formValues, formValues.routeInfo);
 
   return (
     <Stack className="mt-0" gap={1}>

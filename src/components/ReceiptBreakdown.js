@@ -1,7 +1,6 @@
 import React from "react";
 import { OverlayTrigger, Tooltip } from "react-bootstrap";
 import styles from "../styles/ReceiptBreakdown.module.css";
-import sliderStyles from "../styles/Slider.module.css";
 
 export function ReceiptBreakdown({ formValues, routeInfo }) {
   console.log("ReceiptBreakdown formValues:", {
