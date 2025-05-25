@@ -25,6 +25,7 @@
   "scripts": {
     "prestart": "node scripts/generate-cert.js",
     "start": "HTTPS=true SSL_CRT_FILE=./certificates/localhost-cert.pem SSL_KEY_FILE=./certificates/localhost-key.pem react-scripts start",
+    "start-http": "react-scripts start",
     "start-remote": "HTTPS=true SSL_CRT_FILE=./certificates/cert.pem SSL_KEY_FILE=./certificates/key.pem GENERATE_SOURCEMAP=false DISABLE_ESLINT_PLUGIN=true react-scripts start --host $(ipconfig getifaddr en0)",
     "start-windows": "set HTTPS=true&&set SSL_CRT_FILE=./certificates/localhost-cert.pem&&set SSL_KEY_FILE=./certificates/localhost-key.pem&&react-scripts start",
     "build": "CI=false GENERATE_SOURCEMAP=false react-scripts build",
